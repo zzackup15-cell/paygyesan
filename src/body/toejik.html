@@ -1,0 +1,183 @@
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 근무 기간</h2>
+    <p class="section-desc">입사일과 마지막으로 근무한 날을 넣으세요. 평균임금 산정기간은 자동으로 계산됩니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="date-hire">입사일</label>
+        <input type="date" id="date-hire" class="date-input" autocomplete="off">
+      </div>
+      <div class="net-field">
+        <label for="date-last">마지막 근무일</label>
+        <input type="date" id="date-last" class="date-input" autocomplete="off">
+      </div>
+    </div>
+    <p class="hint">퇴직일은 마지막 근무일의 다음 날입니다. 재직일수는 마지막 근무일까지 포함해 계산합니다.</p>
+    <p class="alert" id="alert-date" role="alert" hidden></p>
+  </section>
+
+  <section class="card" aria-labelledby="wage-title">
+    <h2 id="wage-title">2. 임금 입력</h2>
+    <p class="section-desc">퇴직 전 3개월 동안 <strong>실제로 지급받은 세전 금액</strong>을 넣으세요. 연장·야간·휴일근로수당도 포함합니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="wage-3months">퇴직 전 3개월 임금 총액</label>
+        <div class="input-unit">
+          <input type="text" id="wage-3months" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">매달 급여가 같다면 월급 × 3</p>
+      </div>
+      <div class="net-field">
+        <label for="annual-bonus">연간 상여금 총액</label>
+        <div class="input-unit">
+          <input type="text" id="annual-bonus" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">최근 12개월분. 3/12만 산입됩니다</p>
+      </div>
+      <div class="net-field">
+        <label for="annual-leave-pay">연차수당</label>
+        <div class="input-unit">
+          <input type="text" id="annual-leave-pay" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">최근 12개월분. 3/12만 산입됩니다</p>
+      </div>
+      <div class="net-field">
+        <label for="monthly-ordinary">월 통상임금 <span class="label-opt">선택</span></label>
+        <div class="input-unit">
+          <input type="text" id="monthly-ordinary" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">평균임금과 비교용. <a href="/tongsang">통상임금 계산기</a>에서 확인</p>
+      </div>
+    </div>
+
+    <p class="alert" id="alert-ordinary" role="alert" hidden></p>
+
+    <div class="list-actions">
+      <span class="item-count">퇴직금 계산은 세전 기준입니다</span>
+      <button type="button" id="reset-all" class="btn btn-ghost">초기화</button>
+    </div>
+  </section>
+
+  <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+    <h2 id="result-title">3. 계산 결과</h2>
+
+    <div class="result-grid">
+      <div class="result-box">
+        <span class="result-label">재직일수</span>
+        <strong class="result-value"><span id="out-service-days">0</span><em>일</em></strong>
+        <span class="result-sub" id="out-service-text"></span>
+      </div>
+      <div class="result-box result-primary">
+        <span class="result-label">예상 퇴직금 (세전)</span>
+        <strong class="result-value"><span id="out-severance">0</span><em>원</em></strong>
+      </div>
+    </div>
+
+    <p class="alert" id="alert-short" role="alert" hidden></p>
+
+    <div class="annual-list">
+      <div class="annual-row">
+        <dt>평균임금 산정기간<small><span id="out-period">-</span></small></dt>
+        <dd><span id="out-period-days">0</span><em>일</em></dd>
+      </div>
+      <div class="annual-row">
+        <dt>1일 평균임금<small>3개월 임금 + 상여·연차 3/12 ÷ 기간일수</small></dt>
+        <dd><span id="out-avg-daily">0</span><em>원</em></dd>
+      </div>
+      <div class="annual-row">
+        <dt>1일 통상임금<small>월 통상임금 ÷ 209 × 8</small></dt>
+        <dd><span id="out-ordinary-daily">-</span><em>원</em></dd>
+      </div>
+      <div class="annual-row annual-highlight">
+        <dt>적용 임금<small>평균임금과 통상임금 중 큰 쪽</small></dt>
+        <dd><span id="out-base-wage">0</span><em>원</em></dd>
+      </div>
+    </div>
+
+    <p class="formula" id="out-formula"></p>
+
+    <p class="hint">퇴직금에는 <strong>퇴직소득세</strong>가 별도로 부과됩니다. 근속연수공제와 환산급여공제가 적용돼 일반 소득세보다 세율이 크게 낮고, 근속기간이 길수록 부담이 줄어듭니다. 이 계산기의 결과는 세전 금액입니다.</p>
+    <p class="hint">확정기여형(DC) 퇴직연금에 가입되어 있다면 이 계산식이 아니라 <strong>회사가 매년 납입한 부담금과 운용 수익</strong>이 퇴직급여가 됩니다. 확정급여형(DB)은 위 계산식과 같습니다.</p>
+  </section>
+
+  {{OTHER_CALCS}}
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <article class="card content" aria-labelledby="guide-title">
+    <h2 id="guide-title">퇴직금 완전 정리</h2>
+
+    <h3>퇴직금 계산식</h3>
+    <p>퇴직금은 근로자퇴직급여 보장법 제8조에 따라 <strong>계속근로기간 1년에 대하여 30일분 이상의 평균임금</strong>을 지급하도록 정해져 있습니다. 식으로 쓰면 다음과 같습니다.</p>
+    <p><strong>퇴직금 = 1일 평균임금 × 30일 × (재직일수 ÷ 365)</strong></p>
+    <p>예를 들어 1일 평균임금이 10만 원이고 3년(1,096일)을 근무했다면 100,000 × 30 × (1,096 ÷ 365) = 약 <strong>9,008,219원</strong>입니다. 1년을 정확히 채우면 30일분, 2년이면 60일분이 되는 구조입니다.</p>
+
+    <h3>평균임금이 핵심입니다</h3>
+    <p>퇴직금의 크기를 결정하는 것은 <strong>1일 평균임금</strong>입니다. 근로기준법은 평균임금을 이렇게 정의합니다.</p>
+    <p><strong>평균임금 = 산정사유 발생일 이전 3개월 동안 지급된 임금 총액 ÷ 그 기간의 총일수</strong></p>
+    <p>여기서 총일수는 근무일수가 아니라 <em>달력상 날짜 수</em>입니다. 퇴직일이 언제냐에 따라 89일에서 92일 사이로 달라지고, 분모가 작을수록 평균임금은 커집니다.</p>
+    <p>임금 총액에는 그 3개월 동안 실제로 받은 <strong>기본급, 각종 수당, 연장·야간·휴일근로수당</strong>이 모두 들어갑니다. 통상임금과 달리 실제로 받은 돈을 기준으로 하기 때문에, 퇴직 직전 3개월에 잔업이 많았다면 퇴직금도 늘어납니다.</p>
+    <p>상여금과 연차수당은 계산 방식이 다릅니다. 3개월치가 아니라 <strong>최근 12개월분의 3/12</strong>만 산입합니다. 연 600만 원의 상여금을 받았다면 150만 원이 임금 총액에 더해집니다. 특정 달에 몰려 지급되는 돈이 평균임금을 왜곡하지 않도록 1년치를 고르게 나눈 것입니다.</p>
+
+    <h3>평균임금이 통상임금보다 적으면</h3>
+    <p>근로기준법 제2조 제2항은 <strong>평균임금이 통상임금보다 적으면 통상임금을 평균임금으로 본다</strong>고 정하고 있습니다. 근로자를 보호하기 위한 규정입니다.</p>
+    <p>보통은 평균임금이 더 큽니다. 평균임금에는 연장근로수당까지 들어가기 때문입니다. 하지만 퇴직 직전 3개월에 <strong>휴직, 병가, 육아휴직, 무급휴가</strong>가 있었거나 잔업이 전혀 없었다면 평균임금이 통상임금보다 낮아질 수 있습니다. 이때는 통상임금으로 계산해야 하며, 이 계산기도 월 통상임금을 입력하면 두 값을 비교해 큰 쪽을 적용합니다.</p>
+
+    <!-- 광고 위치 3: 설명 콘텐츠 중간 (애드센스 승인 후 삽입) -->
+    <!-- <div class="ad-slot ad-inline"></div> -->
+
+    <h3>받을 수 있는 조건</h3>
+    <p>첫째, <strong>계속근로기간이 1년 이상</strong>이어야 합니다. 364일 근무했다면 퇴직금이 발생하지 않습니다. 여기서 계속근로기간에는 수습기간과 휴직기간도 원칙적으로 포함됩니다.</p>
+    <p>둘째, <strong>4주를 평균해 1주 소정근로시간이 15시간 이상</strong>이어야 합니다. 초단시간 근로자는 퇴직급여 적용 대상에서 제외됩니다.</p>
+    <p>사업장 규모는 관계없습니다. <strong>상시근로자 5인 미만 사업장도 퇴직금을 지급해야 합니다.</strong> 연장근로 가산수당이 5인 미만에 적용되지 않는 것과 혼동하기 쉬운데, 퇴직금은 사업장 규모와 무관합니다. 계약직, 아르바이트, 일용직도 조건만 갖추면 받습니다.</p>
+    <p>퇴직금은 퇴직일로부터 <strong>14일 이내</strong>에 지급해야 하며, 당사자 합의로 기일을 연장할 수 있습니다. 지급받지 못한 퇴직금은 <strong>3년</strong> 안에 청구해야 하고, 그 기간이 지나면 시효로 소멸합니다.</p>
+
+    <h3>퇴직금과 퇴직연금은 다릅니다</h3>
+    <p>회사가 퇴직연금에 가입했다면 제도 유형에 따라 금액이 달라집니다.</p>
+    <p><strong>확정급여형(DB)</strong>은 위 계산식과 같습니다. 퇴직 시점의 평균임금을 기준으로 하므로 임금이 오를수록 퇴직급여도 커집니다. 반면 <strong>확정기여형(DC)</strong>은 회사가 매년 연간 임금총액의 1/12 이상을 근로자 계좌에 넣고, 근로자가 그 돈을 운용합니다. 최종 금액은 운용 성과에 따라 달라지고, 이 계산기의 결과와는 일치하지 않습니다. DC형은 1년 미만 근무해도 적립된 부담금을 받을 수 있습니다.</p>
+
+    <h3>자주 묻는 질문</h3>
+    <div class="faq">
+      <details>
+        <summary>퇴직금에도 세금이 붙나요?</summary>
+        <p>붙습니다. 다만 <strong>퇴직소득세</strong>는 일반 근로소득세와 계산 방식이 다릅니다. 근속연수공제와 환산급여공제를 적용한 뒤 연분연승법으로 계산해 세율이 크게 낮습니다. 근속기간이 길수록 공제가 커져 실효세율이 떨어집니다. 이 계산기의 결과는 세전 금액이며, 정확한 세액은 국세청 홈택스의 퇴직소득 세액계산 프로그램에서 확인할 수 있습니다.</p>
+      </details>
+      <details>
+        <summary>1년을 며칠 못 채웠는데 방법이 없나요?</summary>
+        <p>계속근로기간 1년은 법정 요건이라 며칠이 모자라도 퇴직금은 발생하지 않습니다. 다만 연차유급휴가를 사용하고 퇴직하면 그만큼 재직일수가 늘어나므로, 퇴사일을 조정할 수 있다면 1년을 채우는 편이 유리합니다. 확정기여형(DC) 퇴직연금 가입자라면 1년 미만이어도 적립금을 받습니다.</p>
+      </details>
+      <details>
+        <summary>퇴직 직전에 휴직했는데 퇴직금이 줄어드나요?</summary>
+        <p>줄어들지 않도록 하는 장치가 있습니다. 업무상 부상·질병 요양기간, 육아휴직기간, 사용자 귀책 휴업기간 등은 <strong>평균임금 산정기간에서 제외</strong>합니다. 그래도 평균임금이 통상임금보다 낮게 나오면 통상임금으로 계산합니다. 이 계산기는 제외기간을 자동 반영하지 않으므로, 해당 기간이 있다면 그 기간을 뺀 임금과 일수로 넣거나 노무사 상담을 받으세요.</p>
+      </details>
+      <details>
+        <summary>중간정산을 받았으면 어떻게 되나요?</summary>
+        <p>중간정산 이후부터 다시 계속근로기간을 계산합니다. 이 계산기에는 <strong>중간정산 다음 날</strong>을 입사일로 넣으세요. 참고로 퇴직금 중간정산은 무주택자의 주택 구입, 전세보증금, 6개월 이상 요양, 파산선고 등 법으로 정한 사유가 있을 때만 가능합니다.</p>
+      </details>
+      <details>
+        <summary>5인 미만 사업장도 퇴직금을 주나요?</summary>
+        <p>줍니다. 퇴직금은 사업장 규모와 관계없이 적용됩니다. 2010년 12월부터 5인 미만 사업장에도 전면 적용되었습니다. 5인 미만에 적용되지 않는 것은 연장·야간·휴일근로 가산수당과 연차유급휴가입니다.</p>
+      </details>
+      <details>
+        <summary>자진 퇴사해도 받을 수 있나요?</summary>
+        <p>받을 수 있습니다. 퇴직금은 퇴사 사유와 무관하게 계속근로기간 1년 이상이면 발생합니다. 자진 퇴사, 권고사직, 해고, 계약만료 모두 마찬가지입니다. 퇴사 사유가 문제되는 것은 실업급여이지 퇴직금이 아닙니다.</p>
+      </details>
+      <details>
+        <summary>입력한 정보가 저장되나요?</summary>
+        <p>저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>에서 확인할 수 있습니다.</p>
+      </details>
+    </div>
+  </article>
+
+</main>

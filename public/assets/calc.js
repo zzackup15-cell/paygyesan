@@ -243,8 +243,76 @@ var Calc = (function () {
     };
   }
 
+  /* ---- 퇴직금 (근로자퇴직급여 보장법 제8조) ---- */
+
+  var DAY_MS = 86400000;
+  var MIN_SERVICE_DAYS = 365; // 계속근로기간 1년 이상이어야 퇴직금이 발생한다
+
+  // 'YYYY-MM-DD' → UTC Date. 시간대 보정 오차를 피하려고 UTC 로만 다룬다.
+  function parseDate(raw) {
+    var m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(String(raw == null ? '' : raw).trim());
+    if (!m) return null;
+    var y = +m[1], mo = +m[2], d = +m[3];
+    if (y < 1900 || y > 2200 || mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+    var dt = new Date(Date.UTC(y, mo - 1, d));
+    // 2월 30일처럼 존재하지 않는 날짜는 걸러낸다
+    if (dt.getUTCFullYear() !== y || dt.getUTCMonth() !== mo - 1 || dt.getUTCDate() !== d) return null;
+    return dt;
+  }
+
+  function daysBetween(from, to) {
+    if (!from || !to) return 0;
+    return Math.round((to.getTime() - from.getTime()) / DAY_MS);
+  }
+
+  // n개월 전. 같은 날짜가 없으면(3/31 의 1개월 전 등) 그 달의 마지막 날로 맞춘다.
+  function minusMonths(date, n) {
+    if (!date) return null;
+    var y = date.getUTCFullYear();
+    var m = date.getUTCMonth() - n;
+    var d = date.getUTCDate();
+    var last = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+    return new Date(Date.UTC(y, m, Math.min(d, last)));
+  }
+
+  // 재직일수. 퇴직일(마지막 근무일의 다음 날) 기준이므로 마지막 근무일에 1을 더한다.
+  function serviceDays(hireDate, lastWorkDate) {
+    var days = daysBetween(hireDate, lastWorkDate) + 1;
+    return days > 0 ? days : 0;
+  }
+
+  // 평균임금 = 사유 발생일 이전 3개월 임금 총액 ÷ 그 기간의 총일수
+  // 상여금과 연차수당은 12개월분의 3/12 만 산입한다.
+  function averageDailyWage(opts) {
+    var periodDays = opts.periodDays > 0 ? opts.periodDays : 0;
+    if (!periodDays) return 0;
+    var total = toAmount(opts.wage3Months) +
+      toAmount(opts.annualBonus) * 3 / 12 +
+      toAmount(opts.annualLeavePay) * 3 / 12;
+    return isFinite(total) ? total / periodDays : 0;
+  }
+
+  // 평균임금이 통상임금보다 적으면 통상임금을 평균임금으로 본다 (근로기준법 제2조 제2항)
+  function severance(avgDaily, ordinaryDaily, days) {
+    var base = Math.max(avgDaily || 0, ordinaryDaily || 0);
+    if (!isFinite(base) || base <= 0) return { base: 0, amount: 0, usedOrdinary: false };
+    if (!isFinite(days) || days < MIN_SERVICE_DAYS) return { base: base, amount: 0, usedOrdinary: false };
+    return {
+      base: base,
+      amount: base * 30 * (days / 365),
+      usedOrdinary: (ordinaryDaily || 0) > (avgDaily || 0)
+    };
+  }
+
   return {
     MAX_ITEMS: MAX_ITEMS,
+    MIN_SERVICE_DAYS: MIN_SERVICE_DAYS,
+    parseDate: parseDate,
+    daysBetween: daysBetween,
+    minusMonths: minusMonths,
+    serviceDays: serviceDays,
+    averageDailyWage: averageDailyWage,
+    severance: severance,
     MAX_AMOUNT: MAX_AMOUNT,
     MAX_FAMILY: MAX_FAMILY,
     MAX_CHILDREN: MAX_CHILDREN,

@@ -1,0 +1,85 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "퇴직금 계산기",
+   "url": "https://paygyesan.com/toejik",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "All",
+   "inLanguage": "ko",
+   "description": "입사일과 마지막 근무일, 퇴직 전 3개월 임금을 입력하면 평균임금과 예상 퇴직금을 계산하는 무료 웹 도구입니다. 상여금과 연차수당의 3/12 산입, 평균임금과 통상임금 비교까지 반영합니다.",
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+   "browserRequirements": "JavaScript 사용 가능한 브라우저"
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "퇴직금은 어떻게 계산하나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "퇴직금은 1일 평균임금 × 30일 × (재직일수 ÷ 365)로 계산합니다. 근로자퇴직급여 보장법 제8조가 계속근로기간 1년에 대하여 30일분 이상의 평균임금을 지급하도록 정하고 있기 때문입니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "평균임금은 무엇인가요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "산정사유 발생일 이전 3개월 동안 지급된 임금 총액을 그 기간의 총일수로 나눈 금액입니다. 총일수는 근무일수가 아니라 달력상 날짜 수이며 89일에서 92일 사이입니다. 상여금과 연차수당은 최근 12개월분의 3/12만 산입합니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "평균임금이 통상임금보다 적으면 어떻게 되나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "근로기준법 제2조 제2항에 따라 통상임금을 평균임금으로 봅니다. 퇴직 직전 3개월에 휴직이나 무급휴가가 있어 평균임금이 낮아진 경우 근로자를 보호하기 위한 규정입니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "퇴직금을 받으려면 얼마나 일해야 하나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "계속근로기간이 1년 이상이어야 하고, 4주를 평균해 1주 소정근로시간이 15시간 이상이어야 합니다. 364일 근무했다면 퇴직금이 발생하지 않습니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "5인 미만 사업장도 퇴직금을 주나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "지급합니다. 퇴직금은 사업장 규모와 관계없이 적용되며 2010년 12월부터 5인 미만 사업장에도 전면 적용되었습니다. 5인 미만에 적용되지 않는 것은 연장·야간·휴일근로 가산수당과 연차유급휴가입니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "자진 퇴사해도 퇴직금을 받나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "받습니다. 퇴직금은 퇴사 사유와 무관하게 계속근로기간 1년 이상이면 발생합니다. 자진 퇴사, 권고사직, 해고, 계약만료 모두 마찬가지입니다. 퇴사 사유가 문제되는 것은 실업급여입니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "퇴직금에도 세금이 붙나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "퇴직소득세가 부과됩니다. 근속연수공제와 환산급여공제를 적용한 뒤 연분연승법으로 계산해 일반 근로소득세보다 세율이 크게 낮고, 근속기간이 길수록 실효세율이 떨어집니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "퇴직연금에 가입되어 있으면 계산이 다른가요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "확정급여형(DB)은 퇴직금 계산식과 같습니다. 확정기여형(DC)은 회사가 매년 연간 임금총액의 1/12 이상을 납입하고 근로자가 운용하므로 최종 금액이 운용 성과에 따라 달라집니다."
+     }
+    }
+   ]
+  }
+ ]
+}
