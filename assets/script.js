@@ -300,7 +300,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
     },
     {
       name: '연장·야간·휴일근로수당', amount: 0, period: 'monthly', included: false,
-      note: '실제 근로한 시간에 따라 금액이 달라지므로 소정근로의 대가가 아닙니다. 통상임금에서 제외됩니다.'
+      role: 'overtime',
+      note: '실제 근로한 시간에 따라 금액이 달라지므로 소정근로의 대가가 아닙니다. 통상임금에서 제외됩니다. 아래 가산수당 계산기에 시간을 입력할 예정이라면 여기는 비워 두세요. 둘 다 채우면 같은 수당이 두 번 더해집니다.'
     },
     {
       name: '연차수당 (연간 총액)', amount: 0, period: 'annual', included: false,
@@ -367,6 +368,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
     { input: 'hours-holiday-over', out: 'pay-holiday-over', key: 'holidayOver8' }
   ];
   var extraTotalEl = document.getElementById('pay-extra-total');
+  var dupWarning = document.getElementById('dup-warning');
 
   function formatWon(n) {
     if (!isFinite(n)) n = 0;
@@ -388,7 +390,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
       items.push({
         amount: rows[i].querySelector('.item-amount').value,
         period: rows[i].querySelector('.item-period').value === 'annual' ? 'annual' : 'monthly',
-        included: rows[i].querySelector('.item-included').checked
+        included: rows[i].querySelector('.item-included').checked,
+        role: rows[i].getAttribute('data-role') || '',
+        name: rows[i].querySelector('.item-name').value
       });
     }
     return items;
@@ -427,6 +431,30 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
       document.getElementById(row.out).textContent = formatWon(pay) + '원';
     }
     extraTotalEl.textContent = formatWon(extraSum) + '원';
+
+    // 같은 잔업수당을 항목과 시간 양쪽에 입력하면 이중 계상된다
+    var overtimeItem = 0;
+    var overtimeName = '';
+    for (var k = 0; k < items.length; k++) {
+      if (items[k].role === 'overtime') {
+        overtimeItem += Calc.monthlyOf(items[k]);
+        if (!overtimeName) overtimeName = items[k].name;
+      }
+    }
+    var conflict = Math.round(overtimeItem) > 0 && Math.round(extraSum) > 0;
+    if (conflict) {
+      // 사용자가 바꾼 항목명을 그대로 쓰되 textContent로만 반영한다
+      var label = overtimeName.replace(/\s+/g, ' ').trim() || '연장·야간·휴일근로수당';
+      dupWarning.textContent =
+        '중복 입력으로 보입니다. ‘' + label + '’ 항목에 ' + formatWon(overtimeItem) + '원, ' +
+        '아래 가산수당 계산기에 ' + formatWon(extraSum) + '원이 각각 잡혀 ' +
+        '월 지급총액에 두 금액이 모두 더해졌습니다(합계 ' + formatWon(overtimeItem + extraSum) + '원). ' +
+        '같은 잔업수당이라면 둘 중 하나만 남기세요.';
+      dupWarning.removeAttribute('hidden');
+    } else {
+      dupWarning.textContent = '';
+      dupWarning.setAttribute('hidden', '');
+    }
 
     // 연봉 환산
     var gross = Calc.totalGrossWage(items);
@@ -507,6 +535,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
     var noteEl = row.querySelector('.item-note');
     var noteToggle = row.querySelector('.note-toggle');
 
+    // 항목명을 바꿔도 역할은 유지되어야 중복 감지가 계속 동작한다
+    if (data.role) row.setAttribute('data-role', data.role);
+
     // 사용자 입력은 항상 value/textContent로만 반영 (innerHTML 미사용)
     nameInput.value = data.name;
     amountInput.value = data.amount ? Calc.toAmount(data.amount).toLocaleString('ko-KR') : '';
@@ -525,6 +556,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
       updateCount();
       render();
     });
+
+    // 항목명은 계산에 쓰이지 않지만 중복 경고 문구에 반영되므로 다시 그린다
+    nameInput.addEventListener('input', render);
 
     amountInput.addEventListener('input', function () {
       formatAmountField(amountInput);
