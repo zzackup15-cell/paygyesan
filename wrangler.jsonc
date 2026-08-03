@@ -13,8 +13,16 @@
     "not_found_handling": "404-page"
   },
 
-  // 커스텀 도메인만 쓰고 싶다면 workers_dev 를 false 로 바꾼다.
-  // 중복 도메인은 SEO 상 불리하므로 도메인 연결 후 끄는 것을 권장.
+  // 커스텀 도메인. zone 이 이 계정에 Active 여야 하며, 배포 시 DNS 레코드가
+  // 자동 생성된다. www 도 붙여야 www 로 접속하는 사용자가 실패하지 않는다.
+  // 두 주소가 같은 내용을 서빙하지만 canonical 이 apex 를 가리키므로
+  // 검색엔진은 paygyesan.com 으로 통합한다.
+  "routes": [
+    { "pattern": "paygyesan.com", "custom_domain": true },
+    { "pattern": "www.paygyesan.com", "custom_domain": true }
+  ],
+
+  // 도메인 연결을 확인한 뒤 false 로 바꿔 *.workers.dev 주소를 끈다.
   "workers_dev": true,
   "preview_urls": false,
 
