@@ -57,6 +57,40 @@ function outputFile(slug) {
   return (slug === '' ? 'index' : slug) + '.html';
 }
 
+// 상단 탭. 계산기만 노출한다. 푸터 링크만으로는 다른 계산기를 아무도 찾지 못한다.
+function buildTopNav(current) {
+  const items = pages.filter(p => p.calculator);
+  if (items.length < 2) return '';
+  const links = items
+    .map(p => {
+      const href = p.slug === '' ? '/' : '/' + p.slug;
+      const cur = p.slug === current;
+      return '      <a href="' + href + '" class="nav-pill' + (cur ? ' is-current' : '') + '"' +
+        (cur ? ' aria-current="page"' : '') + '>' + p.navShort + '</a>\n';
+    })
+    .join('');
+  return '\n<nav class="site-nav" aria-label="계산기 목록">\n  <div class="wrap">\n' + links + '  </div>\n</nav>\n';
+}
+
+// 계산이 끝난 자리에서 다음 계산기로 넘어가게 하는 카드
+function buildOtherCalcs(current) {
+  const items = pages.filter(p => p.calculator && p.slug !== current);
+  if (!items.length) return '';
+  const cards = items
+    .map(p => {
+      const href = p.slug === '' ? '/' : '/' + p.slug;
+      return '        <a class="calc-card" href="' + href + '">\n' +
+        '          <span class="calc-card-title">' + p.navLabel + '</span>\n' +
+        '          <span class="calc-card-desc">' + p.cardDesc + '</span>\n' +
+        '        </a>\n';
+    })
+    .join('');
+  return '<section class="card calc-links" aria-labelledby="other-calc-title">\n' +
+    '      <h2 id="other-calc-title">다른 계산기</h2>\n' +
+    '      <div class="calc-grid">\n' + cards + '      </div>\n' +
+    '    </section>';
+}
+
 function buildNav(current) {
   return pages
     .filter(p => p.nav)
@@ -107,7 +141,10 @@ for (const page of pages) {
     .replace(/\{\{BODY\}\}/g, body)
     .replace(/\{\{DISCLAIMER\}\}/g, page.disclaimer ? '    <p class="disclaimer">' + page.disclaimer + '</p>\n' : '')
     .replace(/\{\{NAV\}\}/g, buildNav(page.slug))
-    .replace(/\{\{SCRIPTS\}\}/g, scripts);
+    .replace(/\{\{TOP_NAV\}\}/g, buildTopNav(page.slug))
+    .replace(/\{\{SCRIPTS\}\}/g, scripts)
+    // 본문 안에서도 쓸 수 있어야 하므로 BODY 치환 뒤에 처리한다
+    .replace(/\{\{OTHER_CALCS\}\}/g, buildOtherCalcs(page.slug));
 
   const leftover = html.match(/\{\{[A-Z_]+\}\}/);
   if (leftover) throw new Error(outputFile(page.slug) + ' 에 치환되지 않은 자리표시자: ' + leftover[0]);

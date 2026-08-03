@@ -78,6 +78,96 @@ h1 {
   font-weight: 600;
 }
 
+/* ---------- top nav ---------- */
+
+.site-nav {
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.site-nav .wrap {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  scrollbar-width: none;
+}
+.site-nav .wrap::-webkit-scrollbar { display: none; }
+
+.nav-pill {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 15px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink-mid);
+  font-size: 14.5px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color .12s, border-color .12s, color .12s;
+}
+.nav-pill:hover { background: var(--accent-soft); border-color: var(--accent-line); color: var(--accent); }
+
+.nav-pill.is-current {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.nav-pill.is-current:hover { background: var(--accent); color: #fff; }
+
+/* ---------- other calculators ---------- */
+
+.calc-links h2 { margin-bottom: 14px; }
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.calc-card {
+  display: block;
+  padding: 15px 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--bg-alt);
+  text-decoration: none;
+  transition: border-color .12s, background-color .12s, transform .12s;
+}
+.calc-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+
+.calc-card-title {
+  display: block;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+.calc-card-title::after {
+  content: " →";
+  font-weight: 400;
+}
+
+.calc-card-desc {
+  display: block;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-mid);
+}
+
 /* ---------- cards ---------- */
 
 main { padding: 16px 16px 8px; }
@@ -534,6 +624,7 @@ input[type="text"]:focus, select:focus, button:focus-visible {
   h1 { font-size: 30px; }
   .card { padding: 24px; }
   .result-grid { grid-template-columns: 1fr 1fr; }
+  .calc-grid { grid-template-columns: 1fr 1fr; }
   .result-primary .result-value { font-size: 38px; }
   .extra-row { grid-template-columns: 1fr 56px 96px 1fr; font-size: 14.5px; }
 }

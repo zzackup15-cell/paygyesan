@@ -38,6 +38,13 @@
   </div>
 </header>
 
+<nav class="site-nav" aria-label="계산기 목록">
+  <div class="wrap">
+      <a href="/" class="nav-pill is-current" aria-current="page">통상임금</a>
+      <a href="/juhyu" class="nav-pill">주휴수당</a>
+  </div>
+</nav>
+
 <!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
 <!-- <div class="ad-slot ad-top"></div> -->
 
@@ -222,6 +229,16 @@
 
     <p class="hint">과세 기준은 월 지급총액에서 비과세액을 뺀 <strong id="out-taxable">0</strong>원입니다. 소득세는 회사가 매달 떼는 <strong>원천징수 금액</strong>이라 연말정산에서 환급되거나 추가 납부될 수 있습니다. 의료비·기부금·주택자금 같은 개인별 공제는 반영되지 않으며, 건강보험료 상한과 산재보험(전액 회사 부담)도 계산에서 제외했습니다.</p>
   </section>
+
+  <section class="card calc-links" aria-labelledby="other-calc-title">
+      <h2 id="other-calc-title">다른 계산기</h2>
+      <div class="calc-grid">
+        <a class="calc-card" href="/juhyu">
+          <span class="calc-card-title">주휴수당 계산기</span>
+          <span class="calc-card-desc">시급과 근무시간을 넣으면 주휴수당과 주급, 월 환산액을 계산합니다. 최저임금 미달도 확인합니다.</span>
+        </a>
+      </div>
+    </section>
 
   <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
   <!-- <div class="ad-slot ad-result"></div> -->
