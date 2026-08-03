@@ -122,7 +122,7 @@ def main():
     enc = encode(rows, top)
     print('구간 %d개, %d천원 ~ %d천원' % (enc['rows'], enc['from'], 10000))
 
-    out = os.path.join(os.path.dirname(__file__), '..', 'assets', 'tax-table.js')
+    out = os.path.join(os.path.dirname(__file__), '..', 'public', 'assets', 'tax-table.js')
     with open(out, 'w', encoding='utf-8', newline='\n') as f:
         f.write("'use strict';\n\n")
         f.write('/* 근로소득 간이세액표 (소득세법 시행령 별표2)\n')

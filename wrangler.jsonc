@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "paygyesan",
+  "compatibility_date": "2026-08-03",
+
+  // 정적 자산만 배포한다. 워커 스크립트가 없으므로 main / binding 은 두지 않는다.
+  //
+  // directory 를 "." 로 두면 .git 디렉터리와 README, tools/ 까지 전부
+  // 공개 웹에 올라간다. 실제로 그렇게 배포된 적이 있어 public/ 로 분리했다.
+  // 사이트에 나가야 할 파일만 public/ 안에 둘 것.
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "404-page"
+  },
+
+  // 커스텀 도메인만 쓰고 싶다면 workers_dev 를 false 로 바꾼다.
+  // 중복 도메인은 SEO 상 불리하므로 도메인 연결 후 끄는 것을 권장.
+  "workers_dev": true,
+  "preview_urls": false,
+
+  "observability": {
+    "enabled": true
+  }
+}

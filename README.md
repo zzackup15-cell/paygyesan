@@ -1,6 +1,6 @@
 # 페이계산 — 통상임금 계산기 (paygyesan.com)
 
-한국 근로자를 위한 통상임금·통상시급·연봉·실수령액 계산기입니다. 빌드 도구·서버·DB 없이 순수 HTML/CSS/JS로 동작하며, Cloudflare Pages 정적 호스팅을 전제로 합니다.
+한국 근로자를 위한 통상임금·통상시급·연봉·실수령액 계산기입니다. 빌드 도구·서버·DB 없이 순수 HTML/CSS/JS로 동작하며, Cloudflare Workers 정적 자산(static assets) 호스팅을 전제로 합니다.
 
 모든 계산은 브라우저 안에서만 이루어집니다. 입력값을 서버로 전송하거나 쿠키·localStorage에 저장하지 않습니다.
 
@@ -8,33 +8,39 @@
 
 ```
 paygyesan/
-├─ index.html        계산기 + SEO 본문 + FAQ + JSON-LD
-├─ privacy.html      개인정보처리방침 (애드센스 승인 필수 요건)
-├─ assets/
-│  ├─ style.css      모바일 우선 스타일
-│  ├─ script.js      계산 로직(Calc) + UI 바인딩
-│  └─ tax-table.js   근로소득 간이세액표 (생성 파일, 직접 수정 금지)
+├─ public/           ← 이 폴더만 배포된다
+│  ├─ index.html     계산기 + SEO 본문 + FAQ + JSON-LD
+│  ├─ privacy.html   개인정보처리방침 (애드센스 승인 필수 요건)
+│  ├─ 404.html
+│  ├─ assets/
+│  │  ├─ style.css   모바일 우선 스타일
+│  │  ├─ script.js   계산 로직(Calc) + UI 바인딩
+│  │  └─ tax-table.js  근로소득 간이세액표 (생성 파일, 직접 수정 금지)
+│  ├─ _headers       보안 헤더 (CSP 등)
+│  ├─ robots.txt
+│  └─ sitemap.xml
 ├─ tools/
 │  └─ build-tax-table.py   별표2 PDF → tax-table.js 생성기
-├─ _headers          Cloudflare Pages 보안 헤더 (CSP 등)
-├─ robots.txt
-├─ sitemap.xml
+├─ wrangler.jsonc    Cloudflare 배포 설정
+├─ README.md
 └─ .gitignore
 ```
 
+**사이트에 나가야 할 파일은 반드시 `public/` 안에 두세요.** 배포 대상이 `public/`으로 한정되어 있어, 바깥에 두면 404가 됩니다. 반대로 `wrangler.jsonc`의 `assets.directory`를 `"."`로 되돌리면 `.git` 디렉터리와 README까지 공개 웹에 올라갑니다(실제로 한 번 그렇게 배포된 적이 있습니다).
+
 ## 로컬 실행
 
-정적 파일이라 아무 정적 서버나 쓰면 됩니다.
+정적 파일이라 아무 정적 서버나 쓰면 됩니다. **`public/`을 루트로 띄워야** 합니다.
 
 ```bash
-python -m http.server 8788
+python -m http.server 8788 --directory public
 ```
 
 브라우저에서 `http://localhost:8788` 접속. (`file://`로 직접 열면 절대경로 `/assets/...`가 깨지므로 반드시 서버로 띄우세요.)
 
 ## 계산 로직
 
-`assets/script.js`의 `Calc` 객체에 순수 함수로 분리되어 있어 Node에서도 그대로 불러 검증할 수 있습니다.
+`public/assets/script.js`의 `Calc` 객체에 순수 함수로 분리되어 있어 Node에서도 그대로 불러 검증할 수 있습니다.
 
 ### 통상임금 판단 기준
 
@@ -95,13 +101,13 @@ python -m http.server 8788
 
 **소득세**
 
-근사 산식을 쓰지 않고 <strong>소득세법 시행령 별표2 근로소득 간이세액표를 그대로 내장</strong>했습니다. `assets/tax-table.js`가 그 데이터이며 588개 구간 × 공제대상가족수 11열을 담고 있습니다. 급여명세서의 원천징수 금액과 값이 일치합니다.
+근사 산식을 쓰지 않고 <strong>소득세법 시행령 별표2 근로소득 간이세액표를 그대로 내장</strong>했습니다. `public/assets/tax-table.js`가 그 데이터이며 588개 구간 × 공제대상가족수 11열을 담고 있습니다. 급여명세서의 원천징수 금액과 값이 일치합니다.
 
 - 월급여액 1,000만 원 초과 구간은 별표2 제6호의 가산 산식을 적용
 - 8세 이상 20세 이하 자녀 세액공제(1명 20,830원 / 2명 45,830원 / 3명부터 1명당 33,330원) 반영, 음수면 0
 - 지방소득세 = 소득세 × 10%
 
-`assets/tax-table.js`는 생성 파일이므로 직접 수정하지 마세요. 간이세액표는 매년 2월경 개정되며, 갱신 방법은 아래 [간이세액표 갱신](#간이세액표-갱신)을 참고하세요.
+`public/assets/tax-table.js`는 생성 파일이므로 직접 수정하지 마세요. 간이세액표는 매년 2월경 개정되며, 갱신 방법은 아래 [간이세액표 갱신](#간이세액표-갱신)을 참고하세요.
 
 ## 검증 결과
 
@@ -126,16 +132,16 @@ Node에서 `Calc`를 직접 불러 67개 케이스(통상임금 35 + 세금 32)�
 
 - **XSS** — 사용자 입력은 `value`/`textContent`로만 반영. `innerHTML`·`insertAdjacentHTML`·`eval` 미사용. 항목 행은 `<template>` 복제로 생성.
 - **입력 검증** — `Calc.toAmount`/`Calc.toHours`에서 숫자 외 문자 제거, 음수·NaN·Infinity 차단, 상한 적용.
-- **보안 헤더** — `_headers`에 CSP, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, HSTS 설정.
+- **보안 헤더** — `public/_headers`에 CSP, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, HSTS 설정.
 - **외부 의존성 0** — CDN·외부 폰트·외부 스크립트 없음. 시스템 폰트만 사용.
 - **비저장** — localStorage·sessionStorage·쿠키·서버 전송 모두 없음.
 
 ### CSP와 JSON-LD 해시
 
-`index.html`의 JSON-LD는 인라인 스크립트라 CSP에서 sha256 해시로 허용하고 있습니다. **JSON-LD 내용을 수정하면 해시가 달라져 구조화 데이터가 차단됩니다.** 수정 후 아래로 새 해시를 뽑아 `_headers`의 두 군데(활성 줄, 애드센스용 주석 줄)를 모두 교체하세요.
+`public/index.html`의 JSON-LD는 인라인 스크립트라 CSP에서 sha256 해시로 허용하고 있습니다. **JSON-LD 내용을 수정하면 해시가 달라져 구조화 데이터가 차단됩니다.** 수정 후 아래로 새 해시를 뽑아 `public/_headers`의 두 군데(활성 줄, 애드센스용 주석 줄)를 모두 교체하세요.
 
 ```bash
-node -e "const f=require('fs'),c=require('crypto');const m=f.readFileSync('index.html','utf8').match(/<script type=\"application\/ld\+json\">([\s\S]*?)<\/script>/);console.log('sha256-'+c.createHash('sha256').update(m[1],'utf8').digest('base64'))"
+node -e "const f=require('fs'),c=require('crypto');const m=f.readFileSync('public/index.html','utf8').match(/<script type=\"application\/ld\+json\">([\s\S]*?)<\/script>/);console.log('sha256-'+c.createHash('sha256').update(m[1],'utf8').digest('base64'))"
 ```
 
 ## 간이세액표 갱신
@@ -149,8 +155,8 @@ node -e "const f=require('fs'),c=require('crypto');const m=f.readFileSync('index
 pip install pypdf && python tools/build-tax-table.py 별표2.pdf
 ```
 
-3. `index.html`의 요율·연도 표기와 `assets/script.js`의 `RATES`를 그해 4대보험 요율로 갱신합니다.
-4. JSON-LD를 수정했다면 `_headers`의 CSP 해시를 재계산합니다(아래 참고).
+3. `public/index.html`의 요율·연도 표기와 `public/assets/script.js`의 `RATES`를 그해 4대보험 요율로 갱신합니다.
+4. JSON-LD를 수정했다면 `public/_headers`의 CSP 해시를 재계산합니다(아래 참고).
 
 생성기는 값이 10원 단위인지 검증하므로, 파싱이 어긋나면 실행이 실패합니다.
 
@@ -160,11 +166,11 @@ pip install pypdf && python tools/build-tax-table.py 별표2.pdf
 
 | 위치 | 파일 위치 |
 | --- | --- |
-| 본문 상단 | `index.html` — `<!-- 광고 위치 1 -->` |
-| 결과 하단 | `index.html` — `<!-- 광고 위치 2 -->` |
-| 설명 콘텐츠 중간 | `index.html` — `<!-- 광고 위치 3 -->` |
+| 본문 상단 | `public/index.html` — `<!-- 광고 위치 1 -->` |
+| 결과 하단 | `public/index.html` — `<!-- 광고 위치 2 -->` |
+| 설명 콘텐츠 중간 | `public/index.html` — `<!-- 광고 위치 3 -->` |
 
-광고 코드를 넣을 때 `_headers`의 CSP를 애드센스용 주석 버전으로 교체해야 광고가 차단되지 않습니다.
+광고 코드를 넣을 때 `public/_headers`의 CSP를 애드센스용 주석 버전으로 교체해야 광고가 차단되지 않습니다.
 
 **승인 전 체크리스트**
 
@@ -173,24 +179,38 @@ pip install pypdf && python tools/build-tax-table.py 별표2.pdf
 - [ ] Google Search Console에 사이트 등록 및 `sitemap.xml` 제출
 - [ ] `ads.txt` 파일 추가 (애드센스 승인 후 발급되는 퍼블리셔 ID 사용)
 
-## 배포 — Cloudflare Pages
+## 배포 — Cloudflare Workers (static assets)
 
-1. GitHub에 이 저장소를 push합니다.
-2. Cloudflare 대시보드 → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**에서 저장소를 선택합니다.
-3. 빌드 설정은 다음과 같이 비워 둡니다.
-   - Framework preset: `None`
-   - Build command: (비움)
-   - Build output directory: `/`
-4. **Save and Deploy**를 누르면 `<프로젝트명>.pages.dev`로 배포됩니다.
-5. **Custom domains** 탭에서 `paygyesan.com`과 `www.paygyesan.com`을 추가합니다. 도메인이 Cloudflare에 등록되어 있으면 DNS 레코드가 자동 생성됩니다.
-6. 도메인 대시보드 → **SSL/TLS** → **Edge Certificates**에서 **Always Use HTTPS**를 켭니다.
-7. 배포 후 응답 헤더에 CSP가 실제로 붙는지 확인합니다.
+Cloudflare Workers Builds가 GitHub 저장소를 감시하다가, `main`에 push되면 `npx wrangler deploy`를 실행합니다. 배포 대상과 설정은 모두 저장소의 `wrangler.jsonc`가 결정하므로 대시보드에서 따로 만질 것이 없습니다.
+
+빌드 설정은 다음 상태여야 합니다.
+
+| 항목 | 값 |
+| --- | --- |
+| Build command | (비움) |
+| Deploy command | `npx wrangler deploy` |
+| Root directory | `/` |
+
+`wrangler.jsonc`가 없으면 wrangler가 대화형 프롬프트 없이 기본값으로 설정 파일을 만들어 버리고, 그때 `assets.directory`가 `"."`이 되어 **`.git` 디렉터리까지 공개 웹에 업로드됩니다.** 이 파일을 지우지 마세요.
+
+배포 후 보안 헤더가 실제로 붙는지 확인합니다.
 
 ```bash
 curl -sI https://paygyesan.com | grep -i "content-security-policy\|x-frame-options"
 ```
 
-이후 `main` 브랜치에 push할 때마다 자동 재배포됩니다.
+`.git`이 노출되지 않는지도 함께 확인합니다. 404가 나와야 정상입니다.
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" https://paygyesan.com/.git/config
+```
+
+### 커스텀 도메인
+
+1. 도메인이 Cloudflare에 없다면 대시보드 **Add a site**로 `paygyesan.com`을 추가하고, 안내되는 네임서버를 등록업체에 설정합니다(전파 최대 24시간).
+2. Worker → **Settings** → **Domains & Routes** → **Add** → **Custom domain**에서 `paygyesan.com`과 `www.paygyesan.com`을 추가합니다.
+3. 도메인 대시보드 → **SSL/TLS** → **Edge Certificates**에서 **Always Use HTTPS**를 켭니다.
+4. 도메인이 붙으면 `wrangler.jsonc`의 `workers_dev`를 `false`로 바꿔 `*.workers.dev` 주소를 끕니다. 같은 내용이 두 주소로 노출되면 SEO에 불리합니다.
 
 ## 면책
 
