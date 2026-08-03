@@ -1,6 +1,15 @@
 # 페이계산 — 통상임금 계산기 (paygyesan.com)
 
-한국 근로자를 위한 임금 계산기 모음입니다. 통상임금·통상시급·연봉·실수령액 계산기와 주휴수당 계산기를 제공합니다. 빌드 도구·서버·DB 없이 순수 HTML/CSS/JS로 동작하며, Cloudflare Workers 정적 자산(static assets) 호스팅을 전제로 합니다.
+한국 근로자를 위한 임금 계산기 모음입니다.
+
+| 경로 | 페이지 |
+| --- | --- |
+| `/` | 메인 — 계산기 목록과 안내 |
+| `/tongsang` | 통상임금 계산기 (통상시급·가산수당·연봉·실수령액) |
+| `/juhyu` | 주휴수당 계산기 |
+| `/privacy` | 개인정보처리방침 |
+
+계산기를 추가하면 상단 탭, 메인의 카드, 푸터 링크, `sitemap.xml` 이 모두 자동으로 갱신됩니다. 빌드 도구·서버·DB 없이 순수 HTML/CSS/JS로 동작하며, Cloudflare Workers 정적 자산(static assets) 호스팅을 전제로 합니다.
 
 모든 계산은 브라우저 안에서만 이루어집니다. 입력값을 서버로 전송하거나 쿠키·localStorage에 저장하지 않습니다.
 
@@ -22,7 +31,7 @@ paygyesan/
 │  └─ assets/        원본 (생성 대상 아님)
 │     ├─ style.css
 │     ├─ calc.js     공용 계산 로직 (모든 계산기가 함께 쓴다)
-│     ├─ index.js    통상임금 계산기 UI
+│     ├─ tongsang.js 통상임금 계산기 UI
 │     ├─ juhyu.js    주휴수당 계산기 UI
 │     └─ tax-table.js  근로소득 간이세액표 (생성 파일)
 ├─ tools/
@@ -186,7 +195,7 @@ JSON-LD는 인라인 스크립트라 CSP에서 sha256 해시로 허용합니다.
 pip install pypdf && python tools/build-tax-table.py 별표2.pdf
 ```
 
-3. `src/body/index.html` 의 요율·연도 표기와 `public/assets/calc.js` 의 `RATES` 를 그해 4대보험 요율과 최저임금으로 갱신합니다. 연 1회 바뀌는 값은 모두 `RATES` 한 곳에 모여 있습니다.
+3. `src/body/tongsang.html` 과 `src/body/index.html` 의 요율·연도 표기와 `public/assets/calc.js` 의 `RATES` 를 그해 4대보험 요율과 최저임금으로 갱신합니다. 연 1회 바뀌는 값은 모두 `RATES` 한 곳에 모여 있습니다.
 4. `node tools/build.js` 를 실행합니다. CSP 해시는 자동으로 다시 계산됩니다.
 
 생성기는 값이 10원 단위인지 검증하므로, 파싱이 어긋나면 실행이 실패합니다.
