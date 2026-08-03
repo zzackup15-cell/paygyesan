@@ -91,9 +91,167 @@ var Calc = (function () {
     };
   }
 
+  /* ---- 4대보험 · 소득세 (세후 추정) ---- */
+
+  // 2026년 요율. 근로자 부담분 기준.
+  var RATES = {
+    year: 2026,
+    pension: { rate: 0.0475, min: 410000, max: 6590000 }, // 국민연금 (기준소득월액 2026.7~2027.6)
+    health: { rate: 0.03595 },                            // 건강보험
+    care: { ofHealth: 0.1314 },                           // 장기요양 = 건강보험료 × 13.14%
+    employment: { rate: 0.009 },                          // 고용보험 실업급여
+    localTax: 0.1                                         // 지방소득세 = 소득세 × 10%
+  };
+
+  var MAX_FAMILY = 11; // 간이세액표 열 상한
+  var MAX_CHILDREN = 10;
+
+  function floor10(n) {
+    if (!isFinite(n) || n <= 0) return 0;
+    return Math.floor(n / 10) * 10;
+  }
+
+  // 간이세액표 디코딩 (최초 1회)
+  var decodedTable = null;
+  function table() {
+    if (decodedTable) return decodedTable;
+    if (typeof TAX_TABLE === 'undefined' || !TAX_TABLE) return null;
+
+    var bounds = [TAX_TABLE.from];
+    var parts = TAX_TABLE.bounds.split(',');
+    var acc = TAX_TABLE.from;
+    for (var i = 0; i < parts.length; i++) {
+      acc += parseInt(parts[i], 36);
+      bounds.push(acc);
+    }
+
+    var lines = TAX_TABLE.data.split(';');
+    var rows = [];
+    var prevFirst = 0;
+    for (var r = 0; r < lines.length; r++) {
+      var deltas = lines[r].split(',');
+      var row = [];
+      var v = prevFirst + parseInt(deltas[0], 36);
+      prevFirst = v;
+      row.push(v * 10);
+      for (var c = 1; c < 11; c++) {
+        v += parseInt(deltas[c], 36);
+        row.push(v * 10);
+      }
+      rows.push(row);
+    }
+
+    decodedTable = { bounds: bounds, rows: rows, top: TAX_TABLE.top };
+    return decodedTable;
+  }
+
+  // 월급여액 1,000만원 초과 구간 산식 (별표2 제6호)
+  function taxOver10M(wage, top) {
+    if (wage <= 14000000) return top + (wage - 10000000) * 0.98 * 0.35 + 25000;
+    if (wage <= 28000000) return top + 1397000 + (wage - 14000000) * 0.98 * 0.38;
+    if (wage <= 30000000) return top + 6610600 + (wage - 28000000) * 0.98 * 0.40;
+    if (wage <= 45000000) return top + 7394600 + (wage - 30000000) * 0.40;
+    if (wage <= 87000000) return top + 13394600 + (wage - 45000000) * 0.42;
+    return top + 31034600 + (wage - 87000000) * 0.45;
+  }
+
+  // 8세 이상 20세 이하 자녀 세액공제 (별표2 제3호)
+  function childCredit(children) {
+    var n = Math.min(Math.max(Math.floor(children) || 0, 0), MAX_CHILDREN);
+    if (n <= 0) return 0;
+    if (n === 1) return 20830;
+    if (n === 2) return 45830;
+    return 45830 + (n - 2) * 33330;
+  }
+
+  // 근로소득 간이세액표상 월 원천징수 소득세
+  function incomeTax(taxableMonthly, family, children) {
+    var t = table();
+    if (!t) return 0;
+    var wage = isFinite(taxableMonthly) && taxableMonthly > 0 ? taxableMonthly : 0;
+    var fam = Math.min(Math.max(Math.floor(family) || 1, 1), MAX_FAMILY);
+    var col = fam - 1;
+
+    var tax;
+    if (wage === 10000000) {
+      tax = t.top[col];
+    } else if (wage > 10000000) {
+      tax = floor10(taxOver10M(wage, t.top[col]));
+    } else {
+      var thousand = wage / 1000;
+      if (thousand < t.bounds[0]) return 0;
+      var lo = 0;
+      var hi = t.rows.length - 1;
+      while (lo < hi) {
+        var mid = (lo + hi + 1) >> 1;
+        if (t.bounds[mid] <= thousand) lo = mid; else hi = mid - 1;
+      }
+      tax = t.rows[lo][col];
+    }
+
+    return Math.max(0, tax - childCredit(children));
+  }
+
+  // 4대보험 근로자 부담분
+  function insurance(taxableMonthly) {
+    var base = isFinite(taxableMonthly) && taxableMonthly > 0 ? taxableMonthly : 0;
+
+    // 국민연금 기준소득월액은 천원 단위 절사 후 상·하한 적용
+    var pensionBase = Math.floor(base / 1000) * 1000;
+    if (pensionBase < RATES.pension.min) pensionBase = base > 0 ? RATES.pension.min : 0;
+    if (pensionBase > RATES.pension.max) pensionBase = RATES.pension.max;
+
+    var pension = floor10(pensionBase * RATES.pension.rate);
+    var health = floor10(base * RATES.health.rate);
+    var care = floor10(health * RATES.care.ofHealth);
+    var employment = floor10(base * RATES.employment.rate);
+
+    return {
+      pension: pension,
+      health: health,
+      care: care,
+      employment: employment,
+      total: pension + health + care + employment
+    };
+  }
+
+  // 월 실수령액 추정
+  function netPay(monthlyGross, nonTaxable, family, children) {
+    var gross = isFinite(monthlyGross) && monthlyGross > 0 ? monthlyGross : 0;
+    var exempt = Math.min(Math.max(toAmount(nonTaxable), 0), gross);
+    var taxable = gross - exempt;
+
+    var ins = insurance(taxable);
+    var tax = incomeTax(taxable, family, children);
+    var local = floor10(tax * RATES.localTax);
+    var deduction = ins.total + tax + local;
+
+    return {
+      gross: gross,
+      taxable: taxable,
+      nonTaxable: exempt,
+      pension: ins.pension,
+      health: ins.health,
+      care: ins.care,
+      employment: ins.employment,
+      insuranceTotal: ins.total,
+      incomeTax: tax,
+      localTax: local,
+      deduction: deduction,
+      net: Math.max(0, gross - deduction)
+    };
+  }
+
   return {
     MAX_ITEMS: MAX_ITEMS,
     MAX_AMOUNT: MAX_AMOUNT,
+    MAX_FAMILY: MAX_FAMILY,
+    MAX_CHILDREN: MAX_CHILDREN,
+    RATES: RATES,
+    incomeTax: incomeTax,
+    childCredit: childCredit,
+    insurance: insurance,
+    netPay: netPay,
     WEEKS_PER_MONTH: WEEKS_PER_MONTH,
     MIN_WEEKLY_FOR_HOLIDAY: MIN_WEEKLY_FOR_HOLIDAY,
     LEGAL_WEEKLY_MAX: LEGAL_WEEKLY_MAX,
@@ -172,8 +330,34 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
     grossMonthly: document.getElementById('out-gross-monthly'),
     annualOrdinary: document.getElementById('out-annual-ordinary'),
     annualGross: document.getElementById('out-annual-gross'),
-    annualAll: document.getElementById('out-annual-all')
+    annualAll: document.getElementById('out-annual-all'),
+    payGross: document.getElementById('out-pay-gross'),
+    netMonthly: document.getElementById('out-net-monthly'),
+    netAnnual: document.getElementById('out-net-annual'),
+    deductRate: document.getElementById('out-deduct-rate'),
+    taxable: document.getElementById('out-taxable')
   };
+
+  var deductOut = {
+    pension: document.getElementById('ded-pension'),
+    health: document.getElementById('ded-health'),
+    care: document.getElementById('ded-care'),
+    employment: document.getElementById('ded-employment'),
+    incomeTax: document.getElementById('ded-income-tax'),
+    localTax: document.getElementById('ded-local-tax'),
+    total: document.getElementById('ded-total')
+  };
+
+  var nonTaxableInput = document.getElementById('non-taxable');
+  var familyInput = document.getElementById('family-count');
+  var childInput = document.getElementById('child-count');
+
+  function readCount(input, min, max) {
+    var digits = input.value.replace(/[^0-9]/g, '');
+    var n = digits === '' ? min : parseInt(digits, 10);
+    if (!isFinite(n)) n = min;
+    return Math.min(Math.max(n, min), max);
+  }
 
   var extraRows = [
     { input: 'hours-overtime', out: 'pay-overtime', key: 'overtime' },
@@ -249,6 +433,31 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
     out.annualOrdinary.textContent = formatWon(Calc.toAnnual(total));
     out.annualGross.textContent = formatWon(Calc.toAnnual(gross));
     out.annualAll.textContent = formatWon(Calc.toAnnual(gross + extraSum));
+
+    // 실수령액 추정 — 그 달에 실제 지급되는 총액(급여 + 가산수당)이 기준
+    var payGross = gross + extraSum;
+    var net = Calc.netPay(
+      payGross,
+      nonTaxableInput.value,
+      readCount(familyInput, 1, Calc.MAX_FAMILY),
+      readCount(childInput, 0, Calc.MAX_CHILDREN)
+    );
+
+    deductOut.pension.textContent = formatWon(net.pension) + '원';
+    deductOut.health.textContent = formatWon(net.health) + '원';
+    deductOut.care.textContent = formatWon(net.care) + '원';
+    deductOut.employment.textContent = formatWon(net.employment) + '원';
+    deductOut.incomeTax.textContent = formatWon(net.incomeTax) + '원';
+    deductOut.localTax.textContent = formatWon(net.localTax) + '원';
+    deductOut.total.textContent = formatWon(net.deduction) + '원';
+
+    out.payGross.textContent = formatWon(net.gross);
+    out.netMonthly.textContent = formatWon(net.net);
+    out.netAnnual.textContent = formatWon(Calc.toAnnual(net.net));
+    out.taxable.textContent = formatWon(net.taxable);
+    out.deductRate.textContent = net.gross > 0
+      ? formatDecimal(net.deduction / net.gross * 100, 1)
+      : '0.0';
   }
 
   function formatAmountField(input) {
@@ -345,12 +554,30 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
     document.getElementById(extraRows[j].input).addEventListener('input', render);
   }
 
+  nonTaxableInput.addEventListener('input', function () {
+    formatAmountField(nonTaxableInput);
+    render();
+  });
+  familyInput.addEventListener('input', render);
+  childInput.addEventListener('input', render);
+  familyInput.addEventListener('blur', function () {
+    familyInput.value = String(readCount(familyInput, 1, Calc.MAX_FAMILY));
+    render();
+  });
+  childInput.addEventListener('blur', function () {
+    childInput.value = String(readCount(childInput, 0, Calc.MAX_CHILDREN));
+    render();
+  });
+
   document.getElementById('reset-all').addEventListener('click', function () {
     var rows = itemList.querySelectorAll('[data-item]');
     for (var k = 0; k < rows.length; k++) rows[k].remove();
     for (var m = 0; m < DEFAULT_ITEMS.length; m++) addRow(DEFAULT_ITEMS[m]);
     weeklyInput.value = '40';
     for (var n = 0; n < extraRows.length; n++) document.getElementById(extraRows[n].input).value = '';
+    nonTaxableInput.value = '200,000';
+    familyInput.value = '1';
+    childInput.value = '0';
     render();
   });
 
