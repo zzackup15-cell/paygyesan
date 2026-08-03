@@ -62,6 +62,20 @@ var Calc = (function () {
     return isFinite(sum) ? sum : 0;
   }
 
+  // 통상임금 포함 여부와 무관하게 입력한 모든 항목의 월 환산 합계 (세전 급여 총액)
+  function totalGrossWage(items) {
+    var sum = 0;
+    for (var i = 0; i < items.length; i++) {
+      sum += monthlyOf(items[i]);
+    }
+    return isFinite(sum) ? sum : 0;
+  }
+
+  function toAnnual(monthly) {
+    if (!isFinite(monthly) || monthly < 0) return 0;
+    return monthly * 12;
+  }
+
   function hourlyOrdinaryWage(totalWage, monthlyHours) {
     if (!isFinite(totalWage) || !isFinite(monthlyHours) || monthlyHours <= 0) return 0;
     return totalWage / monthlyHours;
@@ -89,6 +103,8 @@ var Calc = (function () {
     monthlyScheduledHours: monthlyScheduledHours,
     monthlyOf: monthlyOf,
     totalOrdinaryWage: totalOrdinaryWage,
+    totalGrossWage: totalGrossWage,
+    toAnnual: toAnnual,
     hourlyOrdinaryWage: hourlyOrdinaryWage,
     derived: derived
   };
@@ -152,7 +168,11 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
     hourly: document.getElementById('out-hourly'),
     hours: document.getElementById('out-hours'),
     hoursFormula: document.getElementById('out-hours-formula'),
-    daily: document.getElementById('out-daily')
+    daily: document.getElementById('out-daily'),
+    grossMonthly: document.getElementById('out-gross-monthly'),
+    annualOrdinary: document.getElementById('out-annual-ordinary'),
+    annualGross: document.getElementById('out-annual-gross'),
+    annualAll: document.getElementById('out-annual-all')
   };
 
   var extraRows = [
@@ -222,6 +242,13 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
       document.getElementById(row.out).textContent = formatWon(pay) + '원';
     }
     extraTotalEl.textContent = formatWon(extraSum) + '원';
+
+    // 연봉 환산
+    var gross = Calc.totalGrossWage(items);
+    out.grossMonthly.textContent = formatWon(gross);
+    out.annualOrdinary.textContent = formatWon(Calc.toAnnual(total));
+    out.annualGross.textContent = formatWon(Calc.toAnnual(gross));
+    out.annualAll.textContent = formatWon(Calc.toAnnual(gross + extraSum));
   }
 
   function formatAmountField(input) {
