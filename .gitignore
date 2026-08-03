@@ -1,0 +1,25 @@
+# dependencies / build
+node_modules/
+dist/
+.cache/
+
+# 환경변수·비밀정보 (절대 커밋 금지)
+.env
+.env.*
+*.pem
+*.key
+secrets.json
+.dev.vars
+
+# 에디터·OS
+.vscode/
+.idea/
+.claude/settings.local.json
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 로그·임시파일
+*.log
+npm-debug.log*
+tmp/
