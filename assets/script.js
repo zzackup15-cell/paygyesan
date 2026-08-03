@@ -332,6 +332,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
     annualGross: document.getElementById('out-annual-gross'),
     annualAll: document.getElementById('out-annual-all'),
     payGross: document.getElementById('out-pay-gross'),
+    payFormula: document.getElementById('out-pay-formula'),
     netMonthly: document.getElementById('out-net-monthly'),
     netAnnual: document.getElementById('out-net-annual'),
     deductRate: document.getElementById('out-deduct-rate'),
@@ -452,6 +453,14 @@ if (typeof module !== 'undefined' && module.exports) module.exports = Calc;
     deductOut.total.textContent = formatWon(net.deduction) + '원';
 
     out.payGross.textContent = formatWon(net.gross);
+
+    // 2번의 통상임금 총액과 왜 다른지 내역을 드러낸다
+    var excluded = gross - total;
+    var parts = ['통상임금 ' + formatWon(total) + '원'];
+    if (Math.round(excluded) > 0) parts.push('통상임금 제외 항목 ' + formatWon(excluded) + '원');
+    if (Math.round(extraSum) > 0) parts.push('가산수당 ' + formatWon(extraSum) + '원');
+    out.payFormula.textContent = '월 지급총액 = ' + parts.join('  +  ');
+
     out.netMonthly.textContent = formatWon(net.net);
     out.netAnnual.textContent = formatWon(Calc.toAnnual(net.net));
     out.taxable.textContent = formatWon(net.taxable);
