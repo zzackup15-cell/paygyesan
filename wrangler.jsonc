@@ -22,8 +22,9 @@
     { "pattern": "www.paygyesan.com", "custom_domain": true }
   ],
 
-  // 도메인 연결을 확인한 뒤 false 로 바꿔 *.workers.dev 주소를 끈다.
-  "workers_dev": true,
+  // 커스텀 도메인이 동작하므로 *.workers.dev 주소는 끈다.
+  // 같은 내용이 두 주소로 열리면 검색엔진에 중복 콘텐츠로 잡힌다.
+  "workers_dev": false,
   "preview_urls": false,
 
   "observability": {

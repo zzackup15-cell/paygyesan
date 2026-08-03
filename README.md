@@ -174,7 +174,7 @@ pip install pypdf && python tools/build-tax-table.py 별표2.pdf
 
 **승인 전 체크리스트**
 
-- [ ] `privacy.html`의 문의 이메일 `contact@paygyesan.com`을 실제 수신 가능한 주소로 교체 (애드센스는 연락 수단을 요구합니다)
+- [x] `public/privacy.html`의 문의 이메일을 수신 가능한 주소(`zzackup15@gmail.com`)로 설정 (애드센스는 연락 수단을 요구합니다)
 - [ ] 도메인 연결 및 HTTPS 적용 확인
 - [ ] Google Search Console에 사이트 등록 및 `sitemap.xml` 제출
 - [ ] `ads.txt` 파일 추가 (애드센스 승인 후 발급되는 퍼블리셔 ID 사용)
