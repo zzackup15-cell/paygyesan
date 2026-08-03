@@ -1,6 +1,6 @@
 # 페이계산 — 통상임금 계산기 (paygyesan.com)
 
-한국 근로자를 위한 통상임금·통상시급·연봉·실수령액 계산기입니다. 빌드 도구·서버·DB 없이 순수 HTML/CSS/JS로 동작하며, Cloudflare Workers 정적 자산(static assets) 호스팅을 전제로 합니다.
+한국 근로자를 위한 임금 계산기 모음입니다. 통상임금·통상시급·연봉·실수령액 계산기와 주휴수당 계산기를 제공합니다. 빌드 도구·서버·DB 없이 순수 HTML/CSS/JS로 동작하며, Cloudflare Workers 정적 자산(static assets) 호스팅을 전제로 합니다.
 
 모든 계산은 브라우저 안에서만 이루어집니다. 입력값을 서버로 전송하거나 쿠키·localStorage에 저장하지 않습니다.
 
@@ -8,29 +8,60 @@
 
 ```
 paygyesan/
-├─ public/           ← 이 폴더만 배포된다
-│  ├─ index.html     계산기 + SEO 본문 + FAQ + JSON-LD
-│  ├─ privacy.html   개인정보처리방침 (애드센스 승인 필수 요건)
-│  ├─ 404.html
-│  ├─ assets/
-│  │  ├─ style.css   모바일 우선 스타일
-│  │  ├─ script.js   계산 로직(Calc) + UI 바인딩
-│  │  └─ tax-table.js  근로소득 간이세액표 (생성 파일, 직접 수정 금지)
-│  ├─ _headers       보안 헤더 (CSP 등)
-│  ├─ robots.txt
-│  └─ sitemap.xml
+├─ src/              ← 여기를 고친다
+│  ├─ layout.html    공통 헤더·푸터 껍데기
+│  ├─ pages.js       페이지 목록과 메타데이터 (내비게이션·사이트맵의 원천)
+│  ├─ headers.template  보안 헤더 원본 ({{CSP_HASHES}} 자동 치환)
+│  ├─ body/          페이지별 본문 HTML
+│  └─ jsonld/        페이지별 구조화 데이터
+├─ public/           ← 빌드 결과물 + 정적 자산. 이 폴더가 배포된다
+│  ├─ *.html         생성 파일. 직접 수정하지 말 것
+│  ├─ _headers       생성 파일
+│  ├─ sitemap.xml    생성 파일
+│  ├─ robots.txt     생성 파일
+│  └─ assets/        원본 (생성 대상 아님)
+│     ├─ style.css
+│     ├─ calc.js     공용 계산 로직 (모든 계산기가 함께 쓴다)
+│     ├─ index.js    통상임금 계산기 UI
+│     ├─ juhyu.js    주휴수당 계산기 UI
+│     └─ tax-table.js  근로소득 간이세액표 (생성 파일)
 ├─ tools/
-│  └─ build-tax-table.py   별표2 PDF → tax-table.js 생성기
-├─ wrangler.jsonc    Cloudflare 배포 설정
-├─ README.md
-└─ .gitignore
+│  ├─ build.js       src/ → public/ 빌드
+│  └─ build-tax-table.py  별표2 PDF → tax-table.js
+├─ wrangler.jsonc
+└─ README.md
 ```
 
-**사이트에 나가야 할 파일은 반드시 `public/` 안에 두세요.** 배포 대상이 `public/`으로 한정되어 있어, 바깥에 두면 404가 됩니다. 반대로 `wrangler.jsonc`의 `assets.directory`를 `"."`로 되돌리면 `.git` 디렉터리와 README까지 공개 웹에 올라갑니다(실제로 한 번 그렇게 배포된 적이 있습니다).
+
+**`public/` 안의 HTML·`_headers`·`sitemap.xml`·`robots.txt` 는 생성 파일입니다.** 직접 고치면 다음 빌드에서 덮어써집니다. 내용은 `src/` 를, 스타일과 계산 로직은 `public/assets/` 를 고치세요.
+
+배포 대상이 `public/` 으로 한정되어 있어 바깥에 둔 파일은 404 가 됩니다. 반대로 `wrangler.jsonc` 의 `assets.directory` 를 `"."` 로 되돌리면 `.git` 디렉터리와 README 까지 공개 웹에 올라갑니다(실제로 한 번 그렇게 배포된 적이 있습니다).
+
+## 빌드
+
+```bash
+node tools/build.js
+```
+
+`src/` 를 조합해 `public/` 의 HTML 과 `_headers`, `sitemap.xml`, `robots.txt` 를 만듭니다. 외부 의존성 없이 Node 내장 기능만 씁니다. **커밋 전에 반드시 실행하세요.** 생성 결과를 그대로 커밋하므로 Cloudflare 쪽에는 빌드 명령을 설정할 필요가 없습니다.
+
+빌드가 대신 해 주는 일은 다음과 같습니다.
+
+- 페이지마다 생기는 JSON-LD 의 CSP sha256 해시를 계산해 `_headers` 에 넣습니다. 손으로 관리하면 언젠가 어긋나고, 어긋나면 구조화 데이터가 조용히 차단됩니다.
+- 헤더·푸터·내비게이션을 한 곳에서 관리합니다. `src/pages.js` 에 페이지를 추가하면 모든 페이지의 푸터 링크와 `sitemap.xml` 이 함께 갱신됩니다.
+- 치환되지 않은 자리표시자가 남으면 빌드를 실패시킵니다.
+
+### 페이지 추가 방법
+
+1. `src/body/<이름>.html` 에 본문을 씁니다 (`<main>` 부터. 헤더·푸터는 레이아웃이 붙입니다)
+2. 구조화 데이터가 필요하면 `src/jsonld/<이름>.json` 을 만듭니다
+3. `src/pages.js` 의 `pages` 배열에 항목을 추가합니다
+4. 계산기 UI 가 필요하면 `public/assets/<이름>.js` 를 만들고 `scripts` 에 `/assets/calc.js` 와 함께 넣습니다
+5. `node tools/build.js`
 
 ## 로컬 실행
 
-정적 파일이라 아무 정적 서버나 쓰면 됩니다. **`public/`을 루트로 띄워야** 합니다.
+빌드한 뒤 `public/` 을 루트로 띄웁니다.
 
 ```bash
 python -m http.server 8788 --directory public
@@ -40,7 +71,7 @@ python -m http.server 8788 --directory public
 
 ## 계산 로직
 
-`public/assets/script.js`의 `Calc` 객체에 순수 함수로 분리되어 있어 Node에서도 그대로 불러 검증할 수 있습니다.
+`public/assets/calc.js`의 `Calc` 객체에 순수 함수로 분리되어 있어 Node에서도 그대로 불러 검증할 수 있습니다.
 
 ### 통상임금 판단 기준
 
@@ -111,7 +142,7 @@ python -m http.server 8788 --directory public
 
 ## 검증 결과
 
-Node에서 `Calc`를 직접 불러 67개 케이스(통상임금 35 + 세금 32)를 검증했고 전부 통과했습니다. 같은 값이 실제 브라우저 DOM에서도 나오는 것까지 확인했습니다.
+Node에서 `Calc`를 직접 불러 67개 케이스(통상임금 35 + 세금 32)를 검증했고 전부 통과했습니다. 주휴수당 계산기도 같은 `Calc` 를 쓰므로 이 검증을 공유합니다. 같은 값이 실제 브라우저 DOM에서도 나오는 것까지 확인했습니다.
 
 간이세액표는 <strong>전 구간 전수 대조</strong>했습니다. 588개 구간 × 가족수 1~11 × 구간별 3개 지점 = 21,318건을 원본 PDF에서 파싱한 값과 비교해 불일치 0건입니다.
 
@@ -123,6 +154,8 @@ Node에서 `Calc`를 직접 불러 67개 케이스(통상임금 35 + 세금 32)�
 | 위 조건의 연봉 3종 | 통상임금 기준 46,800,000원 / 세전 급여 총액 58,800,000원 / 영끌 **66,301,435원** |
 | 주 20시간 단시간 근로자, 월 100만원 | 104시간, 통상시급 9,615.4원 |
 | 주 14시간 (초단시간) | 주휴 미적용, 61시간 |
+| 주휴수당: 최저임금·주 40시간 | 주휴 8시간 = 82,560원, 월 환산 **2,156,880원** (고용노동부 고시액과 일치) |
+| 주휴수당: 최저임금·주 20시간 | 주휴 4시간 = 41,280원, 월 환산 1,073,280원 |
 | 월 300만원 / 비과세 20만 / 1인 가구 | 공제 334,550원(11.2%), 실수령 **2,665,450원** |
 | 월 900만원 / 비과세 20만 / 1인 가구 | 국민연금 313,020원(상한 적용), 소득세 1,144,380원, 실수령 6,991,050원 |
 
@@ -138,11 +171,9 @@ Node에서 `Calc`를 직접 불러 67개 케이스(통상임금 35 + 세금 32)�
 
 ### CSP와 JSON-LD 해시
 
-`public/index.html`의 JSON-LD는 인라인 스크립트라 CSP에서 sha256 해시로 허용하고 있습니다. **JSON-LD 내용을 수정하면 해시가 달라져 구조화 데이터가 차단됩니다.** 수정 후 아래로 새 해시를 뽑아 `public/_headers`의 두 군데(활성 줄, 애드센스용 주석 줄)를 모두 교체하세요.
+JSON-LD는 인라인 스크립트라 CSP에서 sha256 해시로 허용합니다. **이 해시는 `node tools/build.js` 가 페이지마다 자동으로 계산해 `public/_headers` 에 넣으므로 손댈 필요가 없습니다.** JSON-LD를 고쳤다면 빌드만 다시 실행하세요.
 
-```bash
-node -e "const f=require('fs'),c=require('crypto');const m=f.readFileSync('public/index.html','utf8').match(/<script type=\"application\/ld\+json\">([\s\S]*?)<\/script>/);console.log('sha256-'+c.createHash('sha256').update(m[1],'utf8').digest('base64'))"
-```
+애드센스용 CSP도 `src/headers.template` 안에 주석으로 준비되어 있고 같은 자리표시자를 쓰므로, 그 줄로 교체한 뒤 빌드하면 해시가 그대로 채워집니다.
 
 ## 간이세액표 갱신
 
@@ -155,8 +186,8 @@ node -e "const f=require('fs'),c=require('crypto');const m=f.readFileSync('publi
 pip install pypdf && python tools/build-tax-table.py 별표2.pdf
 ```
 
-3. `public/index.html`의 요율·연도 표기와 `public/assets/script.js`의 `RATES`를 그해 4대보험 요율로 갱신합니다.
-4. JSON-LD를 수정했다면 `public/_headers`의 CSP 해시를 재계산합니다(아래 참고).
+3. `src/body/index.html` 의 요율·연도 표기와 `public/assets/calc.js` 의 `RATES` 를 그해 4대보험 요율과 최저임금으로 갱신합니다. 연 1회 바뀌는 값은 모두 `RATES` 한 곳에 모여 있습니다.
+4. `node tools/build.js` 를 실행합니다. CSP 해시는 자동으로 다시 계산됩니다.
 
 생성기는 값이 10원 단위인지 검증하므로, 파싱이 어긋나면 실행이 실패합니다.
 
@@ -166,17 +197,17 @@ pip install pypdf && python tools/build-tax-table.py 별표2.pdf
 
 | 위치 | 파일 위치 |
 | --- | --- |
-| 본문 상단 | `public/index.html` — `<!-- 광고 위치 1 -->` |
-| 결과 하단 | `public/index.html` — `<!-- 광고 위치 2 -->` |
-| 설명 콘텐츠 중간 | `public/index.html` — `<!-- 광고 위치 3 -->` |
+| 본문 상단 | `src/body/*.html` — `<!-- 광고 위치 1 -->` |
+| 결과 하단 | `src/body/*.html` — `<!-- 광고 위치 2 -->` |
+| 설명 콘텐츠 중간 | `src/body/*.html` — `<!-- 광고 위치 3 -->` |
 
-광고 코드를 넣을 때 `public/_headers`의 CSP를 애드센스용 주석 버전으로 교체해야 광고가 차단되지 않습니다.
+광고 코드를 넣을 때 `src/headers.template` 의 CSP를 애드센스용 주석 버전으로 교체하고 다시 빌드해야 광고가 차단되지 않습니다.
 
 **승인 전 체크리스트**
 
 - [x] `public/privacy.html`의 문의 이메일을 `contact@paygyesan.com`으로 설정. Cloudflare Email Routing으로 개인 주소에 전달되며, 개인 메일을 공개 페이지에 노출하지 않는다
-- [ ] 도메인 연결 및 HTTPS 적용 확인
-- [ ] Google Search Console에 사이트 등록 및 `sitemap.xml` 제출
+- [x] 도메인 연결 및 HTTPS 적용 확인 (Always Use HTTPS 활성화, HTTP는 301)
+- [x] Google Search Console 소유권 확인 및 `sitemap.xml` 제출
 - [ ] `ads.txt` 파일 추가 (애드센스 승인 후 발급되는 퍼블리셔 ID 사용)
 
 ## 배포 — Cloudflare Workers (static assets)
