@@ -418,9 +418,66 @@ var Calc = (function () {
     };
   }
 
+  /* ---- 육아휴직 급여 (고용보험법 제70조) ---- */
+
+  var PARENTAL = {
+    year: 2026,
+    maxMonths: 18,        // 1년 6개월
+    floor: 700000,        // 하한액
+    // [상한 적용 개월 상한, 지급률, 월 상한액]
+    tiers: [
+      [3, 1.0, 2500000],
+      [6, 1.0, 2000000],
+      [Infinity, 0.8, 1600000]
+    ],
+    // 6+6 부모육아휴직제: 첫 6개월 상한이 개월차별로 올라간다 (지급률 100%)
+    plusCaps: [2500000, 2500000, 3000000, 3500000, 4000000, 4500000]
+  };
+
+  // n개월차 육아휴직 급여
+  function parentalLeaveMonth(monthIndex, monthlyOrdinary, isPlus) {
+    var wage = toAmount(monthlyOrdinary);
+    var i = Math.floor(monthIndex);
+    if (!isFinite(i) || i < 1) return { rate: 0, cap: 0, amount: 0 };
+
+    var rate, cap;
+    if (isPlus && i <= PARENTAL.plusCaps.length) {
+      rate = 1.0;
+      cap = PARENTAL.plusCaps[i - 1];
+    } else {
+      for (var t = 0; t < PARENTAL.tiers.length; t++) {
+        if (i <= PARENTAL.tiers[t][0]) {
+          rate = PARENTAL.tiers[t][1];
+          cap = PARENTAL.tiers[t][2];
+          break;
+        }
+      }
+    }
+
+    var amount = Math.min(wage * rate, cap);
+    // 하한액은 상·하한 중 마지막에 적용된다
+    if (amount < PARENTAL.floor) amount = PARENTAL.floor;
+    return { rate: rate, cap: cap, amount: amount };
+  }
+
+  function parentalLeave(monthlyOrdinary, months, isPlus) {
+    var n = Math.min(Math.max(Math.floor(toHours(months)) || 0, 0), PARENTAL.maxMonths);
+    var rows = [];
+    var total = 0;
+    for (var i = 1; i <= n; i++) {
+      var m = parentalLeaveMonth(i, monthlyOrdinary, isPlus);
+      rows.push({ month: i, rate: m.rate, cap: m.cap, amount: m.amount });
+      total += m.amount;
+    }
+    return { months: n, rows: rows, total: total };
+  }
+
   return {
     MAX_ITEMS: MAX_ITEMS,
     MIN_SERVICE_DAYS: MIN_SERVICE_DAYS,
+    PARENTAL: PARENTAL,
+    parentalLeaveMonth: parentalLeaveMonth,
+    parentalLeave: parentalLeave,
     benefitDays: benefitDays,
     minDailyBenefit: minDailyBenefit,
     dailyBenefit: dailyBenefit,

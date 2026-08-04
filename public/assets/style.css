@@ -48,7 +48,11 @@ body {
   letter-spacing: -0.02em;
   color: var(--accent);
   text-decoration: none;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
+  /* 홈으로 가는 주요 경로라 손가락으로 누를 수 있는 크기를 확보한다 */
+  padding: 6px 2px;
+  min-height: 34px;
+  line-height: 22px;
 }
 .brand-dot { color: var(--ink-soft); }
 
@@ -86,6 +90,15 @@ h1 {
   position: sticky;
   top: 0;
   z-index: 10;
+  /* 탭이 6개라 모바일에서는 가로로 넘친다. 오른쪽 끝을 흐리게 해서
+     스크롤할 내용이 더 있다는 것을 알린다. */
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+}
+
+/* 데스크톱에서는 다 보이므로 흐림 처리를 끈다 */
+@media (min-width: 760px) {
+  .site-nav { -webkit-mask-image: none; mask-image: none; }
 }
 
 .site-nav .wrap {
@@ -212,6 +225,10 @@ h1 {
 
 .pick-a {
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 4px 0;
   color: var(--accent);
   font-size: 13px;
   font-weight: 700;
@@ -575,7 +592,8 @@ input[type="text"]:focus, select:focus, button:focus-visible {
   font-size: 12.5px;
   background: none;
   border: none;
-  padding: 0;
+  padding: 8px 2px;
+  min-height: 34px;
   color: var(--accent);
   cursor: pointer;
   text-decoration: underline;
@@ -739,3 +757,6 @@ input[type="text"]:focus, select:focus, button:focus-visible {
   .result-primary .result-value { font-size: 38px; }
   .extra-row { grid-template-columns: 1fr 56px 96px 1fr; font-size: 14.5px; }
 }
+
+.table-scroll { overflow-x: auto; }
+.plus-chk { min-height: 40px; font-size: 14.5px; color: var(--ink); font-weight: 600; }

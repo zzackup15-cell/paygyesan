@@ -1,0 +1,170 @@
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 조건 입력</h2>
+    <p class="section-desc">육아휴직 급여는 <strong>통상임금</strong>을 기준으로 지급됩니다. 개월차에 따라 지급률과 상한액이 달라집니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="monthly-ordinary">월 통상임금</label>
+        <div class="input-unit">
+          <input type="text" id="monthly-ordinary" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">기본급 + 고정수당. <a href="/tongsang">통상임금 계산기</a>에서 확인</p>
+      </div>
+      <div class="net-field">
+        <label for="leave-months">육아휴직 사용 기간</label>
+        <div class="input-unit">
+          <input type="text" id="leave-months" inputmode="numeric" value="12" maxlength="2" autocomplete="off">
+          <span class="unit">개월</span>
+        </div>
+        <p class="hint">최대 18개월 (1년 6개월)</p>
+      </div>
+    </div>
+
+    <label class="chk plus-chk">
+      <input type="checkbox" id="plus-scheme">
+      <span>6+6 부모육아휴직제 적용</span>
+    </label>
+    <p class="hint">생후 18개월 이내 자녀에 대해 <strong>부모가 모두</strong> 육아휴직을 사용하는 경우, 첫 6개월 상한액이 최대 450만 원까지 올라갑니다.</p>
+
+    <div class="list-actions">
+      <span class="item-count">2025년부터 사후지급금이 폐지되어 전액 휴직 중 지급됩니다</span>
+      <button type="button" id="reset-all" class="btn btn-ghost">초기화</button>
+    </div>
+  </section>
+
+  <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+    <h2 id="result-title">2. 계산 결과</h2>
+
+    <div class="result-grid">
+      <div class="result-box">
+        <span class="result-label">첫 달 급여</span>
+        <strong class="result-value"><span id="out-first">0</span><em>원</em></strong>
+      </div>
+      <div class="result-box result-primary">
+        <span class="result-label">총 수령액</span>
+        <strong class="result-value"><span id="out-total">0</span><em>원</em></strong>
+      </div>
+    </div>
+
+    <dl class="result-meta">
+      <div>
+        <dt>사용 기간</dt>
+        <dd><span id="out-months">0</span>개월</dd>
+      </div>
+      <div>
+        <dt>월 평균</dt>
+        <dd><span id="out-average">0</span>원</dd>
+      </div>
+    </dl>
+
+    <p class="formula" id="out-note"></p>
+
+    <h3>월별 지급 내역</h3>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr><th>개월차</th><th>지급률</th><th>상한액</th><th>지급액</th></tr>
+        </thead>
+        <tbody id="month-rows"></tbody>
+      </table>
+    </div>
+
+    <p class="hint">육아휴직 급여는 <strong>비과세 소득</strong>이라 소득세와 4대보험료가 부과되지 않습니다. 계산된 금액이 그대로 지급됩니다. 다만 건강보험료는 휴직 기간 경감 후 복직 시 정산됩니다.</p>
+    <p class="hint">급여는 신청한 달의 다음 달에 지급되며, 육아휴직 시작 후 1개월부터 종료 후 12개월 이내에 신청해야 합니다.</p>
+  </section>
+
+  {{OTHER_CALCS}}
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <article class="card content" aria-labelledby="guide-title">
+    <h2 id="guide-title">육아휴직 급여 완전 정리</h2>
+
+    <h3>얼마를 받나</h3>
+    <p>육아휴직 급여는 <strong>통상임금</strong>을 기준으로 계산하며, 사용 개월차에 따라 지급률과 상한액이 단계적으로 낮아집니다.</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>기간</th><th>지급률</th><th>월 상한액</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1~3개월</td><td>통상임금 100%</td><td>250만 원</td></tr>
+        <tr><td>4~6개월</td><td>통상임금 100%</td><td>200만 원</td></tr>
+        <tr><td>7개월 이후</td><td>통상임금 80%</td><td>160만 원</td></tr>
+      </tbody>
+    </table>
+    <p>하한액은 <strong>월 70만 원</strong>입니다. 통상임금이 낮아 계산된 급여가 70만 원에 미치지 못하면 70만 원을 지급합니다.</p>
+    <p>예를 들어 통상임금이 400만 원이면 1~3개월은 상한인 250만 원, 4~6개월은 200만 원, 7개월부터는 160만 원을 받아 12개월 사용 시 총 <strong>2,310만 원</strong>이 됩니다.</p>
+
+    <h3>2025년에 크게 바뀌었습니다</h3>
+    <p>세 가지가 달라졌습니다.</p>
+    <p><strong>상한액이 대폭 올랐습니다.</strong> 이전에는 전 기간 월 150만 원이 상한이었으나, 1~3개월 250만 원으로 인상되고 구간별로 차등 적용되는 방식으로 바뀌었습니다.</p>
+    <p><strong>사후지급금이 폐지되었습니다.</strong> 예전에는 급여의 25%를 떼어 두었다가 복직 후 6개월 이상 근무해야 지급했습니다. 복직하지 않으면 그 25%를 영영 받지 못하는 구조였죠. 2025년 1월부터 이 제도가 없어져 <strong>휴직 기간 중에 전액을 받습니다.</strong></p>
+    <p><strong>기간이 1년 6개월로 늘었습니다.</strong> 다만 부모가 각각 3개월 이상 사용하는 등 요건을 갖춰야 연장이 가능합니다. 요건을 채우지 못하면 기존대로 1년입니다.</p>
+
+    <!-- 광고 위치 3: 설명 콘텐츠 중간 (애드센스 승인 후 삽입) -->
+    <!-- <div class="ad-slot ad-inline"></div> -->
+
+    <h3>6+6 부모육아휴직제</h3>
+    <p>생후 18개월 이내 자녀에 대해 <strong>부모가 모두</strong> 육아휴직을 사용하면 첫 6개월 동안 상한액이 크게 올라갑니다. 동시에 써도 되고 순차적으로 써도 됩니다.</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>개월차</th><th>상한액</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1~2개월</td><td>250만 원</td></tr>
+        <tr><td>3개월</td><td>300만 원</td></tr>
+        <tr><td>4개월</td><td>350만 원</td></tr>
+        <tr><td>5개월</td><td>400만 원</td></tr>
+        <tr><td>6개월</td><td>450만 원</td></tr>
+      </tbody>
+    </table>
+    <p>이 상향은 <strong>부모 각자에게</strong> 적용됩니다. 두 사람이 각각 6개월씩 사용하면 부부 합산으로 상당한 금액이 됩니다. 7개월차부터는 일반 기준으로 돌아갑니다.</p>
+    <p>주의할 점은 <strong>두 번째로 사용하는 사람의 개월차를 기준</strong>으로 상향분이 정해진다는 것입니다. 한 사람만 오래 쓰고 다른 한 사람이 1개월만 쓰면 그 1개월에 대해서만 상향이 적용됩니다.</p>
+
+    <h3>받을 수 있는 조건</h3>
+    <p>첫째, <strong>고용보험 피보험 단위기간이 180일 이상</strong>이어야 합니다. 실업급여와 같은 기준입니다.</p>
+    <p>둘째, <strong>육아휴직을 30일 이상 부여받아야</strong> 합니다. 30일 미만이면 급여가 나오지 않습니다.</p>
+    <p>셋째, 만 <strong>12세 이하 또는 초등학교 6학년 이하</strong> 자녀를 양육하기 위한 휴직이어야 합니다.</p>
+    <p>육아휴직은 근로자의 <strong>법적 권리</strong>이며 사업주는 정당한 사유 없이 거부할 수 없습니다. 다만 급여는 회사가 아니라 <strong>고용보험에서 지급</strong>합니다. 회사는 무급으로 처리하고, 근로자가 고용센터에 직접 신청합니다.</p>
+
+    <h3>자주 묻는 질문</h3>
+    <div class="faq">
+      <details>
+        <summary>육아휴직 급여에 세금이 붙나요?</summary>
+        <p>붙지 않습니다. 육아휴직 급여는 <strong>비과세 소득</strong>이라 소득세와 4대보험료가 부과되지 않고 계산된 금액이 그대로 들어옵니다. 다만 건강보험료는 휴직 기간 동안 경감되었다가 복직 후 정산되므로, 복직 시점에 일부 부담이 생길 수 있습니다.</p>
+      </details>
+      <details>
+        <summary>사후지급금이 폐지됐다는 게 무슨 뜻인가요?</summary>
+        <p>예전에는 급여의 75%만 휴직 중에 주고 나머지 25%는 복직해서 6개월 이상 근무해야 지급했습니다. 복직하지 않으면 그 25%를 받지 못했죠. <strong>2025년 1월부터 이 제도가 폐지되어 전액을 휴직 기간 중에 받습니다.</strong> 복직 여부와 무관하게 받을 수 있어 실질적인 인상 효과가 큽니다.</p>
+      </details>
+      <details>
+        <summary>1년 6개월을 무조건 쓸 수 있나요?</summary>
+        <p>아닙니다. 연장하려면 <strong>부모가 각각 3개월 이상 육아휴직을 사용</strong>하는 등의 요건을 갖춰야 합니다. 한부모 가정이나 중증 장애아동의 부모는 별도 기준이 적용됩니다. 요건을 충족하지 못하면 기존대로 1년까지입니다.</p>
+      </details>
+      <details>
+        <summary>통상임금이 얼마인지 모르겠습니다.</summary>
+        <p>기본급에 직책수당·자격수당 같은 고정수당을 더한 금액입니다. 연장근로수당이나 성과급처럼 실적에 따라 변하는 항목은 빠집니다. <a href="/tongsang">통상임금 계산기</a>에서 급여 항목을 넣으면 월 통상임금을 정확히 구할 수 있습니다.</p>
+      </details>
+      <details>
+        <summary>육아기 근로시간 단축과 뭐가 다른가요?</summary>
+        <p>육아휴직은 아예 쉬는 것이고, 육아기 근로시간 단축은 주 15~35시간으로 <strong>줄여서 계속 일하는</strong> 제도입니다. 단축은 급여 산정 방식이 달라 이 계산기로는 계산되지 않습니다. 육아휴직 미사용 기간을 단축으로 전환해 쓸 수도 있고, 이 경우 사용 가능 기간이 더 늘어납니다.</p>
+      </details>
+      <details>
+        <summary>회사가 육아휴직을 안 준다고 합니다.</summary>
+        <p>육아휴직은 법에 정해진 근로자의 권리로, 요건을 갖춘 신청을 사업주가 거부하면 <strong>법 위반</strong>입니다. 거부당한 경우 고용노동부에 진정을 넣을 수 있습니다. 또한 육아휴직을 이유로 해고하거나 불리하게 처우하는 것도 금지됩니다.</p>
+      </details>
+      <details>
+        <summary>입력한 정보가 저장되나요?</summary>
+        <p>저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>에서 확인할 수 있습니다.</p>
+      </details>
+    </div>
+  </article>
+
+</main>
