@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>연봉 실수령액 계산기 | 2026년 4대보험·세금 반영 - 페이계산</title>
+<meta name="description" content="세전 연봉을 입력하면 4대보험료와 소득세를 뺀 월 실수령액을 계산합니다. 2026년 국민연금 4.75%, 건강보험 3.595% 등 최신 요율과 국세청 근로소득 간이세액표를 적용하며, 퇴직금 포함 연봉 구분과 연봉별 실수령액표를 함께 제공합니다.">
+<meta name="keywords" content="연봉 실수령액, 연봉 실수령액 계산기, 연봉 계산기, 실수령액표, 세후 월급, 월급 실수령액, 4대보험 공제, 퇴직금 포함 연봉, 연봉 3000 실수령액">
+<link rel="canonical" href="https://paygyesan.com/yeonbong">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" content="#1b4d8f">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="페이계산">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://paygyesan.com/yeonbong">
+<meta property="og:title" content="연봉 실수령액 계산기 | 2026년 4대보험·세금 반영">
+<meta property="og:description" content="세전 연봉만 넣으면 4대보험과 소득세를 뗀 월 실수령액이 즉시 나옵니다.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="연봉 실수령액 계산기">
+<meta name="twitter:description" content="2026년 요율과 국세청 간이세액표를 적용한 연봉 실수령액 계산기.">
+
+<link rel="stylesheet" href="/assets/style.css?v=80b0c62a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b4d8f'/%3E%3Ctext x='16' y='23' font-size='19' font-family='sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'%3E₩%3C/text%3E%3C/svg%3E">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"연봉 실수령액 계산기","url":"https://paygyesan.com/yeonbong","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ko","description":"세전 연봉을 입력하면 4대보험료와 소득세를 뺀 월 실수령액을 계산하는 무료 웹 도구입니다. 2026년 4대보험 요율과 국세청 근로소득 간이세액표를 적용하며, 퇴직금 포함 연봉과 연봉별 실수령액표도 함께 제공합니다.","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"},"browserRequirements":"JavaScript 사용 가능한 브라우저"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"연봉에서 실수령액은 어떻게 계산하나요?","acceptedAnswer":{"@type":"Answer","text":"연봉을 12로 나눈 월 급여에서 비과세액을 뺀 금액을 기준으로 4대보험료와 소득세를 공제합니다. 2026년 근로자 부담분은 국민연금 4.75%, 건강보험 3.595%, 장기요양보험은 건강보험료의 13.14%, 고용보험 0.9%이며 여기에 간이세액표에 따른 소득세와 지방소득세가 더해집니다."}},{"@type":"Question","name":"연봉에서 몇 퍼센트가 공제되나요?","acceptedAnswer":{"@type":"Answer","text":"보통 세전 금액의 10~13% 정도가 공제되며 연봉이 높을수록 소득세율이 올라 비율이 커집니다. 부양가족 수와 비과세 항목에 따라서도 달라집니다."}},{"@type":"Question","name":"퇴직금 포함 연봉은 무엇인가요?","acceptedAnswer":{"@type":"Answer","text":"연봉을 12가 아니라 13으로 나눠 월급을 정하고 나머지 한 달치를 퇴직금 명목으로 적립하는 방식입니다. 연봉 3,900만 원이면 월급이 325만 원이 아니라 300만 원이 됩니다. 다만 퇴직금 분할 약정은 원칙적으로 무효라는 것이 대법원의 입장입니다."}},{"@type":"Question","name":"비과세 항목이 실수령액에 영향을 주나요?","acceptedAnswer":{"@type":"Answer","text":"영향을 줍니다. 비과세 금액은 소득세와 4대보험료 계산에서 모두 빠지므로 실수령액이 늘어납니다. 식대는 월 20만 원까지, 자가운전보조금과 6세 이하 자녀 보육수당도 각각 월 20만 원까지 비과세됩니다."}},{"@type":"Question","name":"부양가족이 있으면 실수령액이 늘어나나요?","acceptedAnswer":{"@type":"Answer","text":"늘어납니다. 소득세는 공제대상 가족 수에 따라 달라져 가족이 많을수록 원천징수액이 줄어듭니다. 8세 이상 20세 이하 자녀가 있으면 1명 20,830원, 2명 45,830원, 3명부터 1명당 33,330원이 추가로 공제됩니다."}},{"@type":"Question","name":"인터넷 실수령액표와 금액이 다른 이유는 무엇인가요?","acceptedAnswer":{"@type":"Answer","text":"대부분의 실수령액표는 1인 가구에 비과세 20만 원을 가정하고 만들어집니다. 또 2026년에 국민연금이 4.5%에서 4.75%로 오른 것이 반영되지 않은 오래된 표가 많습니다."}}]}]}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">페이계산<span class="brand-dot">.</span></a>
+    <h1>연봉 실수령액 계산기</h1>
+    <p class="lead">세전 연봉만 넣으면 4대보험과 소득세를 뗀 <strong>월 실수령액</strong>이 바로 나옵니다. 2026년 요율과 국세청 간이세액표를 적용하고, <strong>퇴직금 포함 연봉</strong>도 구분해 계산합니다.</p>
+    <p class="privacy-badge">입력값은 서버로 전송되지 않고 브라우저 안에서만 계산됩니다.</p>
+  </div>
+</header>
+
+<nav class="site-nav" aria-label="계산기 목록">
+  <div class="wrap">
+      <a href="/tongsang" class="nav-pill">통상임금</a>
+      <a href="/yeonbong" class="nav-pill is-current" aria-current="page">연봉 실수령액</a>
+      <a href="/juhyu" class="nav-pill">주휴수당</a>
+      <a href="/toejik" class="nav-pill">퇴직금</a>
+      <a href="/yeoncha" class="nav-pill">연차수당</a>
+      <a href="/silup" class="nav-pill">실업급여</a>
+      <a href="/yuka" class="nav-pill">육아휴직</a>
+  </div>
+</nav>
+
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 연봉 입력</h2>
+    <p class="section-desc">계약 연봉(세전)을 넣으면 4대보험과 소득세를 뗀 월 실수령액이 바로 나옵니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="annual-salary">연봉 (세전)</label>
+        <div class="input-unit">
+          <input type="text" id="annual-salary" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">3,600만 원이면 36000000</p>
+      </div>
+      <div class="net-field">
+        <label for="non-taxable">비과세액 (월)</label>
+        <div class="input-unit">
+          <input type="text" id="non-taxable" inputmode="numeric" value="200,000" maxlength="11" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">식대는 월 20만 원까지 비과세</p>
+      </div>
+      <div class="net-field">
+        <label for="family-count">공제대상 가족 수</label>
+        <div class="input-unit">
+          <input type="text" id="family-count" inputmode="numeric" value="1" maxlength="2" autocomplete="off">
+          <span class="unit">명</span>
+        </div>
+        <p class="hint">본인 포함</p>
+      </div>
+      <div class="net-field">
+        <label for="child-count">8~20세 자녀 수</label>
+        <div class="input-unit">
+          <input type="text" id="child-count" inputmode="numeric" value="0" maxlength="2" autocomplete="off">
+          <span class="unit">명</span>
+        </div>
+      </div>
+    </div>
+
+    <label class="chk plus-chk">
+      <input type="checkbox" id="include-severance">
+      <span>연봉에 퇴직금이 포함되어 있음</span>
+    </label>
+    <p class="hint">채용공고에 "퇴직금 포함"이라고 적혀 있으면 체크하세요. 연봉을 12가 아니라 <strong>13으로 나눠</strong> 월급을 계산합니다.</p>
+
+    <div class="list-actions">
+      <span class="item-count">입력값은 저장되지 않습니다</span>
+      <button type="button" id="reset-all" class="btn btn-ghost">초기화</button>
+    </div>
+  </section>
+
+  <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+    <h2 id="result-title">2. 계산 결과</h2>
+
+    <div class="result-grid">
+      <div class="result-box">
+        <span class="result-label">월 급여 (세전)</span>
+        <strong class="result-value"><span id="out-monthly-gross">0</span><em>원</em></strong>
+        <span class="result-sub">연봉 ÷ <span id="out-divisor">12개월</span></span>
+      </div>
+      <div class="result-box result-primary">
+        <span class="result-label">월 실수령액</span>
+        <strong class="result-value"><span id="out-net">0</span><em>원</em></strong>
+      </div>
+    </div>
+
+    <dl class="result-meta">
+      <div>
+        <dt>연 실수령액</dt>
+        <dd><span id="out-net-annual">0</span>원</dd>
+      </div>
+      <div>
+        <dt>공제율</dt>
+        <dd><span id="out-rate">0</span>%</dd>
+      </div>
+    </dl>
+
+    <h3>공제 내역</h3>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>항목</th><th>월 금액</th></tr></thead>
+        <tbody id="deduct-rows"></tbody>
+      </table>
+    </div>
+
+    <p class="hint">과세 기준은 월 급여에서 비과세액을 뺀 <strong id="out-taxable">0</strong>원이고, 월 공제 합계는 <strong id="out-deduction">0</strong>원입니다. 소득세는 국세청 간이세액표를 그대로 적용한 <strong>원천징수 금액</strong>이라 연말정산에서 환급되거나 추가 납부될 수 있습니다.</p>
+  </section>
+
+  <section class="card" aria-labelledby="compare-title">
+    <h2 id="compare-title">연봉별 실수령액표</h2>
+    <p class="section-desc">위에 입력한 비과세액·가족 수를 그대로 적용한 표입니다. 입력하신 연봉과 가장 가까운 줄이 표시됩니다.</p>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr><th>연봉</th><th>월 세전</th><th>월 실수령</th><th>공제율</th></tr></thead>
+        <tbody id="compare-rows"></tbody>
+      </table>
+    </div>
+    <p class="hint">인터넷에 도는 실수령액표는 대개 1인 가구·비과세 20만 원을 가정합니다. 부양가족이 있으면 소득세가 줄어 실수령액이 더 많아지니, 위 조건을 본인에 맞게 바꿔 보세요.</p>
+  </section>
+
+  <section class="card calc-links" aria-labelledby="other-calc-title">
+      <h2 id="other-calc-title">다른 계산기</h2>
+      <div class="calc-grid">
+        <a class="calc-card" href="/tongsang">
+          <span class="calc-card-title">통상임금 계산기</span>
+          <span class="calc-card-desc">기본급과 수당을 넣으면 통상시급, 가산수당, 연봉, 세후 실수령액까지 한 번에 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/juhyu">
+          <span class="calc-card-title">주휴수당 계산기</span>
+          <span class="calc-card-desc">시급과 근무시간을 넣으면 주휴수당과 주급, 월 환산액을 계산합니다. 최저임금 미달도 확인합니다.</span>
+        </a>
+        <a class="calc-card" href="/toejik">
+          <span class="calc-card-title">퇴직금 계산기</span>
+          <span class="calc-card-desc">입사일과 퇴직 전 3개월 임금을 넣으면 평균임금과 예상 퇴직금이 나옵니다. 통상임금과 비교해 유리한 쪽을 적용합니다.</span>
+        </a>
+        <a class="calc-card" href="/yeoncha">
+          <span class="calc-card-title">연차수당 계산기</span>
+          <span class="calc-card-desc">입사일만 넣으면 발생 연차일수가 나오고, 통상임금으로 미사용 연차수당까지 계산합니다.</span>
+        </a>
+        <a class="calc-card" href="/silup">
+          <span class="calc-card-title">실업급여 계산기</span>
+          <span class="calc-card-desc">이직 전 3개월 임금과 근무 기간을 넣으면 1일 구직급여와 소정급여일수, 총 수급액이 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/yuka">
+          <span class="calc-card-title">육아휴직 급여 계산기</span>
+          <span class="calc-card-desc">통상임금과 사용 기간을 넣으면 월별 육아휴직 급여와 총 수령액이 나옵니다. 6+6 부모육아휴직제도 반영합니다.</span>
+        </a>
+      </div>
+    </section>
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <article class="card content" aria-labelledby="guide-title">
+    <h2 id="guide-title">연봉 실수령액 완전 정리</h2>
+
+    <h3>연봉에서 무엇이 빠지나</h3>
+    <p>계약서에 적힌 연봉은 <strong>세전 금액</strong>입니다. 통장에 들어오기 전에 두 갈래로 돈이 빠집니다.</p>
+    <p>하나는 <strong>4대보험료</strong>입니다. 2026년 기준 근로자 부담분은 국민연금 4.75%, 건강보험 3.595%, 장기요양보험은 건강보험료의 13.14%, 고용보험 0.9%입니다. 국민연금과 건강보험, 장기요양은 회사가 같은 금액을 함께 부담하고, 산재보험은 회사가 전액 냅니다.</p>
+    <p>다른 하나는 <strong>세금</strong>입니다. 국세청 근로소득 간이세액표에 따른 소득세와, 그 소득세의 10%인 지방소득세가 붙습니다. 이 계산기는 간이세액표를 그대로 담고 있어 급여명세서의 원천징수 금액과 값이 일치합니다.</p>
+    <p>둘을 합치면 보통 세전 금액의 <strong>10~13%</strong>가 빠지고, 연봉이 높을수록 소득세율이 올라 비율이 커집니다.</p>
+
+    <h3>"퇴직금 포함 연봉"의 함정</h3>
+    <p>채용공고에서 가장 조심해야 할 문구입니다. 연봉 3,900만 원이라고 적혀 있어도 <strong>퇴직금 포함</strong>이면 월급은 3,900만 ÷ 12 = 325만 원이 아니라 <strong>3,900만 ÷ 13 = 300만 원</strong>입니다. 나머지 한 달치가 퇴직금 명목으로 적립되는 구조입니다.</p>
+    <p>같은 숫자를 보고도 실제 월급은 <strong>25만 원이 차이</strong>납니다. 연봉 협상 때 반드시 확인해야 할 항목이고, 위 계산기의 체크박스로 두 경우를 비교해 볼 수 있습니다.</p>
+    <p>참고로 퇴직금은 원래 연봉과 별개로 지급하는 것이 원칙입니다. 매월 퇴직금을 나눠 지급하는 이른바 <strong>퇴직금 분할 약정은 원칙적으로 무효</strong>라는 것이 대법원의 입장이며, 그 경우 퇴직 시 퇴직금을 다시 청구할 수 있는 여지가 있습니다.</p>
+
+    <!-- 광고 위치 3: 설명 콘텐츠 중간 (애드센스 승인 후 삽입) -->
+    <!-- <div class="ad-slot ad-inline"></div> -->
+
+    <h3>비과세 항목이 실수령액을 바꿉니다</h3>
+    <p>같은 연봉이라도 <strong>비과세 항목이 얼마나 잡혀 있느냐</strong>에 따라 실수령액이 달라집니다. 비과세 금액은 소득세와 4대보험료 계산에서 모두 빠지기 때문입니다.</p>
+    <p>가장 흔한 것이 <strong>식대로 월 20만 원까지</strong> 비과세됩니다. 그 밖에 본인 차량을 업무에 사용하고 받는 자가운전보조금(월 20만 원), 6세 이하 자녀 보육수당(월 20만 원) 등이 있습니다. 급여명세서에서 비과세로 표시된 항목의 합계를 위 계산기에 넣으면 됩니다.</p>
+    <p>연봉 협상 시 총액이 같다면 <strong>비과세 항목을 최대한 잡아 달라고 요청</strong>하는 편이 유리합니다. 회사도 4대보험 부담분이 줄어들어 서로 이득인 경우가 많습니다.</p>
+
+    <h3>부양가족이 있으면 실수령액이 늘어납니다</h3>
+    <p>소득세는 <strong>공제대상 가족 수</strong>에 따라 달라집니다. 본인과 배우자를 각각 1명으로 세고, 연간 소득금액 100만 원 이하인 부양가족을 더합니다. 가족 수가 늘수록 원천징수되는 소득세가 줄어 실수령액이 많아집니다.</p>
+    <p>8세 이상 20세 이하 자녀가 있으면 추가로 세액이 공제됩니다. 1명이면 월 20,830원, 2명이면 45,830원, 3명부터는 1명당 33,330원씩 더 빠집니다. 가족 수 칸과 자녀 수 칸을 모두 채워야 정확한 금액이 나옵니다.</p>
+
+    <h3>자주 묻는 질문</h3>
+    <div class="faq">
+      <details>
+        <summary>인터넷 실수령액표와 금액이 다릅니다.</summary>
+        <p>대부분의 실수령액표는 <strong>1인 가구, 비과세 20만 원</strong>을 가정합니다. 부양가족이 있거나 비과세 항목이 다르면 금액이 달라집니다. 또 표가 만들어진 연도의 요율을 쓰기 때문에, 2026년에 국민연금이 4.5%에서 4.75%로 오른 것이 반영되지 않은 표가 많습니다. 이 계산기는 2026년 요율과 간이세액표를 적용합니다.</p>
+      </details>
+      <details>
+        <summary>연말정산을 하면 얼마나 돌려받나요?</summary>
+        <p>이 계산기의 소득세는 매달 미리 떼는 <strong>원천징수 금액</strong>입니다. 의료비, 기부금, 주택자금, 신용카드 사용액 같은 개인별 공제는 연말정산에서 한꺼번에 반영되므로, 공제가 많으면 환급을 받고 적으면 추가로 납부합니다. 환급액은 개인 상황에 따라 크게 달라 계산기로 추정하기 어렵습니다.</p>
+      </details>
+      <details>
+        <summary>월급이 매달 조금씩 다릅니다.</summary>
+        <p>연장근로수당처럼 근무에 따라 변하는 항목이 있으면 매달 과세 대상 금액이 달라지고, 그에 따라 소득세와 4대보험료도 달라집니다. 또 건강보험료는 매년 4월에 전년도 보수를 기준으로 정산해 그 달에 추가 징수되거나 환급되는 경우가 많습니다.</p>
+      </details>
+      <details>
+        <summary>4대보험을 안 들면 실수령액이 늘어나나요?</summary>
+        <p>당장은 늘지만 권할 일이 아닙니다. 4대보험은 법정 의무라 <strong>가입하지 않는 것 자체가 위법</strong>이며, 미가입 상태에서는 실업급여도 육아휴직 급여도 받지 못하고 국민연금 가입기간도 쌓이지 않습니다. 산재를 당해도 보상이 어렵습니다.</p>
+      </details>
+      <details>
+        <summary>세전 연봉을 모르고 월급만 압니다.</summary>
+        <p>월급에 12를 곱하면 대략적인 연봉이 됩니다. 다만 상여금이 별도로 나온다면 그 금액도 더해야 실제 연봉이 됩니다. 급여 항목별로 세밀하게 따지고 싶다면 <a href="/tongsang">통상임금 계산기</a>를 이용하세요. 항목마다 금액을 넣어 통상시급부터 실수령액까지 계산할 수 있습니다.</p>
+      </details>
+      <details>
+        <summary>입력한 정보가 저장되나요?</summary>
+        <p>저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>에서 확인할 수 있습니다.</p>
+      </details>
+    </div>
+  </article>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="disclaimer"><strong>면책조항</strong> 이 계산기는 일반적인 법령과 판례를 바탕으로 한 참고용 도구이며, 계산 결과는 법적 효력이 없습니다. 실제 금액은 취업규칙, 단체협약, 근로계약서의 구체적인 내용과 사업장 상황에 따라 달라질 수 있습니다. 정확한 판단이 필요한 경우 공인노무사 또는 고용노동부 고객상담센터(1350)의 상담을 받으시기 바랍니다. 본 사이트는 계산 결과 이용으로 발생한 손해에 대해 책임지지 않습니다.</p>
+    <nav class="footer-nav">
+      <a href="/">홈</a>
+      <a href="/tongsang">통상임금 계산기</a>
+      <a href="/yeonbong" aria-current="page">연봉 실수령액 계산기</a>
+      <a href="/juhyu">주휴수당 계산기</a>
+      <a href="/toejik">퇴직금 계산기</a>
+      <a href="/yeoncha">연차수당 계산기</a>
+      <a href="/silup">실업급여 계산기</a>
+      <a href="/yuka">육아휴직 급여 계산기</a>
+      <a href="/privacy">개인정보처리방침</a>
+    </nav>
+    <p class="copyright">© 2026 paygyesan.com</p>
+  </div>
+</footer>
+<script src="/assets/tax-table.js?v=25a7b24d" defer></script>
+<script src="/assets/calc.js?v=25854f3e" defer></script>
+<script src="/assets/yeonbong.js?v=8d1b14e9" defer></script>
+</body>
+</html>

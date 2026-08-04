@@ -760,3 +760,6 @@ input[type="text"]:focus, select:focus, button:focus-visible {
 
 .table-scroll { overflow-x: auto; }
 .plus-chk { min-height: 40px; font-size: 14.5px; color: var(--ink); font-weight: 600; }
+
+.data-table tbody tr.is-current { background: var(--accent-soft); font-weight: 700; }
+.data-table tbody tr.is-current td { border-color: var(--accent-line); }

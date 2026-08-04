@@ -5,6 +5,7 @@
 | 경로 | 페이지 |
 | --- | --- |
 | `/` | 메인 — 계산기 목록과 안내 |
+| `/yeonbong` | 연봉 실수령액 계산기 |
 | `/tongsang` | 통상임금 계산기 (통상시급·가산수당·연봉·실수령액) |
 | `/juhyu` | 주휴수당 계산기 |
 | `/yeoncha` | 연차수당 계산기 (발생일수·미사용수당) |
@@ -36,6 +37,7 @@ paygyesan/
 │     ├─ style.css
 │     ├─ calc.js     공용 계산 로직 (모든 계산기가 함께 쓴다)
 │     ├─ tongsang.js 통상임금 계산기 UI
+│     ├─ yeonbong.js 연봉 실수령액 계산기 UI
 │     ├─ juhyu.js    주휴수당 계산기 UI
 │     ├─ toejik.js   퇴직금 계산기 UI
 │     ├─ yeoncha.js  연차수당 계산기 UI
