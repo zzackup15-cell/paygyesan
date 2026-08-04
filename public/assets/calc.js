@@ -99,7 +99,17 @@ var Calc = (function () {
     pension: { rate: 0.0475, min: 410000, max: 6590000 }, // 국민연금 (기준소득월액 2026.7~2027.6)
     health: { rate: 0.03595 },                            // 건강보험
     care: { ofHealth: 0.1314 },                           // 장기요양 = 건강보험료 × 13.14%
-    employment: { rate: 0.009 },                          // 고용보험 실업급여
+    // 고용보험. 실업급여분은 노사가 반씩 부담하고, 고용안정·직업능력개발사업분은
+    // 사업주가 기업 규모에 따라 추가로 부담한다.
+    employment: {
+      rate: 0.009,
+      employerStability: [
+        { key: 'under150', label: '150인 미만', rate: 0.0025 },
+        { key: 'priority', label: '150인 이상 (우선지원 대상기업)', rate: 0.0045 },
+        { key: 'under1000', label: '150인 이상 1,000인 미만', rate: 0.0065 },
+        { key: 'over1000', label: '1,000인 이상 · 국가 · 지자체', rate: 0.0085 }
+      ]
+    },
     minWage: { year: 2026, hourly: 10320 },               // 최저임금 (고용노동부 고시)
 
     // 구직급여(실업급여). 고용보험법 제45조·제46조
@@ -119,9 +129,14 @@ var Calc = (function () {
   var MAX_FAMILY = 11; // 간이세액표 열 상한
   var MAX_CHILDREN = 10;
 
+  // 보험료는 10원 미만을 절사한다. 다만 곱셈을 그대로 절사하면 안 된다.
+  // 0.009 같은 요율은 2진 부동소수로 정확히 표현되지 않아
+  // 3,000,000 × 0.009 가 26,999.999999999996 으로 나오고,
+  // 이걸 절사하면 27,000원이 26,990원이 되어 10원이 사라진다.
+  // 계산 오차만 걷어낸 뒤 절사한다. 소수 6자리 밖은 실제 값일 수 없다.
   function floor10(n) {
     if (!isFinite(n) || n <= 0) return 0;
-    return Math.floor(n / 10) * 10;
+    return Math.floor(Math.round(n * 1e6) / 1e6 / 10) * 10;
   }
 
   // 간이세액표 디코딩 (최초 1회)
@@ -205,16 +220,25 @@ var Calc = (function () {
     return Math.max(0, tax - childCredit(children));
   }
 
+  function toBase(monthly) {
+    return isFinite(monthly) && monthly > 0 ? monthly : 0;
+  }
+
+  // 국민연금 기준소득월액. 천원 단위로 절사한 뒤 상·하한을 적용한다.
+  // 근로자·사업주 부담이 같은 기준을 써야 하므로 함수로 뽑아 공유한다.
+  function pensionBase(base) {
+    if (base <= 0) return 0;
+    var b = Math.floor(base / 1000) * 1000;
+    if (b < RATES.pension.min) b = RATES.pension.min;
+    if (b > RATES.pension.max) b = RATES.pension.max;
+    return b;
+  }
+
   // 4대보험 근로자 부담분
   function insurance(taxableMonthly) {
-    var base = isFinite(taxableMonthly) && taxableMonthly > 0 ? taxableMonthly : 0;
+    var base = toBase(taxableMonthly);
 
-    // 국민연금 기준소득월액은 천원 단위 절사 후 상·하한 적용
-    var pensionBase = Math.floor(base / 1000) * 1000;
-    if (pensionBase < RATES.pension.min) pensionBase = base > 0 ? RATES.pension.min : 0;
-    if (pensionBase > RATES.pension.max) pensionBase = RATES.pension.max;
-
-    var pension = floor10(pensionBase * RATES.pension.rate);
+    var pension = floor10(pensionBase(base) * RATES.pension.rate);
     var health = floor10(base * RATES.health.rate);
     var care = floor10(health * RATES.care.ofHealth);
     var employment = floor10(base * RATES.employment.rate);
@@ -225,6 +249,48 @@ var Calc = (function () {
       care: care,
       employment: employment,
       total: pension + health + care + employment
+    };
+  }
+
+  // 4대보험 사업주 부담분
+  //
+  // 국민연금·건강보험·장기요양은 근로자와 같은 금액이고, 고용보험은
+  // 실업급여분(0.9%)에 더해 고용안정·직업능력개발사업분을 기업 규모별로 더 낸다.
+  // 산재보험은 사업주 전액이지만 업종별 편차가 커서 임의의 평균값을 쓰지 않는다.
+  // 요율을 아는 사용자만 직접 넣도록 옵션으로 받는다.
+  function employerInsurance(taxableMonthly, opts) {
+    opts = opts || {};
+    var base = toBase(taxableMonthly);
+
+    var tiers = RATES.employment.employerStability;
+    var tier = tiers[0];
+    for (var i = 0; i < tiers.length; i++) {
+      if (tiers[i].key === opts.sizeKey) { tier = tiers[i]; break; }
+    }
+
+    var pension = floor10(pensionBase(base) * RATES.pension.rate);
+    var health = floor10(base * RATES.health.rate);
+    var care = floor10(health * RATES.care.ofHealth);
+    var employment = floor10(base * RATES.employment.rate);
+    var stability = floor10(base * tier.rate);
+
+    // 산재보험 요율은 퍼센트로 받는다 (예: 0.7 → 0.7%)
+    var accidentRate = toHours(opts.accidentRate) / 100;
+    if (!isFinite(accidentRate) || accidentRate < 0) accidentRate = 0;
+    if (accidentRate > 0.2) accidentRate = 0.2; // 20% 상한
+    var accident = floor10(base * accidentRate);
+
+    return {
+      pension: pension,
+      health: health,
+      care: care,
+      employment: employment,
+      stability: stability,
+      stabilityRate: tier.rate,
+      stabilityLabel: tier.label,
+      accident: accident,
+      accidentRate: accidentRate,
+      total: pension + health + care + employment + stability + accident
     };
   }
 
@@ -501,6 +567,7 @@ var Calc = (function () {
     incomeTax: incomeTax,
     childCredit: childCredit,
     insurance: insurance,
+    employerInsurance: employerInsurance,
     netPay: netPay,
     WEEKS_PER_MONTH: WEEKS_PER_MONTH,
     MIN_WEEKLY_FOR_HOLIDAY: MIN_WEEKLY_FOR_HOLIDAY,

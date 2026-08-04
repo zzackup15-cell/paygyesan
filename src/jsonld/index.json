@@ -12,20 +12,7 @@
   {
    "@type": "ItemList",
    "name": "임금 계산기 목록",
-   "itemListElement": [
-    {
-     "@type": "ListItem",
-     "position": 1,
-     "name": "통상임금 계산기",
-     "url": "https://paygyesan.com/tongsang"
-    },
-    {
-     "@type": "ListItem",
-     "position": 2,
-     "name": "주휴수당 계산기",
-     "url": "https://paygyesan.com/juhyu"
-    }
-   ]
+   "itemListElement": "__CALC_LIST__"
   },
   {
    "@type": "FAQPage",

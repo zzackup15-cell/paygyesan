@@ -141,6 +141,20 @@ for (const page of pages) {
   let jsonldBlock = '';
   if (page.jsonld) {
     const data = JSON.parse(read(SRC, 'jsonld', page.jsonld));
+    // 홈의 계산기 목록도 pages.js 에서 생성한다. 손으로 관리하던 때에는
+    // 계산기를 추가해도 갱신되지 않아 2개에 머물러 있었다.
+    for (const node of data['@graph'] || []) {
+      if (node.itemListElement === '__CALC_LIST__') {
+        node.itemListElement = pages
+          .filter(p => p.calculator)
+          .map((p, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: p.navLabel,
+            url: urlFor(p.slug)
+          }));
+      }
+    }
     // 해시는 <script> 태그 사이의 텍스트에 대해 계산된다. 여기서 만드는
     // 문자열과 한 글자라도 달라지면 브라우저가 블록을 차단한다.
     const inner = '\n' + JSON.stringify(data) + '\n';
