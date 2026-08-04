@@ -645,6 +645,27 @@ input[type="text"]:focus, select:focus, button:focus-visible {
 .content h3:first-of-type { margin-top: 18px; }
 .content a { color: var(--accent); }
 
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 14px;
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+}
+.data-table th, .data-table td {
+  border: 1px solid var(--line);
+  padding: 9px 10px;
+  text-align: center;
+}
+.data-table th {
+  background: var(--bg-alt);
+  color: var(--ink-mid);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.data-table td:first-child, .data-table th:first-child { text-align: left; }
+.data-table tbody tr:nth-child(even) { background: #fafbfc; }
+
 .faq { margin-top: 12px; }
 
 .faq details {

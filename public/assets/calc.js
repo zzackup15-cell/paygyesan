@@ -101,6 +101,18 @@ var Calc = (function () {
     care: { ofHealth: 0.1314 },                           // 장기요양 = 건강보험료 × 13.14%
     employment: { rate: 0.009 },                          // 고용보험 실업급여
     minWage: { year: 2026, hourly: 10320 },               // 최저임금 (고용노동부 고시)
+
+    // 구직급여(실업급여). 고용보험법 제45조·제46조
+    // 상한액은 2026년에 68,100원으로 올랐다. 최저임금 인상으로 하한액(66,048)이
+    // 기존 상한액(66,000)을 넘어서는 역전이 생겨 함께 인상된 것이다.
+    unemployment: {
+      year: 2026,
+      rate: 0.6,             // 구직급여일액 = 기초일액 × 60%
+      maxBaseDaily: 113500,  // 기초일액 상한 → 일액 상한 68,100원
+      minRate: 0.8,          // 최저구직급여일액 = 최저기초일액 × 80%
+      maxDailyHours: 8,      // 최저기초일액 산정 시 1일 소정근로시간 상한
+      minInsuredDays: 180    // 이직 전 18개월간 피보험 단위기간
+    },
     localTax: 0.1                                         // 지방소득세 = 소득세 × 10%
   };
 
@@ -352,9 +364,67 @@ var Calc = (function () {
     return dailyOrdinary * d;
   }
 
+  /* ---- 구직급여 (고용보험법 제45조·제46조, 별표1) ---- */
+
+  // 소정급여일수 (고용보험법 별표1). 2019.10.1. 이후 이직자 기준.
+  // 각 구간은 [피보험기간 상한(년), 50세 미만, 50세 이상·장애인]
+  var BENEFIT_DAYS = [
+    [1, 120, 120],
+    [3, 150, 180],
+    [5, 180, 210],
+    [10, 210, 240],
+    [Infinity, 240, 270]
+  ];
+
+  function benefitDays(insuredYears, isOver50) {
+    var y = isFinite(insuredYears) && insuredYears > 0 ? insuredYears : 0;
+    for (var i = 0; i < BENEFIT_DAYS.length; i++) {
+      if (y < BENEFIT_DAYS[i][0]) return isOver50 ? BENEFIT_DAYS[i][2] : BENEFIT_DAYS[i][1];
+    }
+    return isOver50 ? 270 : 240;
+  }
+
+  // 최저구직급여일액 = (1일 소정근로시간 × 최저임금) × 80%
+  function minDailyBenefit(dailyHours) {
+    var u = RATES.unemployment;
+    var h = Math.min(toHours(dailyHours) || u.maxDailyHours, u.maxDailyHours);
+    return h * RATES.minWage.hourly * u.minRate;
+  }
+
+  // 구직급여일액. 기초일액에 상한을 씌워 60%를 적용하되, 최저액보다 낮으면 최저액.
+  function dailyBenefit(baseDaily, dailyHours) {
+    var u = RATES.unemployment;
+    var base = isFinite(baseDaily) && baseDaily > 0 ? baseDaily : 0;
+    if (base <= 0) return 0;
+    var capped = Math.min(base, u.maxBaseDaily) * u.rate;
+    return Math.max(capped, minDailyBenefit(dailyHours));
+  }
+
+  function unemploymentBenefit(opts) {
+    var base = isFinite(opts.baseDaily) && opts.baseDaily > 0 ? opts.baseDaily : 0;
+    var daily = dailyBenefit(base, opts.dailyHours);
+    var days = benefitDays(opts.insuredYears, opts.isOver50);
+    var u = RATES.unemployment;
+    var min = minDailyBenefit(opts.dailyHours);
+    return {
+      baseDaily: base,
+      daily: daily,
+      days: days,
+      total: daily * days,
+      minDaily: min,
+      maxDaily: u.maxBaseDaily * u.rate,
+      atMax: base > u.maxBaseDaily,
+      atMin: base > 0 && Math.min(base, u.maxBaseDaily) * u.rate < min
+    };
+  }
+
   return {
     MAX_ITEMS: MAX_ITEMS,
     MIN_SERVICE_DAYS: MIN_SERVICE_DAYS,
+    benefitDays: benefitDays,
+    minDailyBenefit: minDailyBenefit,
+    dailyBenefit: dailyBenefit,
+    unemploymentBenefit: unemploymentBenefit,
     MAX_ANNUAL_LEAVE: MAX_ANNUAL_LEAVE,
     MAX_FIRST_YEAR_LEAVE: MAX_FIRST_YEAR_LEAVE,
     MAX_UNUSED_DAYS: MAX_UNUSED_DAYS,

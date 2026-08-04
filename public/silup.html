@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>실업급여 계산기 | 구직급여 일액과 소정급여일수 - 페이계산</title>
+<meta name="description" content="입사일과 마지막 근무일, 이직 전 3개월 임금을 입력하면 구직급여 1일 지급액과 소정급여일수, 총 예상 수급액을 계산합니다. 2026년 상한액 68,100원과 하한액 66,048원, 고용보험법 별표1 소정급여일수를 반영했습니다.">
+<meta name="keywords" content="실업급여, 실업급여 계산기, 구직급여, 실업급여 상한액, 실업급여 하한액, 소정급여일수, 피보험기간, 실업급여 조건, 자발적 퇴사 실업급여">
+<link rel="canonical" href="https://paygyesan.com/silup">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" content="#1b4d8f">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="페이계산">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://paygyesan.com/silup">
+<meta property="og:title" content="실업급여 계산기 | 구직급여 일액과 소정급여일수">
+<meta property="og:description" content="이직 전 3개월 임금과 근무 기간으로 1일 구직급여와 총 수급액을 즉시 계산합니다.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="실업급여 계산기 | 구직급여 계산">
+<meta name="twitter:description" content="2026년 상한액·하한액과 고용보험법 별표1을 반영한 실업급여 계산기.">
+
+<link rel="stylesheet" href="/assets/style.css?v=f951aa19">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b4d8f'/%3E%3Ctext x='16' y='23' font-size='19' font-family='sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'%3E₩%3C/text%3E%3C/svg%3E">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"실업급여 계산기","url":"https://paygyesan.com/silup","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ko","description":"입사일과 마지막 근무일, 이직 전 3개월 임금을 입력하면 구직급여 1일 지급액과 소정급여일수, 총 예상 수급액을 계산하는 무료 웹 도구입니다. 2026년 상한액 68,100원과 하한액 66,048원을 반영했습니다.","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"},"browserRequirements":"JavaScript 사용 가능한 브라우저"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"실업급여는 얼마를 받나요?","acceptedAnswer":{"@type":"Answer","text":"1일 구직급여는 이직 전 3개월 평균임금인 기초일액의 60%입니다. 2026년 기준 상한액은 1일 68,100원, 하한액은 66,048원이며 총 수급액은 1일 구직급여에 소정급여일수를 곱해 구합니다."}},{"@type":"Question","name":"실업급여는 며칠 동안 받나요?","acceptedAnswer":{"@type":"Answer","text":"고용보험법 별표1에 따라 이직일 기준 연령과 피보험기간으로 정해집니다. 50세 미만은 1년 미만 120일부터 10년 이상 240일까지이고, 50세 이상과 장애인은 1년 이상 180일부터 10년 이상 270일까지입니다."}},{"@type":"Question","name":"실업급여를 받으려면 어떤 조건을 갖춰야 하나요?","acceptedAnswer":{"@type":"Answer","text":"이직일 이전 18개월간 피보험 단위기간이 180일 이상이어야 하고, 비자발적 이직이어야 하며, 근로의 의사와 능력이 있고 적극적으로 재취업 활동을 해야 합니다."}},{"@type":"Question","name":"자발적으로 퇴사해도 실업급여를 받을 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"원칙적으로 받지 못하지만 법에서 정한 정당한 이직 사유가 인정되면 가능합니다. 2개월 이상 임금 체불, 최저임금 미달, 직장 내 괴롭힘, 사업장 이전으로 통근이 왕복 3시간 이상이 된 경우 등이 해당합니다."}},{"@type":"Question","name":"월급이 높으면 실업급여를 더 많이 받나요?","acceptedAnswer":{"@type":"Answer","text":"2026년 기준 기초일액 110,080원을 넘어야 하한액보다 많아지고 113,500원을 넘으면 상한액에 걸립니다. 월급으로 약 337만 원 미만이면 모두 하한액인 66,048원을 동일하게 받으므로 실제 차이는 소정급여일수에서 발생합니다."}},{"@type":"Question","name":"실업급여에도 세금이 붙나요?","acceptedAnswer":{"@type":"Answer","text":"붙지 않습니다. 구직급여는 소득세법상 비과세 소득이라 소득세와 4대보험료가 부과되지 않고 계산된 금액이 그대로 지급됩니다."}},{"@type":"Question","name":"실업급여는 언제까지 신청해야 하나요?","acceptedAnswer":{"@type":"Answer","text":"이직일 다음 날부터 12개월 이내에만 받을 수 있습니다. 소정급여일수가 남아 있어도 이 기간이 지나면 받지 못하므로 퇴사 후 바로 신청하는 것이 유리합니다."}},{"@type":"Question","name":"중간에 재취업하면 남은 실업급여는 어떻게 되나요?","acceptedAnswer":{"@type":"Answer","text":"소정급여일수를 절반 이상 남기고 재취업해 12개월 이상 근무하면 조기재취업수당으로 남은 구직급여의 50%를 받을 수 있습니다."}}]}]}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">페이계산<span class="brand-dot">.</span></a>
+    <h1>실업급여 계산기</h1>
+    <p class="lead">이직 전 3개월 임금과 근무 기간을 넣으면 <strong>1일 구직급여</strong>와 <strong>소정급여일수</strong>, 총 예상 수급액이 바로 나옵니다. 2026년 상한액 68,100원·하한액 66,048원을 반영했습니다.</p>
+    <p class="privacy-badge">입력값은 서버로 전송되지 않고 브라우저 안에서만 계산됩니다.</p>
+  </div>
+</header>
+
+<nav class="site-nav" aria-label="계산기 목록">
+  <div class="wrap">
+      <a href="/tongsang" class="nav-pill">통상임금</a>
+      <a href="/juhyu" class="nav-pill">주휴수당</a>
+      <a href="/toejik" class="nav-pill">퇴직금</a>
+      <a href="/yeoncha" class="nav-pill">연차수당</a>
+      <a href="/silup" class="nav-pill is-current" aria-current="page">실업급여</a>
+  </div>
+</nav>
+
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 근무 기간과 임금</h2>
+    <p class="section-desc">입사일과 마지막 근무일을 넣으면 피보험기간과 평균임금 산정기간이 자동으로 계산됩니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="date-hire">입사일</label>
+        <input type="date" id="date-hire" class="date-input" autocomplete="off">
+      </div>
+      <div class="net-field">
+        <label for="date-last">마지막 근무일</label>
+        <input type="date" id="date-last" class="date-input" autocomplete="off">
+      </div>
+      <div class="net-field">
+        <label for="wage-3months">이직 전 3개월 임금 총액</label>
+        <div class="input-unit">
+          <input type="text" id="wage-3months" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">세전 기준. 연장·야간·휴일수당 포함</p>
+      </div>
+      <div class="net-field">
+        <label for="daily-hours">1일 소정근로시간</label>
+        <div class="input-unit">
+          <input type="text" id="daily-hours" inputmode="decimal" value="8" maxlength="4" autocomplete="off">
+          <span class="unit">시간</span>
+        </div>
+        <p class="hint">하한액 산정에 쓰입니다 (최대 8시간)</p>
+      </div>
+      <div class="net-field">
+        <label for="age-group">이직일 기준 연령</label>
+        <select id="age-group" class="date-input">
+          <option value="under50">50세 미만</option>
+          <option value="over50">50세 이상 또는 장애인</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="alert" id="alert-date" role="alert" hidden></p>
+
+    <div class="list-actions">
+      <span class="item-count">이전 직장 가입기간이 있으면 합산됩니다</span>
+      <button type="button" id="reset-all" class="btn btn-ghost">초기화</button>
+    </div>
+  </section>
+
+  <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+    <h2 id="result-title">2. 계산 결과</h2>
+
+    <div class="result-grid">
+      <div class="result-box">
+        <span class="result-label">1일 구직급여</span>
+        <strong class="result-value"><span id="out-daily">0</span><em>원</em></strong>
+        <span class="result-sub" id="out-limit-label"></span>
+      </div>
+      <div class="result-box result-primary">
+        <span class="result-label">총 예상 수급액</span>
+        <strong class="result-value"><span id="out-total">0</span><em>원</em></strong>
+      </div>
+    </div>
+
+    <p class="alert" id="alert-short" role="alert" hidden></p>
+
+    <dl class="result-meta">
+      <div>
+        <dt>소정급여일수</dt>
+        <dd><span id="out-days">0</span>일</dd>
+      </div>
+      <div>
+        <dt>월 환산 (30일)</dt>
+        <dd><span id="out-monthly">0</span>원</dd>
+      </div>
+    </dl>
+
+    <div class="annual-list">
+      <div class="annual-row">
+        <dt>피보험기간<small>재직일수 <span id="out-insured-days">0</span>일</small></dt>
+        <dd><span id="out-insured">-</span></dd>
+      </div>
+      <div class="annual-row">
+        <dt>평균임금 산정기간<small><span id="out-period">-</span></small></dt>
+        <dd><span id="out-period-days">0</span><em>일</em></dd>
+      </div>
+      <div class="annual-row annual-highlight">
+        <dt>기초일액 (평균임금)<small>3개월 임금 ÷ 기간일수</small></dt>
+        <dd><span id="out-base-daily">0</span><em>원</em></dd>
+      </div>
+    </div>
+
+    <p class="formula" id="out-formula"></p>
+
+    <p class="hint">구직급여일액은 <strong id="range-label"></strong> 범위 안에서 결정됩니다. 기초일액이 아무리 높아도 상한을 넘지 않고, 낮아도 하한 아래로 내려가지 않습니다.</p>
+    <p class="hint">이 계산은 <strong>수급 자격이 인정된다는 전제</strong>입니다. 자발적 퇴사는 원칙적으로 수급 대상이 아닙니다. 실제 수급 여부와 금액은 고용센터가 결정합니다.</p>
+  </section>
+
+  <section class="card calc-links" aria-labelledby="other-calc-title">
+      <h2 id="other-calc-title">다른 계산기</h2>
+      <div class="calc-grid">
+        <a class="calc-card" href="/tongsang">
+          <span class="calc-card-title">통상임금 계산기</span>
+          <span class="calc-card-desc">기본급과 수당을 넣으면 통상시급, 가산수당, 연봉, 세후 실수령액까지 한 번에 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/juhyu">
+          <span class="calc-card-title">주휴수당 계산기</span>
+          <span class="calc-card-desc">시급과 근무시간을 넣으면 주휴수당과 주급, 월 환산액을 계산합니다. 최저임금 미달도 확인합니다.</span>
+        </a>
+        <a class="calc-card" href="/toejik">
+          <span class="calc-card-title">퇴직금 계산기</span>
+          <span class="calc-card-desc">입사일과 퇴직 전 3개월 임금을 넣으면 평균임금과 예상 퇴직금이 나옵니다. 통상임금과 비교해 유리한 쪽을 적용합니다.</span>
+        </a>
+        <a class="calc-card" href="/yeoncha">
+          <span class="calc-card-title">연차수당 계산기</span>
+          <span class="calc-card-desc">입사일만 넣으면 발생 연차일수가 나오고, 통상임금으로 미사용 연차수당까지 계산합니다.</span>
+        </a>
+      </div>
+    </section>
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <article class="card content" aria-labelledby="guide-title">
+    <h2 id="guide-title">실업급여 완전 정리</h2>
+
+    <h3>얼마를 받나</h3>
+    <p>실업급여의 정확한 이름은 <strong>구직급여</strong>입니다. 계산은 두 단계로 이루어집니다.</p>
+    <p><strong>1일 구직급여 = 기초일액 × 60%</strong><br>
+    <strong>총 수급액 = 1일 구직급여 × 소정급여일수</strong></p>
+    <p>기초일액은 <strong>이직 전 3개월 평균임금</strong>입니다. 퇴직금을 계산할 때 쓰는 그 평균임금과 같은 개념으로, 3개월 임금 총액을 그 기간의 달력 일수로 나눕니다.</p>
+
+    <h3>상한액과 하한액</h3>
+    <p>여기에 상한과 하한이 있습니다. 2026년 기준입니다.</p>
+    <p><strong>상한액 1일 68,100원</strong> — 고용보험법상 기초일액 상한이 113,500원이고, 여기에 60%를 곱한 금액입니다. 월급이 아무리 높아도 이 이상은 받지 못합니다.</p>
+    <p><strong>하한액 1일 66,048원</strong> — 최저기초일액(1일 소정근로시간 × 최저임금)의 80%입니다. 2026년 최저임금 10,320원 기준으로 8시간 × 10,320 × 80% = 66,048원입니다.</p>
+    <p>2026년에 상한액이 66,000원에서 68,100원으로 올랐습니다. 7년 만의 인상인데, 최저임금이 오르면서 <strong>하한액이 기존 상한액을 넘어서는 역전 현상</strong>이 생겨 불가피하게 함께 올린 것입니다.</p>
+
+    <h3>대부분은 같은 금액을 받습니다</h3>
+    <p>상한과 하한의 차이가 하루 2,052원밖에 되지 않습니다. 이 때문에 <strong>기초일액이 110,080원 미만인 사람은 모두 하한액인 66,048원을 받습니다.</strong> 3개월 임금 총액으로 환산하면 약 1,012만 원, 월급으로 치면 <strong>약 337만 원 미만이면 급여 수준과 무관하게 금액이 같습니다.</strong></p>
+    <p>월 250만 원을 받던 사람과 월 330만 원을 받던 사람이 똑같이 하루 66,048원을 받는다는 뜻입니다. 실업급여가 소득 대체보다 최저생활 보장에 가깝게 설계되어 있어서 생기는 결과입니다. 결국 <strong>수급액의 차이는 금액보다 기간에서 갈립니다.</strong></p>
+
+    <!-- 광고 위치 3: 설명 콘텐츠 중간 (애드센스 승인 후 삽입) -->
+    <!-- <div class="ad-slot ad-inline"></div> -->
+
+    <h3>며칠 동안 받나</h3>
+    <p>소정급여일수는 고용보험법 별표1에 따라 <strong>이직일 기준 연령</strong>과 <strong>고용보험 피보험기간</strong>으로 정해집니다.</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>피보험기간</th><th>50세 미만</th><th>50세 이상·장애인</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1년 미만</td><td>120일</td><td>120일</td></tr>
+        <tr><td>1년 이상 3년 미만</td><td>150일</td><td>180일</td></tr>
+        <tr><td>3년 이상 5년 미만</td><td>180일</td><td>210일</td></tr>
+        <tr><td>5년 이상 10년 미만</td><td>210일</td><td>240일</td></tr>
+        <tr><td>10년 이상</td><td>240일</td><td>270일</td></tr>
+      </tbody>
+    </table>
+    <p>피보험기간은 한 직장의 재직기간이 아니라 <strong>고용보험에 가입되어 있던 전체 기간</strong>입니다. 이전 직장 이력이 있으면 합산되므로, 이직이 잦았더라도 공백이 길지 않다면 기간이 꽤 길어질 수 있습니다. 이 계산기는 입력한 한 직장 기준으로만 계산하니, 이전 이력이 있다면 실제 수급일수는 더 길 수 있습니다.</p>
+
+    <h3>받을 수 있는 조건</h3>
+    <p>금액보다 먼저 따져야 할 것이 <strong>수급 자격</strong>입니다. 네 가지를 모두 충족해야 합니다.</p>
+    <p>첫째, <strong>이직일 이전 18개월간 피보험 단위기간이 180일 이상</strong>이어야 합니다. 여기서 180일은 재직일수가 아니라 보수를 받은 날의 합계라 실제로는 7~8개월 정도 근무해야 채워집니다.</p>
+    <p>둘째, <strong>비자발적 이직</strong>이어야 합니다. 경영상 해고, 권고사직, 계약기간 만료, 폐업 등이 해당합니다. 스스로 그만둔 경우는 원칙적으로 받지 못합니다.</p>
+    <p>다만 자발적 퇴사여도 <strong>정당한 이직 사유</strong>가 인정되면 받을 수 있습니다. 2개월 이상 임금 체불, 최저임금 미달, 사업장의 폐업이 확실한 경우, 직장 내 괴롭힘, 통근 시간이 왕복 3시간 이상으로 늘어난 경우, 질병으로 업무 수행이 어려운데 회사가 배치전환을 해주지 않는 경우 등입니다.</p>
+    <p>셋째, <strong>근로의 의사와 능력</strong>이 있어야 하고, 넷째, <strong>적극적인 재취업 활동</strong>을 해야 합니다. 실업인정일마다 구직활동을 증명해야 급여가 나갑니다.</p>
+
+    <h3>신청은 언제까지</h3>
+    <p>중요한 함정이 있습니다. 구직급여는 <strong>이직일 다음 날부터 12개월 이내</strong>에만 받을 수 있습니다. 소정급여일수가 남아 있어도 이 기간이 지나면 못 받습니다.</p>
+    <p>예를 들어 소정급여일수가 240일인데 이직 후 8개월이 지나 신청하면, 남은 4개월분만 받고 끝납니다. 퇴사 후 <strong>바로 신청하는 것이 유리</strong>한 이유입니다. 고용센터 방문 전에 워크넷 구직등록과 수급자격 신청자 온라인 교육을 먼저 마쳐야 합니다.</p>
+
+    <h3>자주 묻는 질문</h3>
+    <div class="faq">
+      <details>
+        <summary>자발적 퇴사인데 정말 못 받나요?</summary>
+        <p>원칙적으로는 받지 못합니다. 다만 법에서 정한 <strong>정당한 이직 사유</strong>에 해당하면 자발적 퇴사여도 수급 자격이 인정됩니다. 임금 체불, 최저임금 미달, 직장 내 괴롭힘, 사업장 이전으로 통근이 왕복 3시간 이상이 된 경우 등이 대표적입니다. 증빙 자료가 있어야 하니 퇴사 전에 자료를 모아두세요. 판단은 고용센터가 합니다.</p>
+      </details>
+      <details>
+        <summary>180일은 어떻게 세나요?</summary>
+        <p>재직일수가 아니라 <strong>보수 지급의 기초가 된 날</strong>의 합계입니다. 주 5일 근무자라면 주휴일을 포함해 주 6일이 잡히는 경우가 많아, 실제로는 7~8개월 정도 근무해야 180일이 채워집니다. 무급휴일은 제외됩니다. 이전 직장의 기간도 합산되지만, 그 사이에 실업급여를 받은 적이 있다면 그 이전 기간은 빠집니다.</p>
+      </details>
+      <details>
+        <summary>월급이 높으면 더 많이 받나요?</summary>
+        <p>어느 정도까지만 그렇습니다. 2026년 기준 기초일액 110,080원(월급 약 337만 원)을 넘어야 하한액보다 많아지고, 113,500원(월급 약 348만 원)을 넘으면 상한액에 걸려 더는 늘지 않습니다. 즉 <strong>월급 337만 원 미만과 348만 원 초과는 각각 모두 같은 금액</strong>을 받습니다. 실제 차이는 소정급여일수에서 납니다.</p>
+      </details>
+      <details>
+        <summary>실업급여에도 세금이 붙나요?</summary>
+        <p>붙지 않습니다. 구직급여는 소득세법상 <strong>비과세 소득</strong>이라 소득세와 4대보험료가 부과되지 않습니다. 계산된 금액이 그대로 지급됩니다. 다른 계산기의 결과가 세전인 것과 다른 점입니다.</p>
+      </details>
+      <details>
+        <summary>중간에 취업하면 남은 금액은 어떻게 되나요?</summary>
+        <p>소정급여일수를 절반 이상 남기고 재취업해 12개월 이상 근무하면 <strong>조기재취업수당</strong>으로 남은 구직급여의 50%를 받을 수 있습니다. 실업급여를 끝까지 받는 것보다 빨리 취업하는 편이 유리하도록 만든 제도입니다. 다만 이전 사업주에게 재고용된 경우 등 제외 사유가 있습니다.</p>
+      </details>
+      <details>
+        <summary>계약직인데 계약이 끝났습니다. 받을 수 있나요?</summary>
+        <p>받을 수 있습니다. 계약기간 만료는 비자발적 이직으로 인정됩니다. 다만 회사가 재계약을 제안했는데 근로자가 거부한 경우에는 자발적 이직으로 볼 수 있어 주의가 필요합니다.</p>
+      </details>
+      <details>
+        <summary>입력한 정보가 저장되나요?</summary>
+        <p>저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>에서 확인할 수 있습니다.</p>
+      </details>
+    </div>
+  </article>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="disclaimer"><strong>면책조항</strong> 이 계산기는 일반적인 법령과 판례를 바탕으로 한 참고용 도구이며, 계산 결과는 법적 효력이 없습니다. 실제 금액은 취업규칙, 단체협약, 근로계약서의 구체적인 내용과 사업장 상황에 따라 달라질 수 있습니다. 정확한 판단이 필요한 경우 공인노무사 또는 고용노동부 고객상담센터(1350)의 상담을 받으시기 바랍니다. 본 사이트는 계산 결과 이용으로 발생한 손해에 대해 책임지지 않습니다.</p>
+    <nav class="footer-nav">
+      <a href="/">홈</a>
+      <a href="/tongsang">통상임금 계산기</a>
+      <a href="/juhyu">주휴수당 계산기</a>
+      <a href="/toejik">퇴직금 계산기</a>
+      <a href="/yeoncha">연차수당 계산기</a>
+      <a href="/silup" aria-current="page">실업급여 계산기</a>
+      <a href="/privacy">개인정보처리방침</a>
+    </nav>
+    <p class="copyright">© 2026 paygyesan.com</p>
+  </div>
+</footer>
+<script src="/assets/calc.js?v=4db4f393" defer></script>
+<script src="/assets/silup.js?v=cfdbb96a" defer></script>
+</body>
+</html>
