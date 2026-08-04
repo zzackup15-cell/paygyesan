@@ -84,6 +84,23 @@ function buildTopNav(current) {
   return '\n<nav class="site-nav" aria-label="계산기 목록">\n  <div class="wrap">\n' + links + '  </div>\n</nav>\n';
 }
 
+// 홈의 계산기 카드. 손으로 쓰면 탭 순서와 어긋나므로 pages.js 에서 생성한다.
+function buildHubCards() {
+  return pages
+    .filter(p => p.calculator)
+    .map(p => {
+      const tags = (p.tags || [])
+        .map(t => '<span>' + t + '</span>')
+        .join('');
+      return '      <a class="calc-card" href="/' + p.slug + '">\n' +
+        '        <span class="calc-card-title">' + p.navLabel + '</span>\n' +
+        '        <span class="calc-card-desc">' + (p.hubDesc || p.cardDesc) + '</span>\n' +
+        (tags ? '        <span class="calc-card-tags">' + tags + '</span>\n' : '') +
+        '      </a>\n';
+    })
+    .join('');
+}
+
 // 계산이 끝난 자리에서 다음 계산기로 넘어가게 하는 카드
 function buildOtherCalcs(current) {
   const items = pages.filter(p => p.calculator && p.slug !== current);
@@ -157,7 +174,8 @@ for (const page of pages) {
     .replace(/\{\{SCRIPTS\}\}/g, scripts)
     .replace(/\{\{CSS\}\}/g, assetUrl('/assets/style.css'))
     // 본문 안에서도 쓸 수 있어야 하므로 BODY 치환 뒤에 처리한다
-    .replace(/\{\{OTHER_CALCS\}\}/g, buildOtherCalcs(page.slug));
+    .replace(/\{\{OTHER_CALCS\}\}/g, buildOtherCalcs(page.slug))
+    .replace(/\{\{CALC_CARDS\}\}/g, buildHubCards());
 
   const leftover = html.match(/\{\{[A-Z_]+\}\}/);
   if (leftover) throw new Error(outputFile(page.slug) + ' 에 치환되지 않은 자리표시자: ' + leftover[0]);
