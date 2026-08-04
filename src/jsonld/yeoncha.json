@@ -1,0 +1,77 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "연차수당 계산기",
+   "url": "https://paygyesan.com/yeoncha",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "All",
+   "inLanguage": "ko",
+   "description": "입사일을 입력하면 근로기준법 제60조에 따른 연차 발생일수를 계산하고, 월 통상임금으로 연차 미사용수당을 산출하는 무료 웹 도구입니다. 가산휴가와 25일 한도까지 반영합니다.",
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+   "browserRequirements": "JavaScript 사용 가능한 브라우저"
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "연차는 며칠 발생하나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "입사 1년 미만이면 1개월 개근마다 1일씩 최대 11일이 발생합니다. 1년 이상이고 출근율 80% 이상이면 15일이 발생하며, 3년차부터 2년마다 1일씩 가산되어 21년차에 한도인 25일에 도달합니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "연차수당은 어떻게 계산하나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "연차수당은 1일 통상임금에 미사용 연차일수를 곱해 계산합니다. 퇴직금과 달리 평균임금이 아니라 통상임금이 기준이며, 1일 통상임금은 통상시급에 1일 소정근로시간을 곱한 값입니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "연차는 언제 소멸하나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "발생일로부터 1년간 사용하지 않으면 소멸합니다. 다만 사용하지 못한 일수는 미사용수당 청구권으로 바뀌며 이 수당에는 3년의 소멸시효가 적용됩니다. 회사가 법정 절차대로 연차사용촉진을 했다면 수당을 지급하지 않을 수 있습니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "5인 미만 사업장도 연차가 있나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "없습니다. 연차유급휴가는 상시근로자 5인 이상 사업장에만 적용되므로 5인 미만 사업장에서는 연차와 연차수당이 발생하지 않습니다. 주휴수당과 퇴직금은 사업장 규모와 무관하게 적용됩니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "1년만 채우고 퇴사하면 연차가 며칠인가요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "1년 미만 기간에 발생한 최대 11일에 1년 시점의 15일을 더해 26일이 됩니다. 다만 대법원은 15일이 확정되려면 1년하고 하루를 더 근무해야 한다고 보므로, 365일만 근무하고 퇴사하면 11일분만 인정될 수 있습니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "육아휴직 기간도 출근으로 보나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "출근율을 따질 때 육아휴직 기간, 업무상 부상·질병으로 인한 휴업기간, 출산전후휴가 기간은 출근한 것으로 봅니다. 따라서 이 기간이 있어도 연차는 정상적으로 발생합니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "연차수당이 퇴직금에도 영향을 주나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "영향을 줍니다. 퇴직 전 12개월 동안 받은 연차수당의 3/12가 평균임금에 산입되므로 연차수당을 받으면 퇴직금도 함께 늘어납니다."
+     }
+    }
+   ]
+  }
+ ]
+}

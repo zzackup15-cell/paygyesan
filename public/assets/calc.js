@@ -304,9 +304,63 @@ var Calc = (function () {
     };
   }
 
+  /* ---- 연차유급휴가 (근로기준법 제60조) ---- */
+
+  var MAX_ANNUAL_LEAVE = 25;      // 가산휴가 포함 한도
+  var MAX_FIRST_YEAR_LEAVE = 11;  // 1년 미만 기간에 월 1일씩 최대 11일
+  var MAX_UNUSED_DAYS = 25;
+
+  // 경과한 만(滿) 개월 수. 일자가 모자라면 아직 그 달을 채우지 못한 것으로 본다.
+  function monthsBetween(from, to) {
+    if (!from || !to) return 0;
+    var m = (to.getUTCFullYear() - from.getUTCFullYear()) * 12 +
+            (to.getUTCMonth() - from.getUTCMonth());
+    if (to.getUTCDate() < from.getUTCDate()) m--;
+    return m > 0 ? m : 0;
+  }
+
+  // 입사일 기준으로 산정한 연차일수
+  function annualLeaveDays(hireDate, baseDate) {
+    var months = monthsBetween(hireDate, baseDate);
+    var years = Math.floor(months / 12);
+
+    // 1년 미만: 1개월 개근마다 1일 (최대 11일)
+    var firstYear = Math.min(months, MAX_FIRST_YEAR_LEAVE);
+
+    // 1년 이상: 15일 + 최초 1년을 초과하는 매 2년마다 1일 가산
+    var annual = 0;
+    if (years >= 1) {
+      annual = Math.min(15 + Math.floor((years - 1) / 2), MAX_ANNUAL_LEAVE);
+    }
+
+    return {
+      months: months,
+      years: years,
+      firstYearDays: years >= 1 ? MAX_FIRST_YEAR_LEAVE : firstYear,
+      annualDays: annual,
+      // 지금 이 시점에 새로 쓸 수 있는 연차
+      currentDays: years >= 1 ? annual : firstYear,
+      isFirstYear: years < 1
+    };
+  }
+
+  // 연차 미사용수당 = 1일 통상임금 × 미사용 일수
+  function annualLeavePay(dailyOrdinary, unusedDays) {
+    var d = toHours(unusedDays);
+    if (d > MAX_UNUSED_DAYS) d = MAX_UNUSED_DAYS;
+    if (!isFinite(dailyOrdinary) || dailyOrdinary <= 0 || d <= 0) return 0;
+    return dailyOrdinary * d;
+  }
+
   return {
     MAX_ITEMS: MAX_ITEMS,
     MIN_SERVICE_DAYS: MIN_SERVICE_DAYS,
+    MAX_ANNUAL_LEAVE: MAX_ANNUAL_LEAVE,
+    MAX_FIRST_YEAR_LEAVE: MAX_FIRST_YEAR_LEAVE,
+    MAX_UNUSED_DAYS: MAX_UNUSED_DAYS,
+    monthsBetween: monthsBetween,
+    annualLeaveDays: annualLeaveDays,
+    annualLeavePay: annualLeavePay,
     parseDate: parseDate,
     daysBetween: daysBetween,
     minusMonths: minusMonths,

@@ -49,6 +49,18 @@ function lastModified(bodyFile) {
   return new Date().toISOString().slice(0, 10);
 }
 
+// 자산 URL에 내용 해시를 붙인다.
+//
+// _headers 가 /assets/* 를 1시간 캐시하는데, 배포 후 사용자 브라우저가
+// 새 페이지 스크립트와 캐시된 옛 calc.js 를 섞어 로드하면 계산기가 깨진다.
+// 실제로 로컬에서 이 상태를 만났다. 내용이 바뀌면 URL 도 바뀌게 해서 막는다.
+function assetUrl(p) {
+  var file = path.join(OUT, p.replace(/^\//, ''));
+  if (!fs.existsSync(file)) throw new Error('자산 파일이 없다: ' + p);
+  var hash = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex').slice(0, 8);
+  return p + '?v=' + hash;
+}
+
 function urlFor(slug) {
   return slug === '' ? SITE + '/' : SITE + '/' + slug;
 }
@@ -120,7 +132,7 @@ for (const page of pages) {
   }
 
   const scripts = (page.scripts || [])
-    .map(s => '<script src="' + s + '" defer></script>\n')
+    .map(s => '<script src="' + assetUrl(s) + '" defer></script>\n')
     .join('');
 
   const html = layout
@@ -143,6 +155,7 @@ for (const page of pages) {
     .replace(/\{\{NAV\}\}/g, buildNav(page.slug))
     .replace(/\{\{TOP_NAV\}\}/g, buildTopNav(page.slug))
     .replace(/\{\{SCRIPTS\}\}/g, scripts)
+    .replace(/\{\{CSS\}\}/g, assetUrl('/assets/style.css'))
     // 본문 안에서도 쓸 수 있어야 하므로 BODY 치환 뒤에 처리한다
     .replace(/\{\{OTHER_CALCS\}\}/g, buildOtherCalcs(page.slug));
 
