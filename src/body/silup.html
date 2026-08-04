@@ -25,6 +25,30 @@
         <p class="hint">세전 기준. 연장·야간·휴일수당 포함</p>
       </div>
       <div class="net-field">
+        <label for="annual-bonus">연간 상여금 총액</label>
+        <div class="input-unit">
+          <input type="text" id="annual-bonus" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">최근 12개월분. 3/12만 산입됩니다</p>
+      </div>
+      <div class="net-field">
+        <label for="annual-leave-pay">연차수당</label>
+        <div class="input-unit">
+          <input type="text" id="annual-leave-pay" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">최근 12개월분. 3/12만 산입됩니다</p>
+      </div>
+      <div class="net-field">
+        <label for="monthly-ordinary">월 통상임금 <span class="label-opt">선택</span></label>
+        <div class="input-unit">
+          <input type="text" id="monthly-ordinary" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">평균임금과 비교용. <a href="/tongsang">통상임금 계산기</a>에서 확인</p>
+      </div>
+      <div class="net-field">
         <label for="daily-hours">1일 소정근로시간</label>
         <div class="input-unit">
           <input type="text" id="daily-hours" inputmode="decimal" value="8" maxlength="4" autocomplete="off">
@@ -86,12 +110,21 @@
         <dt>평균임금 산정기간<small><span id="out-period">-</span></small></dt>
         <dd><span id="out-period-days">0</span><em>일</em></dd>
       </div>
+      <div class="annual-row">
+        <dt>1일 평균임금<small>3개월 임금 + 상여·연차 3/12 ÷ 기간일수</small></dt>
+        <dd><span id="out-avg-daily">0</span><em>원</em></dd>
+      </div>
+      <div class="annual-row">
+        <dt>1일 통상임금<small>월 통상임금 ÷ 209 × 8</small></dt>
+        <dd><span id="out-ordinary-daily">-</span><em>원</em></dd>
+      </div>
       <div class="annual-row annual-highlight">
-        <dt>기초일액 (평균임금)<small>3개월 임금 ÷ 기간일수</small></dt>
+        <dt>기초일액<small>평균임금과 통상임금 중 큰 쪽</small></dt>
         <dd><span id="out-base-daily">0</span><em>원</em></dd>
       </div>
     </div>
 
+    <p class="alert" id="alert-ordinary" role="alert" hidden></p>
     <p class="formula" id="out-formula"></p>
 
     <p class="hint">구직급여일액은 <strong id="range-label"></strong> 범위 안에서 결정됩니다. 기초일액이 아무리 높아도 상한을 넘지 않고, 낮아도 하한 아래로 내려가지 않습니다.</p>
@@ -110,7 +143,9 @@
     <p>실업급여의 정확한 이름은 <strong>구직급여</strong>입니다. 계산은 두 단계로 이루어집니다.</p>
     <p><strong>1일 구직급여 = 기초일액 × 60%</strong><br>
     <strong>총 수급액 = 1일 구직급여 × 소정급여일수</strong></p>
-    <p>기초일액은 <strong>이직 전 3개월 평균임금</strong>입니다. 퇴직금을 계산할 때 쓰는 그 평균임금과 같은 개념으로, 3개월 임금 총액을 그 기간의 달력 일수로 나눕니다.</p>
+    <p>기초일액은 <strong>이직 전 3개월 평균임금</strong>입니다. 퇴직금을 계산할 때 쓰는 그 평균임금과 정확히 같은 개념으로, 3개월 임금 총액을 그 기간의 달력 일수로 나눕니다.</p>
+    <p>그래서 <strong>상여금과 연차수당도 들어갑니다.</strong> 다만 3개월치가 아니라 최근 12개월분의 3/12만 산입합니다. 연 600만 원의 상여금을 받았다면 150만 원이 임금 총액에 더해집니다. 이 부분을 빼고 계산하면 기초일액이 실제보다 낮게 나옵니다.</p>
+    <p>또 하나, <strong>평균임금이 통상임금보다 적으면 통상임금을 기초일액으로 합니다.</strong> 고용보험법 제45조 제2항에 있는 규정으로, 이직 전 3개월에 휴직이나 무급휴가가 있어 평균임금이 낮아진 사람을 보호하기 위한 것입니다. 위 계산기에 월 통상임금을 넣으면 두 값을 비교해 큰 쪽을 적용합니다.</p>
 
     <h3>상한액과 하한액</h3>
     <p>여기에 상한과 하한이 있습니다. 2026년 기준입니다.</p>

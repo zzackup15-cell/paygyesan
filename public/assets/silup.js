@@ -8,6 +8,9 @@
   var hireInput = document.getElementById('date-hire');
   var lastInput = document.getElementById('date-last');
   var wageInput = document.getElementById('wage-3months');
+  var bonusInput = document.getElementById('annual-bonus');
+  var leaveInput = document.getElementById('annual-leave-pay');
+  var ordinaryInput = document.getElementById('monthly-ordinary');
   var hoursInput = document.getElementById('daily-hours');
   var ageSelect = document.getElementById('age-group');
 
@@ -16,6 +19,8 @@
     insuredDays: document.getElementById('out-insured-days'),
     period: document.getElementById('out-period'),
     periodDays: document.getElementById('out-period-days'),
+    avgDaily: document.getElementById('out-avg-daily'),
+    ordinaryDaily: document.getElementById('out-ordinary-daily'),
     baseDaily: document.getElementById('out-base-daily'),
     daily: document.getElementById('out-daily'),
     days: document.getElementById('out-days'),
@@ -27,6 +32,7 @@
 
   var alertDate = document.getElementById('alert-date');
   var alertShort = document.getElementById('alert-short');
+  var alertOrdinary = document.getElementById('alert-ordinary');
   var rangeLabel = document.getElementById('range-label');
 
   function formatWon(n) {
@@ -113,7 +119,24 @@
     out.period.textContent = periodStart ? isoText(periodStart) + ' ~ ' + isoText(last) : '-';
     out.periodDays.textContent = periodDays ? periodDays.toLocaleString('ko-KR') : '0';
 
-    var baseDaily = periodDays > 0 ? Calc.toAmount(wageInput.value) / periodDays : 0;
+    // 기초일액은 근로기준법상 평균임금이다(고용보험법 제45조 제1항).
+    // 따라서 상여금과 연차수당의 3/12 가 산입되어야 한다. 퇴직금과 같은 계산이다.
+    var avgDaily = Calc.averageDailyWage({
+      wage3Months: wageInput.value,
+      annualBonus: bonusInput.value,
+      annualLeavePay: leaveInput.value,
+      periodDays: periodDays
+    });
+
+    // 평균임금이 통상임금보다 적으면 통상임금을 기초일액으로 한다(같은 조 제2항).
+    var monthlyOrdinary = Calc.toAmount(ordinaryInput.value);
+    var ordinaryDaily = monthlyOrdinary > 0
+      ? Calc.hourlyOrdinaryWage(monthlyOrdinary, Calc.monthlyScheduledHours(40)) * 8
+      : 0;
+
+    var baseDaily = Math.max(avgDaily, ordinaryDaily);
+    var usedOrdinary = ordinaryDaily > avgDaily && avgDaily > 0;
+
     var dailyHours = Calc.toHours(hoursInput.value);
     var isOver50 = ageSelect.value === 'over50';
 
@@ -129,7 +152,14 @@
     // 피보험 단위기간 180일 미만이면 수급 자격이 없다
     var eligible = insuredDays >= Calc.RATES.unemployment.minInsuredDays;
 
+    out.avgDaily.textContent = formatWon(avgDaily);
+    out.ordinaryDaily.textContent = ordinaryDaily > 0 ? formatWon(ordinaryDaily) : '-';
     out.baseDaily.textContent = formatWon(r.baseDaily);
+
+    showAlert(alertOrdinary, usedOrdinary
+      ? '평균임금(' + formatWon(avgDaily) + '원)이 1일 통상임금(' + formatWon(ordinaryDaily) + '원)보다 적어 ' +
+        '통상임금을 기초일액으로 적용했습니다. 고용보험법 제45조 제2항에 따른 것입니다.'
+      : '');
     out.daily.textContent = formatWon(eligible ? r.daily : 0);
     out.days.textContent = eligible ? r.days.toLocaleString('ko-KR') : '0';
     out.total.textContent = formatWon(eligible ? r.total : 0);
@@ -155,7 +185,7 @@
       formatWon(minD) + '원 ~ ' + formatWon(maxD) + '원';
   }
 
-  [wageInput].forEach(function (input) {
+  [wageInput, bonusInput, leaveInput, ordinaryInput].forEach(function (input) {
     input.addEventListener('input', function () {
       formatAmountField(input);
       render();
@@ -173,6 +203,9 @@
     hireInput.value = '';
     lastInput.value = '';
     wageInput.value = '';
+    bonusInput.value = '';
+    leaveInput.value = '';
+    ordinaryInput.value = '';
     hoursInput.value = '8';
     ageSelect.value = 'under50';
     render();
