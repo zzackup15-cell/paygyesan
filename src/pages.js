@@ -11,6 +11,10 @@
 
 const SITE = 'https://paygyesan.com';
 
+// 애드센스 ads.txt. 광고 사기 방지용 공개 표준이라 이 내용은 공개되는 것이 정상이다.
+// 퍼블리셔 ID 가 바뀌거나 다른 광고 네트워크를 추가하면 여기에 한 줄씩 더한다.
+const ADS_TXT = 'google.com, pub-1984750615156688, DIRECT, f08c47fec0942fa0';
+
 const DISCLAIMER_CALC =
   '<strong>면책조항</strong> 이 계산기는 일반적인 법령과 판례를 바탕으로 한 참고용 도구이며, 계산 결과는 법적 효력이 없습니다. ' +
   '실제 금액은 취업규칙, 단체협약, 근로계약서의 구체적인 내용과 사업장 상황에 따라 달라질 수 있습니다. ' +
@@ -25,6 +29,7 @@ const BADGE = '입력값은 서버로 전송되지 않고 브라우저 안에서
 
 module.exports = {
   SITE,
+  ADS_TXT,
   pages: [
     {
       slug: '',

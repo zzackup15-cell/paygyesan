@@ -251,7 +251,7 @@ pip install pypdf && python tools/build-tax-table.py 별표2.pdf
 - [x] `public/privacy.html`의 문의 이메일을 `contact@paygyesan.com`으로 설정. Cloudflare Email Routing으로 개인 주소에 전달되며, 개인 메일을 공개 페이지에 노출하지 않는다
 - [x] 도메인 연결 및 HTTPS 적용 확인 (Always Use HTTPS 활성화, HTTP는 301)
 - [x] Google Search Console 소유권 확인 및 `sitemap.xml` 제출
-- [ ] `ads.txt` 파일 추가 (애드센스 승인 후 발급되는 퍼블리셔 ID 사용)
+- [x] `ads.txt` 추가 (`src/pages.js` 의 `ADS_TXT` 에서 생성). 광고 사기 방지용 공개 표준이라 내용이 공개되는 것이 정상
 
 ## 배포 — Cloudflare Workers (static assets)
 

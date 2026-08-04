@@ -23,7 +23,7 @@ const ROOT = path.join(__dirname, '..');
 const SRC = path.join(ROOT, 'src');
 const OUT = path.join(ROOT, 'public');
 
-const { SITE, pages } = require(path.join(SRC, 'pages.js'));
+const { SITE, ADS_TXT, pages } = require(path.join(SRC, 'pages.js'));
 
 function read(...p) {
   return fs.readFileSync(path.join(...p), 'utf8');
@@ -189,3 +189,6 @@ console.log('  sitemap.xml     URL ' + sitemapEntries.length + '개');
 
 write('robots.txt', 'User-agent: *\nAllow: /\n\nSitemap: ' + SITE + '/sitemap.xml\n');
 console.log('  robots.txt');
+
+write('ads.txt', ADS_TXT + '\n');
+console.log('  ads.txt');
