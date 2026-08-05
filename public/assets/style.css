@@ -96,9 +96,16 @@ h1 {
   mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
 }
 
-/* 데스크톱에서는 다 보이므로 흐림 처리를 끈다 */
+/* 데스크톱에서는 가로 스크롤 대신 줄바꿈으로 전부 보여준다.
+   마우스 사용자는 가로 스크롤을 하기 어렵고, 탭이 잘리면 뒤쪽 계산기는
+   아예 없는 것이 된다. 세로 공간은 데스크톱에 여유가 있다. */
 @media (min-width: 760px) {
   .site-nav { -webkit-mask-image: none; mask-image: none; }
+  .site-nav .wrap { flex-wrap: wrap; overflow-x: visible; row-gap: 6px; }
+  /* 탭 8개가 본문 폭(720px) 안에 한 줄로 들어가도록 좌우 여백만 좁힌다.
+     계산기가 더 늘면 위 flex-wrap 이 받아 자연스럽게 두 줄이 된다.
+     .nav-pill 기본 규칙이 이 블록보다 아래에 있어 선택자를 구체화해야 이긴다. */
+  .site-nav .nav-pill { padding: 0 11px; }
 }
 
 .site-nav .wrap {

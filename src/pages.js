@@ -60,7 +60,7 @@ module.exports = {
       body: 'yeonbong.html',
       jsonld: 'yeonbong.json',
       navLabel: '연봉 실수령액 계산기',
-      navShort: '연봉 실수령액',
+      navShort: '실수령액',
       cardDesc: '세전 연봉만 넣으면 4대보험과 소득세를 뗀 월 실수령액이 나옵니다. 연봉별 실수령액표도 함께 봅니다.',
       calculator: true,
       nav: true,
