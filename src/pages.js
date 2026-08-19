@@ -11,6 +11,10 @@
 
 const SITE = 'https://paygyesan.com';
 
+// 애드센스 자동 광고 스크립트. 콘텐츠가 없는 페이지(404)에는 넣지 않는다.
+// 내용이 빈약한 페이지에 광고를 다는 것은 애드센스 정책 위반 소지가 있다.
+const ADSENSE = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1984750615156688" crossorigin="anonymous"></script>';
+
 // 애드센스 ads.txt. 광고 사기 방지용 공개 표준이라 이 내용은 공개되는 것이 정상이다.
 // 퍼블리셔 ID 가 바뀌거나 다른 광고 네트워크를 추가하면 여기에 한 줄씩 더한다.
 const ADS_TXT = 'google.com, pub-1984750615156688, DIRECT, f08c47fec0942fa0';
@@ -30,6 +34,7 @@ const BADGE = '입력값은 서버로 전송되지 않고 브라우저 안에서
 module.exports = {
   SITE,
   ADS_TXT,
+  ADSENSE,
   pages: [
     {
       slug: '',
@@ -291,6 +296,7 @@ module.exports = {
       slug: '404',
       body: '404.html',
       nav: false,
+      ads: false,
       title: '페이지를 찾을 수 없습니다 | 페이계산',
       h1: '페이지를 찾을 수 없습니다',
       lead: '주소가 바뀌었거나 삭제된 페이지입니다.',

@@ -23,7 +23,7 @@ const ROOT = path.join(__dirname, '..');
 const SRC = path.join(ROOT, 'src');
 const OUT = path.join(ROOT, 'public');
 
-const { SITE, ADS_TXT, pages } = require(path.join(SRC, 'pages.js'));
+const { SITE, ADS_TXT, ADSENSE, pages } = require(path.join(SRC, 'pages.js'));
 
 function read(...p) {
   return fs.readFileSync(path.join(...p), 'utf8');
@@ -178,6 +178,7 @@ for (const page of pages) {
     .replace(/\{\{TW_TITLE\}\}/g, page.twTitle)
     .replace(/\{\{TW_DESCRIPTION\}\}/g, page.twDescription)
     .replace(/\{\{JSONLD\}\}/g, jsonldBlock)
+    .replace(/\{\{ADSENSE\}\}/g, page.ads === false ? '' : ADSENSE + '\n')
     .replace(/\{\{H1\}\}/g, page.h1)
     .replace(/\{\{LEAD\}\}/g, page.lead)
     .replace(/\{\{BADGE\}\}/g, page.badge ? '    <p class="privacy-badge">' + page.badge + '</p>\n' : '')
