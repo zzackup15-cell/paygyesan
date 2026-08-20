@@ -17,6 +17,7 @@ const SUITES = [
   'leave',
   'unemployment',
   'parental',
+  'pension',
   'consistency',
   'precision'
 ];

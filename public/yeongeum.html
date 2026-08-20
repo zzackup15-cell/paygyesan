@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>국민연금 예상 수령액 계산기 | 2026년 개혁 반영 - 페이계산</title>
+<meta name="description" content="국민연금 노령연금 예상 수령액을 계산합니다. 가입 이력 없이 출생연도·가입기간·현재 소득만으로 추정하며, 2026년 A값 3,193,511원, 가입 연도별 비례상수(1988~1998년 2.4 · 2026년 이후 1.29), 20년 미만 지급률, 조기수급 감액과 연기연금 가산을 모두 반영했습니다.">
+<meta name="keywords" content="국민연금 예상 수령액, 국민연금 계산기, 노령연금, 국민연금 수령액 조회, 조기노령연금, 연기연금, 소득대체율 43%, 국민연금 개혁, A값, 비례상수">
+<link rel="canonical" href="https://paygyesan.com/yeongeum">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" content="#1b4d8f">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="페이계산">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://paygyesan.com/yeongeum">
+<meta property="og:title" content="국민연금 예상 수령액 계산기 | 2026년 개혁 반영">
+<meta property="og:description" content="출생연도와 가입기간, 현재 소득으로 매달 받을 국민연금을 계산합니다. 조기수급·연기연금 비교까지.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="국민연금 예상 수령액 계산기">
+<meta name="twitter:description" content="2026년 A값과 가입 연도별 비례상수를 반영한 국민연금 예상 수령액 계산기.">
+
+<link rel="stylesheet" href="/assets/style.css?v=5b8c7be6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b4d8f'/%3E%3Ctext x='16' y='23' font-size='19' font-family='sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'%3E₩%3C/text%3E%3C/svg%3E">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"국민연금 예상 수령액 계산기","url":"https://paygyesan.com/yeongeum","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ko","description":"출생연도와 가입기간, 현재 소득을 입력하면 국민연금 노령연금 예상 수령액을 계산하는 무료 웹 도구입니다. 2026년 A값 3,193,511원과 가입 연도별 비례상수, 조기수급·연기연금 지급률을 반영했습니다.","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"},"browserRequirements":"JavaScript 사용 가능한 브라우저"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"국민연금 예상 수령액은 어떻게 계산하나요?","acceptedAnswer":{"@type":"Answer","text":"기본연금액(연액) = 상수 × (A + B) × (1 + 0.05 × n / 12) 입니다. A는 전체 가입자 평균소득월액의 3년간 평균으로 2026년 기준 3,193,511원이고, B는 본인의 가입기간 중 기준소득월액 평균, n은 20년을 넘는 가입월수입니다. 여기에 가입기간과 수령 시기에 따른 지급률을 곱해 실제 연금액이 정해집니다."}},{"@type":"Question","name":"가입 이력이 없어도 계산할 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"가능합니다. 산식의 B값은 과거 소득을 재평가율로 현재가치 환산한 평균이므로, 소득이 평균 임금상승을 따라왔다면 현재 소득 수준과 비슷해집니다. 따라서 현재 소득과 가입기간만으로 추정할 수 있습니다. 다만 정확한 금액은 국민연금공단 '내 연금 알아보기'에서 확인해야 합니다."}},{"@type":"Question","name":"2026년 국민연금은 무엇이 바뀌었나요?","acceptedAnswer":{"@type":"Answer","text":"2025년 연금개혁으로 보험료율이 9%에서 9.5%로 올랐고 2033년 13%까지 매년 0.5%p씩 인상됩니다. 소득대체율은 2026년부터 43%로 고정되어 비례상수가 1.245에서 1.29로 올랐습니다."}},{"@type":"Question","name":"국민연금은 언제부터 받을 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"출생연도에 따라 다릅니다. 1952년 이전 출생자는 60세, 1953~1956년생 61세, 1957~1960년생 62세, 1961~1964년생 63세, 1965~1968년생 64세, 1969년 이후 출생자는 65세부터입니다. 최소 가입기간 10년을 채워야 합니다."}},{"@type":"Question","name":"국민연금을 일찍 받거나 미루면 얼마나 달라지나요?","acceptedAnswer":{"@type":"Answer","text":"조기노령연금은 최대 5년 앞당길 수 있고 1년마다 6%씩 감액되어 5년이면 70%가 됩니다. 연기연금은 최대 5년 미룰 수 있고 1년마다 7.2%씩 가산되어 5년이면 136%가 됩니다. 한 번 정해진 비율은 평생 적용됩니다."}},{"@type":"Question","name":"가입기간 10년을 못 채우면 어떻게 되나요?","acceptedAnswer":{"@type":"Answer","text":"노령연금 대신 그동안 낸 보험료에 이자를 더한 반환일시금을 한 번에 받습니다. 10년에 조금 모자란다면 임의계속가입으로 60세 이후에도 보험료를 내 기간을 채우거나, 추후납부로 납부하지 않은 기간을 메울 수 있습니다."}},{"@type":"Question","name":"비례상수가 가입 연도마다 다른가요?","acceptedAnswer":{"@type":"Answer","text":"다릅니다. 1988~1998년 가입기간은 2.4(B에 0.75 적용), 1999~2007년은 1.8, 2008년은 1.5이며 이후 매년 0.015씩 낮아져 2025년 1.245, 2026년 이후는 1.29입니다. 각 연도의 가입월수 비중으로 가중 합산되므로 여러 시기에 걸쳐 가입했다면 상수가 함께 적용됩니다."}}]}]}
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1984750615156688" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">페이계산<span class="brand-dot">.</span></a>
+    <h1>국민연금 예상 수령액 계산기</h1>
+    <p class="lead">출생연도와 가입기간, 현재 소득만 넣으면 <strong>매달 받을 연금액</strong>이 바로 나옵니다. 2026년 A값 3,193,511원과 가입 연도별 비례상수, 조기수급·연기연금 지급률을 반영했습니다.</p>
+    <p class="privacy-badge">입력값은 서버로 전송되지 않고 브라우저 안에서만 계산됩니다.</p>
+  </div>
+</header>
+
+<nav class="site-nav" aria-label="계산기 목록">
+  <div class="wrap">
+      <a href="/yeonbong" class="nav-pill">실수령액</a>
+      <a href="/tongsang" class="nav-pill">통상임금</a>
+      <a href="/boheom" class="nav-pill">4대보험</a>
+      <a href="/yeongeum" class="nav-pill is-current" aria-current="page">국민연금</a>
+      <a href="/juhyu" class="nav-pill">주휴수당</a>
+      <a href="/toejik" class="nav-pill">퇴직금</a>
+      <a href="/yeoncha" class="nav-pill">연차수당</a>
+      <a href="/silup" class="nav-pill">실업급여</a>
+      <a href="/yuka" class="nav-pill">육아휴직</a>
+  </div>
+</nav>
+
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 조건 입력</h2>
+    <p class="section-desc">가입 이력 없이도 계산됩니다. <strong>지금 소득이 계속 유지된다고 보고</strong> 현재가치로 추정합니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="birth-year">출생연도</label>
+        <div class="input-unit">
+          <input type="text" id="birth-year" inputmode="numeric" placeholder="1990" maxlength="4" autocomplete="off">
+          <span class="unit">년</span>
+        </div>
+        <p class="hint">수급개시연령을 정합니다</p>
+      </div>
+      <div class="net-field">
+        <label for="monthly-income">현재 월 소득</label>
+        <div class="input-unit">
+          <input type="text" id="monthly-income" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">국민연금 기준소득월액. 상한 659만 · 하한 41만</p>
+      </div>
+      <div class="net-field">
+        <label for="start-year">가입 시작 연도</label>
+        <div class="input-unit">
+          <input type="text" id="start-year" inputmode="numeric" placeholder="2015" maxlength="4" autocomplete="off">
+          <span class="unit">년</span>
+        </div>
+        <p class="hint">첫 직장에 들어간 해</p>
+      </div>
+      <div class="net-field">
+        <label for="end-year">가입 종료 연도</label>
+        <div class="input-unit">
+          <input type="text" id="end-year" inputmode="numeric" placeholder="2055" maxlength="4" autocomplete="off">
+          <span class="unit">년</span>
+        </div>
+        <p class="hint">보험료를 마지막으로 내는 해</p>
+      </div>
+      <div class="net-field">
+        <label for="claim-age">수령 시작 나이</label>
+        <select id="claim-age" class="date-input"></select>
+        <p class="hint">앞당기면 감액, 미루면 가산됩니다</p>
+      </div>
+    </div>
+
+    <div class="list-actions">
+      <span class="item-count">가입 시작·종료는 연 단위로 계산합니다</span>
+      <button type="button" id="reset-all" class="btn btn-ghost">초기화</button>
+    </div>
+  </section>
+
+  <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+    <h2 id="result-title">2. 계산 결과</h2>
+
+    <div class="result-grid">
+      <div class="result-box result-primary">
+        <span class="result-label">월 예상 연금액</span>
+        <strong class="result-value"><span id="out-monthly">0</span><em>원</em></strong>
+      </div>
+      <div class="result-box">
+        <span class="result-label">연 수령액</span>
+        <strong class="result-value"><span id="out-annual">0</span><em>원</em></strong>
+      </div>
+    </div>
+
+    <dl class="result-meta">
+      <div>
+        <dt>총 가입기간</dt>
+        <dd><span id="out-period">0</span></dd>
+      </div>
+      <div>
+        <dt>수급개시연령</dt>
+        <dd><span id="out-start-age">-</span>세</dd>
+      </div>
+      <div>
+        <dt>소득대체율</dt>
+        <dd><span id="out-replacement">0</span>%</dd>
+      </div>
+      <div>
+        <dt>지급률</dt>
+        <dd><span id="out-pay-rate">100</span>%</dd>
+      </div>
+    </dl>
+
+    <p class="formula" id="out-note"></p>
+
+    <h3>수령 시기별 비교</h3>
+    <p class="section-desc">한 번 정하면 평생 그 금액입니다. 앞당기면 매년 6% 깎이고, 미루면 매년 7.2% 붙습니다.</p>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr><th>수령 나이</th><th>구분</th><th>지급률</th><th>월 수령액</th></tr>
+        </thead>
+        <tbody id="claim-rows"></tbody>
+      </table>
+    </div>
+
+    <h3>가입 구간별 적용 상수</h3>
+    <p class="section-desc">비례상수는 <strong>가입한 연도마다 다릅니다.</strong> 오래 전에 가입한 기간일수록 유리한 상수가 적용됩니다.</p>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr><th>기간</th><th>가입월수</th><th>비례상수</th><th>소득대체율</th></tr>
+        </thead>
+        <tbody id="constant-rows"></tbody>
+      </table>
+    </div>
+
+    <p class="hint">내가 낸 보험료 누계는 <strong id="out-paid">0</strong>원(직장가입자 본인부담분)이며, 연금을 받기 시작하면 <strong id="out-breakeven">-</strong>에 원금을 넘어섭니다. 회사가 낸 같은 금액은 계산에 넣지 않았습니다.</p>
+    <p class="hint"><strong>모든 금액은 현재가치입니다.</strong> 실제로 받는 시점의 통장 금액은 그동안의 물가상승분만큼 더 큽니다. 국민연금은 매년 물가상승률을 반영해 올려 주기 때문입니다.</p>
+  </section>
+
+  <section class="card calc-links" aria-labelledby="other-calc-title">
+      <h2 id="other-calc-title">다른 계산기</h2>
+      <div class="calc-grid">
+        <a class="calc-card" href="/yeonbong">
+          <span class="calc-card-title">연봉 실수령액 계산기</span>
+          <span class="calc-card-desc">세전 연봉만 넣으면 4대보험과 소득세를 뗀 월 실수령액이 나옵니다. 연봉별 실수령액표도 함께 봅니다.</span>
+        </a>
+        <a class="calc-card" href="/tongsang">
+          <span class="calc-card-title">통상임금 계산기</span>
+          <span class="calc-card-desc">기본급과 수당을 넣으면 통상시급, 가산수당, 연봉, 세후 실수령액까지 한 번에 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/boheom">
+          <span class="calc-card-title">4대보험 계산기</span>
+          <span class="calc-card-desc">월 급여를 넣으면 근로자 부담과 사업주 부담을 나눠 계산합니다. 회사가 실제로 쓰는 인건비까지 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/juhyu">
+          <span class="calc-card-title">주휴수당 계산기</span>
+          <span class="calc-card-desc">시급과 근무시간을 넣으면 주휴수당과 주급, 월 환산액을 계산합니다. 최저임금 미달도 확인합니다.</span>
+        </a>
+        <a class="calc-card" href="/toejik">
+          <span class="calc-card-title">퇴직금 계산기</span>
+          <span class="calc-card-desc">입사일과 퇴직 전 3개월 임금을 넣으면 평균임금과 예상 퇴직금이 나옵니다. 통상임금과 비교해 유리한 쪽을 적용합니다.</span>
+        </a>
+        <a class="calc-card" href="/yeoncha">
+          <span class="calc-card-title">연차수당 계산기</span>
+          <span class="calc-card-desc">입사일만 넣으면 발생 연차일수가 나오고, 통상임금으로 미사용 연차수당까지 계산합니다.</span>
+        </a>
+        <a class="calc-card" href="/silup">
+          <span class="calc-card-title">실업급여 계산기</span>
+          <span class="calc-card-desc">이직 전 3개월 임금과 근무 기간을 넣으면 1일 구직급여와 소정급여일수, 총 수급액이 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/yuka">
+          <span class="calc-card-title">육아휴직 급여 계산기</span>
+          <span class="calc-card-desc">통상임금과 사용 기간을 넣으면 월별 육아휴직 급여와 총 수령액이 나옵니다. 6+6 부모육아휴직제도 반영합니다.</span>
+        </a>
+      </div>
+    </section>
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <article class="card content" aria-labelledby="guide-title">
+    <h2 id="guide-title">국민연금 예상 수령액 완전 정리</h2>
+
+    <h3>가입 이력이 없어도 계산되는 이유</h3>
+    <p>정확한 연금액은 공단이 보관한 <strong>가입 이력</strong>으로만 확정됩니다. 그런데 20년 치 급여명세서를 꺼내 볼 필요는 없습니다. 이유가 있습니다.</p>
+    <p>연금 산식에 들어가는 개인 소득값(B값)은 <strong>과거에 낸 금액 그대로가 아닙니다.</strong> 공단이 과거 소득을 재평가율로 현재가치에 맞춰 다시 계산한 뒤 평균을 냅니다. 1995년의 월 100만 원은 지금 기준으로 300만 원대로 환산되는 식입니다.</p>
+    <p>그래서 소득이 대체로 평균 임금상승을 따라왔다면 <strong>B값은 현재 소득 수준과 비슷해집니다.</strong> 이 계산기가 현재 소득 하나로 추정하는 근거이고, 국민연금공단의 예상연금 모의계산도 이력이 없는 사람에게 같은 가정을 씁니다.</p>
+
+    <h3>산식</h3>
+    <p>국민연금법 제51조의 급여산식입니다.</p>
+    <p class="formula">기본연금액(연액) = 상수 × (A + B) × (1 + 0.05 × n / 12)</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>기호</th><th>뜻</th><th>2026년 값</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>A</td><td>전체 가입자 평균소득월액의 3년간 평균</td><td>3,193,511원</td></tr>
+        <tr><td>B</td><td>본인의 가입기간 중 기준소득월액 평균</td><td>입력값</td></tr>
+        <tr><td>n</td><td>20년(240개월)을 넘는 가입월수</td><td>가입기간에 따라</td></tr>
+        <tr><td>상수</td><td>가입 연도별 비례상수</td><td>1.29</td></tr>
+      </tbody>
+    </table>
+    <p>산식에 <strong>A값이 들어간다는 점</strong>이 중요합니다. 내 소득뿐 아니라 전체 가입자 평균이 함께 반영되기 때문에, 소득이 낮을수록 낸 돈 대비 더 많이 돌려받는 구조입니다. 국민연금이 소득재분배 기능을 가진다고 말하는 이유가 여기 있습니다.</p>
+
+    <h3>비례상수는 가입한 연도마다 다릅니다</h3>
+    <p>이 부분을 놓친 계산기가 많습니다. 상수는 <strong>연금을 받는 시점이 아니라 보험료를 낸 시점</strong>으로 정해지며, 각 연도의 가입월수 비중으로 가중 합산됩니다.</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>가입 시기</th><th>비례상수</th><th>소득대체율</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1988~1998년</td><td>2.4 (B에 0.75 적용)</td><td>70%</td></tr>
+        <tr><td>1999~2007년</td><td>1.8</td><td>60%</td></tr>
+        <tr><td>2008년</td><td>1.5</td><td>50%</td></tr>
+        <tr><td>2009~2025년</td><td>매년 0.015씩 감소 (2025년 1.245)</td><td>매년 0.5%p 감소</td></tr>
+        <tr><td>2026년 이후</td><td>1.29</td><td>43%</td></tr>
+      </tbody>
+    </table>
+    <p>1990년대에 가입한 기간이 있다면 그 기간에는 상수 2.4가 그대로 적용됩니다. 오래 가입한 사람이 유리한 것은 기간이 길어서만이 아니라 <strong>더 좋은 상수를 붙들고 있기 때문</strong>이기도 합니다.</p>
+
+    <!-- 광고 위치 3: 설명 콘텐츠 중간 (애드센스 승인 후 삽입) -->
+    <!-- <div class="ad-slot ad-inline"></div> -->
+
+    <h3>2026년에 무엇이 바뀌었나</h3>
+    <p>2025년 연금개혁으로 두 가지가 동시에 달라졌습니다.</p>
+    <p><strong>보험료율이 오릅니다.</strong> 1998년부터 9%로 묶여 있던 요율이 2026년 9.5%로 오르고, 매년 0.5%p씩 올라 <strong>2033년 13%</strong>에서 멈춥니다. 직장가입자는 절반만 부담하므로 본인 부담은 4.75%에서 6.5%까지 오릅니다.</p>
+    <p><strong>소득대체율이 올랐습니다.</strong> 원래는 매년 깎여 2028년에 40%까지 내려갈 예정이었으나, 2026년부터 <strong>43%로 고정</strong>되었습니다. 2025년의 41.5%보다 높은 수준에서 멈춘 것입니다. 상수로는 1.245에서 1.29로 올랐습니다.</p>
+    <p>더 내고 더 받는 방향입니다. 다만 인상된 소득대체율은 <strong>2026년 이후 가입기간에만</strong> 적용되므로, 이미 가입기간이 긴 사람일수록 체감 효과는 작습니다.</p>
+
+    <h3>가입기간이 20년을 넘느냐가 갈림길입니다</h3>
+    <p>상수 자체가 <strong>20년 가입을 전제로</strong> 만들어져 있습니다. 그래서 20년을 기준으로 계산이 양쪽으로 갈립니다.</p>
+    <p>20년에 못 미치면 지급률이 붙습니다. <strong>10년에 50%</strong>이고 1년마다 5%p씩 올라 20년에 100%가 됩니다. 20년을 넘으면 초과 1년마다 <strong>5%씩 가산</strong>됩니다. 40년을 채우면 20년 가입자의 정확히 두 배입니다.</p>
+    <p>결과적으로 연금액은 가입기간에 거의 정비례합니다. 평균소득자를 기준으로 40년 가입이 소득대체율 43%, 20년이 21.5%, 10년이 10.75%입니다. <strong>가입기간을 늘리는 것이 연금을 늘리는 가장 확실한 방법</strong>인 이유입니다.</p>
+
+    <h3>10년(120개월)을 채우지 못하면</h3>
+    <p>노령연금은 <strong>최소 가입기간 10년</strong>을 채워야 받습니다. 채우지 못하면 연금이 아니라 그동안 낸 보험료에 이자를 더한 <strong>반환일시금</strong>을 한 번에 받고 끝납니다.</p>
+    <p>10년에 조금 모자란다면 <strong>임의계속가입</strong>으로 60세 이후에도 보험료를 계속 내 기간을 채울 수 있습니다. 내지 못한 기간이 있다면 <strong>추후납부(추납)</strong>로 메우는 방법도 있습니다. 반환일시금으로 받고 끝내는 것보다 대개 훨씬 유리합니다.</p>
+
+    <h3>언제부터 받나</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>출생연도</th><th>수급개시연령</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1952년 이전</td><td>60세</td></tr>
+        <tr><td>1953~1956년</td><td>61세</td></tr>
+        <tr><td>1957~1960년</td><td>62세</td></tr>
+        <tr><td>1961~1964년</td><td>63세</td></tr>
+        <tr><td>1965~1968년</td><td>64세</td></tr>
+        <tr><td>1969년 이후</td><td>65세</td></tr>
+      </tbody>
+    </table>
+    <p>최대 5년 앞당길 수 있고(<strong>조기노령연금</strong>) 5년 미룰 수 있습니다(<strong>연기연금</strong>). 앞당기면 1년마다 6% 깎여 5년이면 70%가 되고, 미루면 1년마다 7.2% 붙어 5년이면 136%가 됩니다. <strong>한 번 정해진 비율은 평생 갑니다.</strong></p>
+    <p>단순 계산으로는 대략 10년 안팎을 더 살면 미루는 쪽이 유리해집니다. 다만 건강 상태, 다른 소득, 당장의 생활비가 모두 다르므로 손익분기만 보고 정할 문제는 아닙니다.</p>
+
+    <h3>자주 묻는 질문</h3>
+    <div class="faq">
+      <details>
+        <summary>이 계산기 결과와 공단 조회 금액이 다릅니다.</summary>
+        <p>다를 수 있습니다. 공단은 실제 가입 이력의 <strong>월별 기준소득월액</strong>을 재평가해 B값을 구하지만, 이 계산기는 현재 소득이 계속 유지된다고 가정합니다. 소득이 크게 오르내렸거나 납부 예외 기간이 있으면 차이가 커집니다. 정확한 금액은 국민연금공단 '내 연금 알아보기'에서 공인인증 후 확인하세요.</p>
+      </details>
+      <details>
+        <summary>왜 물가상승을 반영한 금액이 아닌가요?</summary>
+        <p>현재가치로 보여 주는 편이 판단에 유리하기 때문입니다. 30년 뒤 월 300만 원이라는 숫자는 그때의 물가를 모르면 의미가 없습니다. 국민연금은 매년 물가상승률만큼 연금액을 올려 주므로, <strong>지금 기준으로 이만큼의 구매력</strong>이라고 읽으시면 됩니다.</p>
+      </details>
+      <details>
+        <summary>소득이 앞으로 오를 텐데 반영되나요?</summary>
+        <p>반영되지 않습니다. 다만 B값은 현재가치 기준이라, 본인 소득이 <strong>전체 평균 임금상승률만큼</strong> 오른다면 결과는 크게 달라지지 않습니다. 평균보다 빠르게 오를 것으로 본다면 예상 평균 소득을 넣어 보세요.</p>
+      </details>
+      <details>
+        <summary>국민연금이 고갈된다는데 받을 수 있나요?</summary>
+        <p>국민연금은 <strong>법으로 지급이 보장된 사회보험</strong>이며, 기금이 소진되더라도 그해 보험료로 그해 연금을 주는 방식(부과방식)으로 전환하는 것이 일반적입니다. 2025년 개혁의 보험료율 인상도 소진 시점을 늦추기 위한 조치입니다. 다만 미래의 급여 수준은 제도 개편에 따라 달라질 수 있습니다.</p>
+      </details>
+      <details>
+        <summary>직장을 옮기거나 잠시 쉬면 가입기간이 끊기나요?</summary>
+        <p>보험료를 낸 기간만 가입기간에 들어갑니다. 소득이 없는 동안에는 <strong>납부 예외</strong>를 신청할 수 있는데, 이 기간은 가입기간에 포함되지 않습니다. 나중에 <strong>추후납부</strong>로 그 기간의 보험료를 내면 가입기간으로 인정됩니다.</p>
+      </details>
+      <details>
+        <summary>회사가 내는 절반은 왜 계산에 안 넣나요?</summary>
+        <p>넣어도 되지만, 본인 부담만 보는 편이 체감에 가깝기 때문입니다. 직장가입자는 요율의 절반만 부담하고 나머지는 회사가 냅니다. 회사 부담분까지 합치면 원금 회수 기간은 대략 두 배가 됩니다. 회사 부담분이 궁금하다면 <a href="/boheom">4대보험 계산기</a>를 참고하세요.</p>
+      </details>
+      <details>
+        <summary>입력한 정보가 저장되나요?</summary>
+        <p>저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>에서 확인할 수 있습니다.</p>
+      </details>
+    </div>
+  </article>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="disclaimer"><strong>면책조항</strong> 이 계산기는 일반적인 법령과 판례를 바탕으로 한 참고용 도구이며, 계산 결과는 법적 효력이 없습니다. 실제 금액은 취업규칙, 단체협약, 근로계약서의 구체적인 내용과 사업장 상황에 따라 달라질 수 있습니다. 정확한 판단이 필요한 경우 공인노무사 또는 고용노동부 고객상담센터(1350)의 상담을 받으시기 바랍니다. 본 사이트는 계산 결과 이용으로 발생한 손해에 대해 책임지지 않습니다.</p>
+    <nav class="footer-nav">
+      <a href="/">홈</a>
+      <a href="/yeonbong">연봉 실수령액 계산기</a>
+      <a href="/tongsang">통상임금 계산기</a>
+      <a href="/boheom">4대보험 계산기</a>
+      <a href="/yeongeum" aria-current="page">국민연금 예상 수령액 계산기</a>
+      <a href="/juhyu">주휴수당 계산기</a>
+      <a href="/toejik">퇴직금 계산기</a>
+      <a href="/yeoncha">연차수당 계산기</a>
+      <a href="/silup">실업급여 계산기</a>
+      <a href="/yuka">육아휴직 급여 계산기</a>
+      <a href="/privacy">개인정보처리방침</a>
+    </nav>
+    <p class="copyright">© 2026 paygyesan.com</p>
+  </div>
+</footer>
+<script src="/assets/calc.js?v=24f5dcc4" defer></script>
+<script src="/assets/yeongeum.js?v=97011b41" defer></script>
+</body>
+</html>

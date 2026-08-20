@@ -770,3 +770,11 @@ input[type="text"]:focus, select:focus, button:focus-visible {
 
 .data-table tbody tr.is-current { background: var(--accent-soft); font-weight: 700; }
 .data-table tbody tr.is-current td { border-color: var(--accent-line); }
+
+/* 수령 시기별 비교표에서 현재 선택한 나이를 표시한다.
+   국민연금은 한 번 정한 수령 시기가 평생 가므로, 지금 고른 줄이
+   어디인지 한눈에 보여야 다른 선택지와 비교가 된다. */
+.data-table tr.row-highlight td {
+  background: var(--accent-soft, #eef3fa);
+  font-weight: 600;
+}

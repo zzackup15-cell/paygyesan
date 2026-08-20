@@ -538,7 +538,215 @@ var Calc = (function () {
     return { months: n, rows: rows, total: total };
   }
 
+  /* ---- 국민연금 노령연금 (예상 수령액) ---- */
+
+  // 국민연금법 제51조 급여산식.
+  //
+  //   기본연금액(연액) = Σ[ 상수ᵢ × (A + wᵢ·B) × Pᵢ/P ] × (1 + 0.05 × n/12)
+  //
+  //   A  = 연금수급 직전 3년간 전체가입자 평균소득월액의 평균액 (공단 고시)
+  //   B  = 가입기간 중 기준소득월액의 평균액 (과거 소득을 현재가치로 재평가한 값)
+  //   Pᵢ = 해당 연도 가입월수,  P = 총 가입월수,  n = 20년(240개월) 초과 가입월수
+  //
+  // 비례상수는 '가입한 연도'마다 다르고, 그 연도 가입월수의 비중으로 가중합산한다.
+  // 한 사람이 1995년과 2026년에 걸쳐 가입했다면 두 상수가 함께 적용된다.
+  // 1988~1998년 가입분만 B에 0.75를 곱한다(w).
+  var NPS = {
+    year: 2026,
+    aValue: 3193511,   // 2026년 A값
+    startYear: 1988,   // 제도 시행
+    minMonths: 120,    // 노령연금 최소 가입기간 10년
+    maxMonths: 600,    // 입력 방어용 상한
+    excessFrom: 240,   // 20년 초과분 가산 기준
+    excessPerYear: 0.05,
+    early: { perYear: 0.06, maxYears: 5 },  // 조기노령연금 1년당 6% 감액
+    defer: { perYear: 0.072, maxYears: 5 }, // 연기연금 1년당 7.2% 가산
+    // 보험료율 (2025년 연금개혁). 2025년까지 9%, 2026년 9.5%부터 매년 0.5%p씩
+    // 올라 2033년 13%에서 멈춘다.
+    feeBase: 0.09, feeFrom: 2026, feeCap: 0.13
+  };
+
+  // 가입 연도별 비례상수. 정수 연산으로 만든다.
+  // 부동소수 곱셈을 쓰면 1.5 - 0.015×17 이 1.2449999... 로 나온다.
+  function npsConstant(year) {
+    if (year <= 1998) return 2.4;  // 소득대체율 70%
+    if (year <= 2007) return 1.8;  // 60%
+    if (year >= 2026) return 1.29; // 43% 고정 (2025년 개혁)
+    return (1500 - 15 * (year - 2008)) / 1000; // 2008년 1.5 → 2025년 1.245
+  }
+
+  // 1988~1998년 가입기간은 B에 0.75만 반영한다
+  function npsIncomeWeight(year) {
+    return year <= 1998 ? 0.75 : 1;
+  }
+
+  /* 가입기간에 따른 지급률.
+   *
+   * 급여산식의 Σ[ … × Pᵢ/P ] 는 가중치 합이 1이라 총 가입기간이 반영되지 않는다.
+   * 상수 자체가 '20년 가입'을 전제로 만들어졌기 때문이다. 20년을 넘는 부분은
+   * 기본연금액 안의 (1 + 0.05n/12) 가 받고, 20년에 못 미치는 부분은 이 지급률이
+   * 받는다. 10년에 50%, 이후 1년마다 5%p 씩 올라 20년에 100% 로 이어진다.
+   *
+   * 이게 빠지면 10년 가입자와 20년 가입자의 연금액이 같아진다.
+   */
+  function npsDurationRate(months) {
+    if (months < NPS.minMonths) return 0;
+    if (months >= NPS.excessFrom) return 1;
+    return 0.5 + 0.05 * (months - NPS.minMonths) / 12;
+  }
+
+  // 노령연금 수급개시연령 (국민연금법 부칙 제8조)
+  function npsStartAge(birthYear) {
+    var y = Math.floor(birthYear) || 0;
+    if (y <= 1952) return 60;
+    if (y <= 1956) return 61;
+    if (y <= 1960) return 62;
+    if (y <= 1964) return 63;
+    if (y <= 1968) return 64;
+    return 65;
+  }
+
+  // 해당 연도 보험료율 (노사 합계). 정수 연산.
+  function npsFeeRate(year) {
+    if (year < NPS.feeFrom) return NPS.feeBase;
+    var r = (90 + 5 * (year - NPS.feeFrom + 1)) / 1000;
+    return r > NPS.feeCap ? NPS.feeCap : r;
+  }
+
+  // 연·월·나이는 toHours() 를 쓰면 안 된다. 그쪽 상한이 999시간이라
+  // 2026 을 넣으면 999 로 잘려 나온다.
+  function npsInt(raw) {
+    if (typeof raw === 'number') return isFinite(raw) ? Math.floor(raw) : NaN;
+    var digits = String(raw == null ? '' : raw).replace(/[^0-9]/g, '');
+    if (digits === '') return NaN;
+    return parseInt(digits.slice(0, 6), 10);
+  }
+
+  function npsYear(raw, fallback) {
+    var n = npsInt(raw);
+    if (!isFinite(n) || n < 1900) return fallback;
+    return n > 2200 ? 2200 : n;
+  }
+
+  function npsMonth(raw) {
+    var n = npsInt(raw);
+    if (!isFinite(n) || n < 1) return 1;
+    return n > 12 ? 12 : n;
+  }
+
+  function npsAge(raw, fallback) {
+    var n = npsInt(raw);
+    if (!isFinite(n) || n <= 0) return fallback;
+    return n > 120 ? 120 : n;
+  }
+
+  // 연도별 가입월수. 가입 시작·종료를 연월로 받아 달력 연도마다 쪼갠다.
+  function npsMonthsByYear(startY, startM, endY, endM) {
+    var out = [];
+    var total = 0;
+    if (endY < startY || (endY === startY && endM < startM)) return { rows: out, total: 0 };
+    for (var y = startY; y <= endY; y++) {
+      var from = y === startY ? startM : 1;
+      var to = y === endY ? endM : 12;
+      var count = to - from + 1;
+      if (count <= 0) continue;
+      if (total + count > NPS.maxMonths) count = NPS.maxMonths - total;
+      if (count <= 0) break;
+      out.push({ year: y, months: count });
+      total += count;
+    }
+    return { rows: out, total: total };
+  }
+
+  /* 예상 노령연금액.
+   *
+   * 실제 금액은 공단이 보관한 가입 이력으로만 확정된다. 여기서는 B값을
+   * '현재 소득이 가입기간 내내 유지된다'고 보고 대신 쓴다. 공단의 예상연금
+   * 모의계산도 이력이 없는 사람에게 같은 가정을 쓴다. 과거 소득은 어차피
+   * 재평가율로 현재가치 환산되므로, 소득이 평균 임금상승을 따라온 경우
+   * 이 가정은 크게 빗나가지 않는다.
+   *
+   * 따라서 결과는 모두 '현재가치' 기준이다. 실제 수령 시점의 명목 금액은
+   * 물가상승분만큼 더 크다.
+   */
+  function nationalPension(opts) {
+    opts = opts || {};
+
+    var income = pensionBase(toAmount(opts.monthlyIncome)); // 기준소득월액 상·하한 적용
+    var birthYear = npsYear(opts.birthYear, 0);
+    var startY = npsYear(opts.startYear, NPS.startYear);
+    var endY = npsYear(opts.endYear, startY);
+    if (startY < NPS.startYear) startY = NPS.startYear;
+
+    var span = npsMonthsByYear(startY, npsMonth(opts.startMonth), endY, npsMonth(opts.endMonth));
+    var months = span.total;
+
+    var startAge = npsStartAge(birthYear);
+    var claimAge = npsAge(opts.claimAge, startAge);
+    var shift = claimAge - startAge;
+    if (shift < -NPS.early.maxYears) shift = -NPS.early.maxYears;
+    if (shift > NPS.defer.maxYears) shift = NPS.defer.maxYears;
+
+    var payRate = 1;
+    if (shift < 0) payRate = 1 - NPS.early.perYear * (-shift);
+    else if (shift > 0) payRate = 1 + NPS.defer.perYear * shift;
+
+    var result = {
+      months: months,
+      years: months / 12,
+      startAge: startAge,
+      claimAge: startAge + shift,
+      shift: shift,
+      payRate: payRate,
+      durationRate: npsDurationRate(months),
+      aValue: NPS.aValue,
+      bValue: income,
+      rows: span.rows,
+      eligible: months >= NPS.minMonths,
+      basicMonthly: 0,
+      monthly: 0,
+      replacementRate: 0,
+      paidSelf: 0,
+      breakEvenMonths: 0
+    };
+
+    if (!months || income <= 0) return result;
+
+    // 연도별 상수를 가입월수 비중으로 가중합산
+    var weighted = 0;
+    var paid = 0;
+    for (var i = 0; i < span.rows.length; i++) {
+      var row = span.rows[i];
+      var w = npsIncomeWeight(row.year);
+      weighted += npsConstant(row.year) * (NPS.aValue + w * income) * (row.months / months);
+      // 사업장가입자 기준 본인부담분(요율의 절반). 현재 소득 기준 명목 합계.
+      paid += income * npsFeeRate(row.year) / 2 * row.months;
+    }
+
+    var excess = months > NPS.excessFrom ? months - NPS.excessFrom : 0;
+    var basicAnnual = weighted * (1 + NPS.excessPerYear * excess / 12);
+    var basicMonthly = basicAnnual / 12;
+
+    result.basicMonthly = Math.floor(basicMonthly);
+    result.paidSelf = Math.floor(paid);
+
+    if (!result.eligible) return result; // 10년 미만은 반환일시금 대상
+
+    result.monthly = Math.floor(basicMonthly * result.durationRate * payRate);
+    result.replacementRate = result.monthly / income;
+    result.breakEvenMonths = result.monthly > 0 ? Math.ceil(result.paidSelf / result.monthly) : 0;
+    return result;
+  }
+
   return {
+    NPS: NPS,
+    npsConstant: npsConstant,
+    npsIncomeWeight: npsIncomeWeight,
+    npsStartAge: npsStartAge,
+    npsDurationRate: npsDurationRate,
+    npsFeeRate: npsFeeRate,
+    npsMonthsByYear: npsMonthsByYear,
+    nationalPension: nationalPension,
     MAX_ITEMS: MAX_ITEMS,
     MIN_SERVICE_DAYS: MIN_SERVICE_DAYS,
     PARENTAL: PARENTAL,
