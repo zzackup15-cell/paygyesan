@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>부수입 세금 계산기 | 프리랜서 3.3% 종합소득세 정산 - 페이계산</title>
+<meta name="description" content="월급 외 추가 수익에 붙는 종합소득세를 계산합니다. 프리랜서 3.3%와 기타소득 8.8% 원천징수를 실제 세금과 비교해 5월 종합소득세 신고 때 더 낼 돈 또는 돌려받을 돈을 알려 주고, 근로 외 소득 2,000만 원 초과 시 부과되는 건강보험 소득월액보험료까지 반영합니다.">
+<meta name="keywords" content="부수입 세금, 종합소득세 계산기, 프리랜서 세금, 3.3% 환급, 기타소득 세금, 부업 세금, 투잡 세금, 소득월액보험료, 애드센스 세금, 5월 종합소득세">
+<link rel="canonical" href="https://paygyesan.com/busuip">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" content="#1b4d8f">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="페이계산">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://paygyesan.com/busuip">
+<meta property="og:title" content="부수입 세금 계산기 | 프리랜서 3.3% 종합소득세 정산">
+<meta property="og:description" content="연봉과 추가 수입으로 5월에 더 낼 세금을 계산합니다. 사업소득·기타소득 비교와 건강보험료까지.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="부수입 세금 계산기">
+<meta name="twitter:description" content="3.3%는 정산이 아닙니다. 5월에 더 낼 돈을 미리 계산해 보세요.">
+
+<link rel="stylesheet" href="/assets/style.css?v=5b8c7be6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b4d8f'/%3E%3Ctext x='16' y='23' font-size='19' font-family='sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'%3E₩%3C/text%3E%3C/svg%3E">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"부수입 세금 계산기","url":"https://paygyesan.com/busuip","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ko","description":"연봉과 추가 수입을 입력하면 월급 외 수익에 붙는 종합소득세와 5월 정산 금액을 계산하는 무료 웹 도구입니다. 사업소득 3.3%와 기타소득 8.8%를 비교하고 건강보험 소득월액보험료까지 반영합니다.","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"},"browserRequirements":"JavaScript 사용 가능한 브라우저"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"프리랜서 3.3%를 떼면 세금이 끝난 건가요?","acceptedAnswer":{"@type":"Answer","text":"아닙니다. 3.3%는 미리 떼어 둔 원천징수일 뿐이며 실제 세금은 이듬해 5월 종합소득세 신고에서 확정됩니다. 기존 연봉과 합산해 누진세율을 매긴 뒤 이미 뗀 3.3%를 빼서 정산하므로, 한계세율이 15% 이상인 직장인은 대부분 추가로 납부하게 됩니다."}},{"@type":"Question","name":"부수입 세금은 어떻게 계산하나요?","acceptedAnswer":{"@type":"Answer","text":"부수입의 소득금액을 기존 과세표준 위에 더한 뒤, 늘어난 만큼의 종합소득세를 계산합니다. 종합소득세는 과세표준 1,400만 원 이하 6%부터 10억 원 초과 45%까지 8구간 누진세율이며 지방소득세 10%가 추가됩니다. 같은 부수입이라도 연봉이 높을수록 세금이 많아집니다."}},{"@type":"Question","name":"사업소득과 기타소득은 무엇이 다른가요?","acceptedAnswer":{"@type":"Answer","text":"사업소득은 3.3%를 원천징수하고 실제 지출한 필요경비만 인정하며 금액과 무관하게 종합과세됩니다. 기타소득은 8.8%를 원천징수하지만 필요경비 60%를 자동으로 인정하고, 기타소득금액이 연 300만 원 이하면 분리과세를 선택할 수 있습니다. 유형은 선택하는 것이 아니라 계속·반복성 여부로 정해집니다."}},{"@type":"Question","name":"부수입이 있으면 건강보험료가 오르나요?","acceptedAnswer":{"@type":"Answer","text":"근로 외 소득이 연 2,000만 원을 넘으면 초과분에 대해 소득월액보험료가 부과됩니다. 계산식은 (연간 보수외소득 − 2,000만 원) ÷ 12 × 소득평가율 × 건강보험료율이며, 사업·기타소득의 소득평가율은 100%입니다. 회사 부담분이 없어 직장가입자 본인이 전액 부담합니다."}},{"@type":"Question","name":"애드센스나 유튜브 수익도 세금을 내나요?","acceptedAnswer":{"@type":"Answer","text":"사업소득으로 분류되어 5월 종합소득세 신고 대상입니다. 구글이 원천징수를 하지 않으므로 3.3%조차 떼이지 않은 상태로 입금되며, 이듬해 5월에 전액을 신고해야 합니다. 해외 광고 수익은 부가가치세 영세율이 적용됩니다."}},{"@type":"Question","name":"회사에 부업 사실이 알려지나요?","acceptedAnswer":{"@type":"Answer","text":"종합소득세를 본인이 직접 신고하면 회사에 통보되지 않습니다. 다만 근로 외 소득이 연 2,000만 원을 넘어 소득월액보험료가 부과되면 건강보험공단 고지서가 자택으로 발송됩니다."}},{"@type":"Question","name":"5월 종합소득세 신고를 하지 않으면 어떻게 되나요?","acceptedAnswer":{"@type":"Answer","text":"무신고가산세 20%와 납부지연가산세가 부과됩니다. 국세청은 원천징수 자료로 소득을 이미 파악하고 있습니다. 신고 기간은 매년 5월 1일부터 31일까지이며 홈택스에서 직접 신고할 수 있습니다."}}]}]}
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1984750615156688" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">페이계산<span class="brand-dot">.</span></a>
+    <h1>부수입 세금 계산기</h1>
+    <p class="lead">연봉과 추가 수입만 넣으면 <strong>5월에 더 낼 돈</strong>이 바로 나옵니다. 3.3%는 정산이 아니라 미리 떼어 둔 돈일 뿐입니다. 사업소득·기타소득 비교와 건강보험료까지 함께 계산합니다.</p>
+    <p class="privacy-badge">입력값은 서버로 전송되지 않고 브라우저 안에서만 계산됩니다.</p>
+  </div>
+</header>
+
+<nav class="site-nav" aria-label="계산기 목록">
+  <div class="wrap">
+      <a href="/yeonbong" class="nav-pill">실수령액</a>
+      <a href="/tongsang" class="nav-pill">통상임금</a>
+      <a href="/busuip" class="nav-pill is-current" aria-current="page">부수입 세금</a>
+      <a href="/boheom" class="nav-pill">4대보험</a>
+      <a href="/yeongeum" class="nav-pill">국민연금</a>
+      <a href="/juhyu" class="nav-pill">주휴수당</a>
+      <a href="/toejik" class="nav-pill">퇴직금</a>
+      <a href="/yeoncha" class="nav-pill">연차수당</a>
+      <a href="/silup" class="nav-pill">실업급여</a>
+      <a href="/yuka" class="nav-pill">육아휴직</a>
+  </div>
+</nav>
+
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 조건 입력</h2>
+    <p class="section-desc">부수입 세금은 <strong>기존 연봉으로 정해집니다.</strong> 종합소득세가 누진세라 부수입이 연봉 위에 얹혀 한계세율을 맞기 때문입니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="annual-salary">연봉 (세전)</label>
+        <div class="input-unit">
+          <input type="text" id="annual-salary" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">회사에서 받는 연간 급여 총액</p>
+      </div>
+      <div class="net-field">
+        <label for="family-count">공제대상 가족 수</label>
+        <select id="family-count" class="date-input"></select>
+        <p class="hint">본인 포함</p>
+      </div>
+      <div class="net-field">
+        <label for="income-type">추가 수익 유형</label>
+        <select id="income-type" class="date-input">
+          <option value="business">사업소득 (3.3% 원천징수)</option>
+          <option value="other">기타소득 (8.8% 원천징수)</option>
+        </select>
+        <p class="hint">받은 돈에서 몇 %를 떼였는지로 구분됩니다</p>
+      </div>
+      <div class="net-field">
+        <label for="side-revenue">연간 추가 수입</label>
+        <div class="input-unit">
+          <input type="text" id="side-revenue" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">원천징수 떼기 전 금액</p>
+      </div>
+      <div class="net-field" id="expense-field">
+        <label for="side-expense">필요경비 <span class="label-opt">선택</span></label>
+        <div class="input-unit">
+          <input type="text" id="side-expense" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">장비·재료비 등 실제로 쓴 돈</p>
+      </div>
+    </div>
+
+    <div class="list-actions">
+      <span class="item-count" id="type-note">사업소득은 금액과 무관하게 5월 종합소득세 신고 대상입니다</span>
+      <button type="button" id="reset-all" class="btn btn-ghost">초기화</button>
+    </div>
+  </section>
+
+  <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+    <h2 id="result-title">2. 계산 결과</h2>
+
+    <div class="result-grid">
+      <div class="result-box">
+        <span class="result-label">추가로 내는 세금</span>
+        <strong class="result-value"><span id="out-tax">0</span><em>원</em></strong>
+      </div>
+      <div class="result-box result-primary">
+        <span class="result-label" id="settle-label">5월에 더 낼 돈</span>
+        <strong class="result-value"><span id="out-settle">0</span><em>원</em></strong>
+      </div>
+    </div>
+
+    <dl class="result-meta">
+      <div>
+        <dt>소득금액</dt>
+        <dd><span id="out-income">0</span>원</dd>
+      </div>
+      <div>
+        <dt>한계세율</dt>
+        <dd><span id="out-marginal">0</span>%</dd>
+      </div>
+      <div>
+        <dt>이미 뗀 원천징수</dt>
+        <dd><span id="out-withheld">0</span>원</dd>
+      </div>
+      <div>
+        <dt>실효세율</dt>
+        <dd><span id="out-effective">0</span>%</dd>
+      </div>
+    </dl>
+
+    <p class="formula" id="out-note"></p>
+
+    <h3>세금 떼고 실제로 남는 돈</h3>
+    <div class="table-scroll">
+      <table class="data-table">
+        <tbody id="breakdown-rows"></tbody>
+      </table>
+    </div>
+
+    <h3>사업소득이었다면 / 기타소득이었다면</h3>
+    <p class="section-desc">같은 금액을 받아도 <strong>어느 소득으로 잡히느냐</strong>에 따라 세금이 달라집니다. 기타소득은 필요경비 60%를 자동으로 인정해 줍니다.</p>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr><th>구분</th><th>소득금액</th><th>추가 세금</th><th>5월 정산</th></tr>
+        </thead>
+        <tbody id="compare-rows"></tbody>
+      </table>
+    </div>
+    <p class="hint">소득 유형은 고르는 것이 아니라 <strong>일의 성격으로 정해집니다.</strong> 계속·반복적으로 하면 사업소득, 일시적이면 기타소득입니다. 매달 들어오는 수입을 기타소득으로 신고하면 나중에 문제가 됩니다.</p>
+
+    <div id="health-block" hidden>
+      <h3>건강보험료도 따로 붙습니다</h3>
+      <p class="section-desc">근로 외 소득이 연 <strong>2,000만 원</strong>을 넘으면 초과분에 대해 소득월액보험료가 부과됩니다. 회사 부담이 없어 <strong>전액 본인 몫</strong>입니다.</p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <tbody id="health-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="card calc-links" aria-labelledby="other-calc-title">
+      <h2 id="other-calc-title">다른 계산기</h2>
+      <div class="calc-grid">
+        <a class="calc-card" href="/yeonbong">
+          <span class="calc-card-title">연봉 실수령액 계산기</span>
+          <span class="calc-card-desc">세전 연봉만 넣으면 4대보험과 소득세를 뗀 월 실수령액이 나옵니다. 연봉별 실수령액표도 함께 봅니다.</span>
+        </a>
+        <a class="calc-card" href="/tongsang">
+          <span class="calc-card-title">통상임금 계산기</span>
+          <span class="calc-card-desc">기본급과 수당을 넣으면 통상시급, 가산수당, 연봉, 세후 실수령액까지 한 번에 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/boheom">
+          <span class="calc-card-title">4대보험 계산기</span>
+          <span class="calc-card-desc">월 급여를 넣으면 근로자 부담과 사업주 부담을 나눠 계산합니다. 회사가 실제로 쓰는 인건비까지 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/yeongeum">
+          <span class="calc-card-title">국민연금 예상 수령액 계산기</span>
+          <span class="calc-card-desc">출생연도와 가입기간, 현재 소득만 넣으면 매달 받을 연금액이 나옵니다. 언제부터 받느냐에 따라 얼마나 달라지는지도 함께 비교합니다.</span>
+        </a>
+        <a class="calc-card" href="/juhyu">
+          <span class="calc-card-title">주휴수당 계산기</span>
+          <span class="calc-card-desc">시급과 근무시간을 넣으면 주휴수당과 주급, 월 환산액을 계산합니다. 최저임금 미달도 확인합니다.</span>
+        </a>
+        <a class="calc-card" href="/toejik">
+          <span class="calc-card-title">퇴직금 계산기</span>
+          <span class="calc-card-desc">입사일과 퇴직 전 3개월 임금을 넣으면 평균임금과 예상 퇴직금이 나옵니다. 통상임금과 비교해 유리한 쪽을 적용합니다.</span>
+        </a>
+        <a class="calc-card" href="/yeoncha">
+          <span class="calc-card-title">연차수당 계산기</span>
+          <span class="calc-card-desc">입사일만 넣으면 발생 연차일수가 나오고, 통상임금으로 미사용 연차수당까지 계산합니다.</span>
+        </a>
+        <a class="calc-card" href="/silup">
+          <span class="calc-card-title">실업급여 계산기</span>
+          <span class="calc-card-desc">이직 전 3개월 임금과 근무 기간을 넣으면 1일 구직급여와 소정급여일수, 총 수급액이 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/yuka">
+          <span class="calc-card-title">육아휴직 급여 계산기</span>
+          <span class="calc-card-desc">통상임금과 사용 기간을 넣으면 월별 육아휴직 급여와 총 수령액이 나옵니다. 6+6 부모육아휴직제도 반영합니다.</span>
+        </a>
+      </div>
+    </section>
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <article class="card content" aria-labelledby="guide-title">
+    <h2 id="guide-title">월급 외 수익의 세금 완전 정리</h2>
+
+    <h3>3.3%는 세금을 다 낸 게 아닙니다</h3>
+    <p>프리랜서로 100만 원을 받으면 3만 3천 원을 떼고 96만 7천 원이 들어옵니다. 많은 사람이 이걸 <strong>"세금 다 낸 것"</strong>으로 생각합니다. 아닙니다.</p>
+    <p>3.3%는 <strong>미리 떼어 둔 예치금</strong>에 가깝습니다. 진짜 세금은 이듬해 5월 종합소득세 신고에서 정해집니다. 그때 기존 연봉과 합산해 누진세율을 매기고, 이미 뗀 3.3%를 빼서 차액을 정산합니다.</p>
+    <p>그래서 <strong>대부분 5월에 더 냅니다.</strong> 직장인의 한계세율은 보통 15%나 24%인데 3.3%만 떼였으니 나머지를 채워야 하는 겁니다. 매년 5월 "왜 토해내냐"는 말이 나오는 이유가 이것입니다.</p>
+
+    <h3>세금은 금액이 아니라 연봉으로 정해집니다</h3>
+    <p>같은 부수입 500만 원이라도 사람마다 세금이 다릅니다. 종합소득세는 소득이 클수록 세율이 올라가는 <strong>누진세</strong>이고, 부수입은 기존 연봉 <strong>위에 얹혀서</strong> 계산되기 때문입니다.</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>과세표준</th><th>세율</th><th>누진공제</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1,400만 원 이하</td><td>6%</td><td>-</td></tr>
+        <tr><td>1,400만 ~ 5,000만 원</td><td>15%</td><td>126만 원</td></tr>
+        <tr><td>5,000만 ~ 8,800만 원</td><td>24%</td><td>576만 원</td></tr>
+        <tr><td>8,800만 ~ 1억 5천만 원</td><td>35%</td><td>1,544만 원</td></tr>
+        <tr><td>1억 5천만 ~ 3억 원</td><td>38%</td><td>1,994만 원</td></tr>
+        <tr><td>3억 ~ 5억 원</td><td>40%</td><td>2,594만 원</td></tr>
+        <tr><td>5억 ~ 10억 원</td><td>42%</td><td>3,594만 원</td></tr>
+        <tr><td>10억 원 초과</td><td>45%</td><td>6,594만 원</td></tr>
+      </tbody>
+    </table>
+    <p>연봉 3천만 원인 사람의 부수입은 15%를 맞지만, 연봉 1억 5천만 원인 사람의 같은 부수입은 38%를 맞습니다. <strong>부수입을 늘릴수록 남는 비율이 줄어드는</strong> 구조입니다.</p>
+
+    <!-- 광고 위치 3: 설명 콘텐츠 중간 (애드센스 승인 후 삽입) -->
+    <!-- <div class="ad-slot ad-inline"></div> -->
+
+    <h3>사업소득과 기타소득은 완전히 다릅니다</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>구분</th><th>사업소득</th><th>기타소득</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>원천징수</td><td>3.3%</td><td>8.8%</td></tr>
+        <tr><td>필요경비</td><td>실제 쓴 만큼</td><td>60% 자동 인정</td></tr>
+        <tr><td>분리과세</td><td>불가</td><td>소득금액 300만 원 이하면 선택 가능</td></tr>
+        <tr><td>예시</td><td>프리랜서 개발·디자인, 배달, 유튜브·애드센스</td><td>원고료, 강연료, 자문료, 상금</td></tr>
+      </tbody>
+    </table>
+    <p>기타소득의 <strong>필요경비 60% 의제</strong>가 핵심입니다. 실제로 돈을 쓰지 않았어도 받은 금액의 60%를 경비로 쳐 줍니다. 1,000만 원을 받으면 소득금액은 400만 원뿐이라 세금이 훨씬 적습니다.</p>
+    <p>또 하나, 기타소득금액이 연 <strong>300만 원 이하</strong>면 종합과세 대신 <strong>분리과세</strong>를 고를 수 있습니다. 원천징수된 8.8%로 끝내는 것이죠. 지급액 기준으로는 750만 원까지입니다. 한계세율이 24% 이상인 고연봉자라면 분리과세가 유리합니다.</p>
+    <p>다만 <strong>유형을 마음대로 고를 수는 없습니다.</strong> 계속적·반복적으로 하는 일이면 사업소득, 일시적·우발적이면 기타소득입니다. 매달 들어오는 수입을 기타소득으로 신고했다가 나중에 사업소득으로 경정되면 가산세까지 물게 됩니다.</p>
+
+    <h3>진짜 복병은 건강보험료입니다</h3>
+    <p>세금만 계산하고 끝내면 안 됩니다. 근로 외 소득이 연 <strong>2,000만 원</strong>을 넘으면 건강보험 <strong>소득월액보험료</strong>가 별도로 부과됩니다.</p>
+    <p class="formula">소득월액보험료 = (연간 보수외소득 − 2,000만 원) ÷ 12 × 소득평가율 × 건강보험료율</p>
+    <p>사업·기타소득의 소득평가율은 100%입니다. 결정적인 차이는 <strong>회사 부담분이 없다는 것</strong>입니다. 월급에서 떼는 건강보험료는 회사가 절반을 내 주지만, 이 보험료는 요율 전체를 본인이 냅니다. 여기에 장기요양보험료까지 붙습니다.</p>
+    <p>2,000만 원은 <strong>소득금액 기준</strong>이라 기타소득은 훨씬 여유가 있습니다. 필요경비 60%를 뺀 금액으로 판정하므로 지급액 5,000만 원까지는 걸리지 않습니다.</p>
+
+    <h3>애드센스·유튜브 수익은 어떻게 되나요</h3>
+    <p><strong>사업소득</strong>입니다. 계속적·반복적으로 발생하는 수입이기 때문입니다. 구글이 원천징수를 하지 않으므로 3.3%조차 떼이지 않은 상태로 들어오고, 이듬해 5월에 <strong>전액을 신고</strong>해야 합니다. 미리 떼인 게 없으니 5월에 낼 돈이 그만큼 큽니다.</p>
+    <p>수익이 계속 발생하면 <strong>사업자등록</strong> 대상이 될 수 있습니다. 해외 광고 수익은 부가가치세 영세율이 적용되어 부가세 부담은 없지만, 신고 의무 자체는 생깁니다.</p>
+
+    <h3>5월 신고를 안 하면</h3>
+    <p><strong>무신고가산세 20%</strong>와 <strong>납부지연가산세</strong>가 붙습니다. 납부지연가산세는 하루 단위로 쌓입니다. 국세청은 원천징수 자료로 이미 소득을 파악하고 있어서 넘어가지 않습니다.</p>
+    <p>신고 기간은 매년 <strong>5월 1일부터 31일까지</strong>이며 홈택스에서 직접 할 수 있습니다. 수입이 단순하면 <strong>모두채움 신고</strong>로 몇 분이면 끝납니다.</p>
+
+    <h3>자주 묻는 질문</h3>
+    <div class="faq">
+      <details>
+        <summary>이 계산기 결과가 실제 신고 금액과 다를 수 있나요?</summary>
+        <p>다를 수 있습니다. 정확한 종합소득세는 주택자금·기부금·의료비 같은 개인별 공제와 세액공제에 따라 달라집니다. 이 계산기는 누구에게나 적용되는 근로소득공제·인적공제·4대보험료공제만 반영해 <strong>"부수입 때문에 늘어난 세금"</strong>을 계산합니다. 두 과세표준의 세액 차이로 구하므로 양쪽에 똑같이 걸리는 공제는 상쇄되어, 총액을 계산하는 방식보다 오차가 작습니다.</p>
+      </details>
+      <details>
+        <summary>회사에 부업 사실이 알려지나요?</summary>
+        <p>종합소득세를 <strong>본인이 직접 신고</strong>하면 회사에 통보되지 않습니다. 다만 근로 외 소득이 연 2,000만 원을 넘어 소득월액보험료가 부과되면 건강보험공단에서 고지서가 <strong>자택으로</strong> 발송됩니다. 회사로 가지는 않습니다.</p>
+      </details>
+      <details>
+        <summary>부수입이 적어도 신고해야 하나요?</summary>
+        <p>사업소득은 <strong>금액과 무관하게</strong> 신고 대상입니다. 기타소득은 소득금액이 연 300만 원 이하면 분리과세로 끝낼 수 있어 신고하지 않아도 됩니다. 다만 한계세율이 낮은 경우에는 신고하는 편이 오히려 <strong>환급</strong>을 받아 유리할 수 있습니다.</p>
+      </details>
+      <details>
+        <summary>필요경비는 뭘 넣을 수 있나요?</summary>
+        <p>그 수입을 얻기 위해 실제로 쓴 돈입니다. 장비 구입비, 재료비, 임차료, 통신비, 교통비 등이 해당합니다. <strong>증빙을 갖춰야</strong> 인정되므로 세금계산서·현금영수증·카드 내역을 보관해야 합니다. 증빙이 없으면 업종별 경비율로 추계하는 방법도 있습니다.</p>
+      </details>
+      <details>
+        <summary>투잡으로 두 곳에서 월급을 받으면요?</summary>
+        <p>둘 다 근로소득이므로 <strong>합산해서</strong> 신고해야 합니다. 주된 근무지에서 두 곳 급여를 합쳐 연말정산을 하거나, 각각 연말정산한 뒤 5월에 합산 신고합니다. 이 계산기는 사업소득·기타소득을 대상으로 하므로 투잡 근로소득에는 맞지 않습니다.</p>
+      </details>
+      <details>
+        <summary>입력한 정보가 저장되나요?</summary>
+        <p>저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>에서 확인할 수 있습니다.</p>
+      </details>
+    </div>
+  </article>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="disclaimer"><strong>면책조항</strong> 이 계산기는 일반적인 법령과 판례를 바탕으로 한 참고용 도구이며, 계산 결과는 법적 효력이 없습니다. 실제 금액은 취업규칙, 단체협약, 근로계약서의 구체적인 내용과 사업장 상황에 따라 달라질 수 있습니다. 정확한 판단이 필요한 경우 공인노무사 또는 고용노동부 고객상담센터(1350)의 상담을 받으시기 바랍니다. 본 사이트는 계산 결과 이용으로 발생한 손해에 대해 책임지지 않습니다.</p>
+    <nav class="footer-nav">
+      <a href="/">홈</a>
+      <a href="/yeonbong">연봉 실수령액 계산기</a>
+      <a href="/tongsang">통상임금 계산기</a>
+      <a href="/busuip" aria-current="page">부수입 세금 계산기</a>
+      <a href="/boheom">4대보험 계산기</a>
+      <a href="/yeongeum">국민연금 예상 수령액 계산기</a>
+      <a href="/juhyu">주휴수당 계산기</a>
+      <a href="/toejik">퇴직금 계산기</a>
+      <a href="/yeoncha">연차수당 계산기</a>
+      <a href="/silup">실업급여 계산기</a>
+      <a href="/yuka">육아휴직 급여 계산기</a>
+      <a href="/privacy">개인정보처리방침</a>
+    </nav>
+    <p class="copyright">© 2026 paygyesan.com</p>
+  </div>
+</footer>
+<script src="/assets/calc.js?v=1a6d3c48" defer></script>
+<script src="/assets/busuip.js?v=fc66bb9f" defer></script>
+</body>
+</html>

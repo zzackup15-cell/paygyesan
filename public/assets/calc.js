@@ -538,6 +538,163 @@ var Calc = (function () {
     return { months: n, rows: rows, total: total };
   }
 
+  /* ---- 월급 외 추가 수익의 세금 (종합소득세) ---- */
+
+  // 소득세법 제55조 종합소득세율. 세율이 전부 정수 퍼센트라
+  // 정수 연산으로 계산할 수 있다.
+  var TAX_BRACKETS = [
+    { upto: 14000000, pct: 6, deduct: 0 },
+    { upto: 50000000, pct: 15, deduct: 1260000 },
+    { upto: 88000000, pct: 24, deduct: 5760000 },
+    { upto: 150000000, pct: 35, deduct: 15440000 },
+    { upto: 300000000, pct: 38, deduct: 19940000 },
+    { upto: 500000000, pct: 40, deduct: 25940000 },
+    { upto: 1000000000, pct: 42, deduct: 35940000 },
+    { upto: Infinity, pct: 45, deduct: 65940000 }
+  ];
+
+  var SIDE = {
+    otherExpensePct: 60,        // 기타소득 필요경비 의제율
+    otherWithholdPct: 88,       // 기타소득 원천징수 8.8% (지방소득세 포함, 1000분율)
+    businessWithholdPct: 33,    // 사업소득 원천징수 3.3% (지방소득세 포함, 1000분율)
+    otherSeparateLimit: 3000000,// 기타소득금액 300만원 이하면 분리과세 선택 가능
+    healthThreshold: 20000000,  // 보수외소득 연 2,000만원 초과분에 건보료
+    basicDeduction: 1500000,    // 인적공제 1명당
+    earnedDeductionCap: 20000000
+  };
+
+  // 종합소득 산출세액 = 과세표준 × 세율 - 누진공제
+  function comprehensiveTax(base) {
+    if (!isFinite(base) || base <= 0) return 0;
+    for (var i = 0; i < TAX_BRACKETS.length; i++) {
+      if (base <= TAX_BRACKETS[i].upto) {
+        var t = Math.floor(base * TAX_BRACKETS[i].pct / 100) - TAX_BRACKETS[i].deduct;
+        return t > 0 ? t : 0;
+      }
+    }
+    return 0;
+  }
+
+  // 이 과세표준에 1원을 더 벌면 붙는 세율(%). 추가 수익 세금의 핵심 개념이다.
+  function marginalPct(base) {
+    if (!isFinite(base) || base <= 0) return TAX_BRACKETS[0].pct;
+    for (var i = 0; i < TAX_BRACKETS.length; i++) {
+      if (base <= TAX_BRACKETS[i].upto) return TAX_BRACKETS[i].pct;
+    }
+    return TAX_BRACKETS[TAX_BRACKETS.length - 1].pct;
+  }
+
+  // 근로소득공제 (소득세법 제47조). 한도 2,000만원
+  function earnedIncomeDeduction(gross) {
+    var g = toAmount(gross);
+    if (g <= 0) return 0;
+    var d;
+    if (g <= 5000000) d = g * 70 / 100;
+    else if (g <= 15000000) d = 3500000 + (g - 5000000) * 40 / 100;
+    else if (g <= 45000000) d = 7500000 + (g - 15000000) * 15 / 100;
+    else if (g <= 100000000) d = 12000000 + (g - 45000000) * 5 / 100;
+    else d = 14750000 + (g - 100000000) * 2 / 100;
+    if (d > SIDE.earnedDeductionCap) d = SIDE.earnedDeductionCap;
+    return Math.floor(d);
+  }
+
+  /* 근로소득만 있을 때의 과세표준 추정.
+   *
+   * 정확한 과세표준은 개인별 공제에 따라 달라진다. 여기서는 누구에게나
+   * 적용되는 것만 뺀다. 근로소득공제(법정 산식), 인적공제, 그리고 4대보험료
+   * 소득공제다. 주택자금·기부금 같은 선택적 공제와 세액공제는 넣지 않는다.
+   *
+   * 이 추정치의 오차는 대체로 상쇄된다. 이 계산기가 내놓는 값은 세금 총액이
+   * 아니라 '추가 수익 때문에 늘어난 세금'이고, 그건 두 과세표준에서 각각
+   * 구한 세액의 차이이기 때문이다. 양쪽에 똑같이 걸린 공제는 빼기에서 사라진다.
+   */
+  function estimatedTaxBase(annualSalary, family) {
+    var salary = toAmount(annualSalary);
+    if (salary <= 0) return 0;
+    var fam = Math.min(Math.max(Math.floor(family) || 1, 1), MAX_FAMILY);
+    var ins = insurance(Math.floor(salary / 12));
+    var insAnnual = (ins.pension + ins.health + ins.care + ins.employment) * 12;
+    var base = salary - earnedIncomeDeduction(salary) - SIDE.basicDeduction * fam - insAnnual;
+    return base > 0 ? Math.floor(base) : 0;
+  }
+
+  /* 추가 수익에 붙는 세금.
+   *
+   * 핵심은 추가 수익의 세금이 '금액'이 아니라 '기존 연봉'으로 정해진다는 것이다.
+   * 종합소득세는 누진세라 부수입이 연봉 위에 얹혀 한계세율을 맞는다.
+   * 같은 500만원이라도 연봉 3천만원이면 15%, 1억이면 35%다.
+   *
+   * 원천징수(사업 3.3% / 기타 8.8%)는 미리 떼어 둔 것일 뿐 정산이 아니다.
+   * 대부분 5월에 더 내야 하고, 이 계산기는 그 차액을 보여 준다.
+   */
+  function sideIncomeTax(opts) {
+    opts = opts || {};
+    var isOther = opts.type === 'other';
+    var salary = toAmount(opts.annualSalary);
+    var revenue = toAmount(opts.sideRevenue);
+    var family = opts.family;
+
+    // 소득금액 = 수입 - 필요경비.
+    // 기타소득은 실제 경비 대신 60% 를 의제로 인정한다.
+    var expense = isOther
+      ? Math.floor(revenue * SIDE.otherExpensePct / 100)
+      : Math.min(toAmount(opts.sideExpense), revenue);
+    var incomeAmount = revenue - expense;
+
+    var withholdPct = isOther ? SIDE.otherWithholdPct : SIDE.businessWithholdPct;
+    var withheld = Math.floor(revenue * withholdPct / 1000);
+
+    var baseBefore = estimatedTaxBase(salary, family);
+    var baseAfter = baseBefore + incomeAmount;
+
+    var taxBefore = comprehensiveTax(baseBefore);
+    var taxAfter = comprehensiveTax(baseAfter);
+    var addedIncomeTax = taxAfter - taxBefore;
+    if (addedIncomeTax < 0) addedIncomeTax = 0;
+    var addedLocalTax = Math.floor(addedIncomeTax * 10 / 100);
+    var addedTax = addedIncomeTax + addedLocalTax;
+
+    // 건강보험 소득월액보험료. 보수외소득이 연 2,000만원을 넘으면
+    // 초과분에 대해 직장가입자가 전액 부담한다(국민건강보험법 제69조·제76조).
+    // 사업·기타소득의 소득평가율은 100% 다.
+    var healthMonthly = 0;
+    var careMonthly = 0;
+    if (incomeAmount > SIDE.healthThreshold) {
+      var monthlyBase = (incomeAmount - SIDE.healthThreshold) / 12;
+      // 보수월액보험료와 달리 사업주 부담이 없어 요율 전체를 본인이 낸다.
+      healthMonthly = floor10(monthlyBase * RATES.health.rate * 2);
+      careMonthly = floor10(healthMonthly * RATES.care.ofHealth);
+    }
+    var healthYear = (healthMonthly + careMonthly) * 12;
+
+    // 기타소득금액 300만원 이하는 종합과세 대신 분리과세를 고를 수 있다.
+    // 이 경우 원천징수된 8.8% 로 납세의무가 끝난다.
+    var canSeparate = isOther && incomeAmount > 0 && incomeAmount <= SIDE.otherSeparateLimit;
+
+    return {
+      type: isOther ? 'other' : 'business',
+      revenue: revenue,
+      expense: expense,
+      incomeAmount: incomeAmount,
+      withheld: withheld,
+      baseBefore: baseBefore,
+      baseAfter: baseAfter,
+      marginalPct: marginalPct(baseAfter),
+      incomeTax: addedIncomeTax,
+      localTax: addedLocalTax,
+      addedTax: addedTax,
+      settlement: addedTax - withheld, // 양수면 5월에 더 낼 돈
+      effectiveRate: incomeAmount > 0 ? addedTax / incomeAmount : 0,
+      healthMonthly: healthMonthly,
+      careMonthly: careMonthly,
+      healthYear: healthYear,
+      totalBurden: addedTax + healthYear,
+      netIncome: revenue - expense - addedTax - healthYear,
+      canSeparate: canSeparate,
+      separateTax: canSeparate ? withheld : 0
+    };
+  }
+
   /* ---- 국민연금 노령연금 (예상 수령액) ---- */
 
   // 국민연금법 제51조 급여산식.
@@ -739,6 +896,13 @@ var Calc = (function () {
   }
 
   return {
+    TAX_BRACKETS: TAX_BRACKETS,
+    SIDE: SIDE,
+    comprehensiveTax: comprehensiveTax,
+    marginalPct: marginalPct,
+    earnedIncomeDeduction: earnedIncomeDeduction,
+    estimatedTaxBase: estimatedTaxBase,
+    sideIncomeTax: sideIncomeTax,
     NPS: NPS,
     npsConstant: npsConstant,
     npsIncomeWeight: npsIncomeWeight,
