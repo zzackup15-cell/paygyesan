@@ -35,18 +35,31 @@ function write(file, content) {
 
 // 본문 파일의 마지막 커밋 날짜. 빌드할 때마다 lastmod 가 바뀌면
 // 실제로 바뀌지 않은 페이지까지 갱신된 것처럼 보인다.
+/* sitemap 의 lastmod.
+ *
+ * 커밋 날짜를 쓰되, 아직 커밋되지 않은 변경이 있으면 오늘로 본다.
+ * 빌드는 커밋 '전에' 돌기 때문에 git log 만 보면 이번에 고친 페이지가
+ * 항상 한 커밋 뒤처진 날짜로 나간다. 구글에게 "안 바뀌었다" 고 알리는 셈이라
+ * 고쳐도 다시 크롤링되지 않는다. 실제로 홈 FAQ 를 고친 날 사이트맵에는
+ * 3주 전 날짜가 실려 나갔다.
+ */
 function lastModified(bodyFile) {
+  const rel = path.join('src/body', bodyFile);
+  const git = (args) => execFileSync('git', args, {
+    cwd: ROOT,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore']
+  });
+  const today = new Date().toISOString().slice(0, 10);
   try {
-    const out = execFileSync('git', ['log', '-1', '--format=%cs', '--', path.join('src/body', bodyFile)], {
-      cwd: ROOT,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore']
-    }).trim();
+    // 워킹 트리나 스테이지에 변경이 남아 있으면 이번 빌드가 그 변경을 담는다
+    if (git(['status', '--porcelain', '--', rel]).trim() !== '') return today;
+    const out = git(['log', '-1', '--format=%cs', '--', rel]).trim();
     if (/^\d{4}-\d{2}-\d{2}$/.test(out)) return out;
   } catch (e) {
     /* git 이 없거나 아직 커밋되지 않은 파일 */
   }
-  return new Date().toISOString().slice(0, 10);
+  return today;
 }
 
 // 자산 URL에 내용 해시를 붙인다.
