@@ -706,6 +706,110 @@ var Calc = (function () {
     };
   }
 
+  /* ---- 퇴사 시 받는 돈 (조합 계산) ---- */
+
+  // 새로운 산식은 하나도 없다. 이미 검증된 퇴직금·연차수당·구직급여를
+  // 한 사람의 조건으로 묶어 '언제 얼마가 들어오는가' 로 바꿔 놓을 뿐이다.
+  // 계산기를 따로 쓰면 사람이 직접 합쳐야 하고, 그 과정에서 빠뜨린다.
+  var EXIT = {
+    payWithinDays: 14,   // 근로기준법 제36조. 퇴직 후 14일 이내 금품 청산
+    benefitStartMonth: 2, // 대기기간 7일과 신청·교육 절차로 첫 입금은 대개 한 달 뒤
+    maxFlowMonths: 12
+  };
+
+  function exitPackage(opts) {
+    opts = opts || {};
+    var hire = parseDate(opts.hireDate);
+    var last = parseDate(opts.lastWorkDate);
+    var monthlyWage = toAmount(opts.monthlyWage);
+    var annualBonus = toAmount(opts.annualBonus);
+    var unusedDays = toHours(opts.unusedDays);
+    var weeklyHours = toHours(opts.weeklyHours) || LEGAL_WEEKLY_MAX;
+    var dailyHours = toHours(opts.dailyHours) || 8;
+    var monthlyCost = toAmount(opts.monthlyCost);
+    var voluntary = !!opts.voluntary;
+    var isOver50 = !!opts.isOver50;
+
+    var result = {
+      serviceDays: 0, serviceYears: 0, insuredMonths: 0,
+      averageDaily: 0, ordinaryDaily: 0,
+      severance: 0, annualLeavePay: 0,
+      benefitDaily: 0, benefitDays: 0, benefitTotal: 0,
+      benefitEligible: false, reason: 'ok',
+      immediate: 0, total: 0,
+      flow: [], monthlyCost: monthlyCost, survivalMonths: 0
+    };
+    if (!hire || !last || monthlyWage <= 0) return result;
+
+    var days = serviceDays(hire, last);
+    result.serviceDays = days;
+    result.serviceYears = days / 365;
+
+    // 퇴직일은 마지막 근무일의 다음 날. 평균임금 산정기간의 끝이다.
+    var quit = new Date(last.getTime() + DAY_MS);
+    var periodDays = daysBetween(minusMonths(quit, 3), quit);
+
+    result.averageDaily = averageDailyWage({
+      wage3Months: monthlyWage * 3,
+      annualBonus: annualBonus,
+      periodDays: periodDays
+    });
+    result.ordinaryDaily = hourlyOrdinaryWage(monthlyWage, monthlyScheduledHours(weeklyHours)) * dailyHours;
+
+    var sev = severance(result.averageDaily, result.ordinaryDaily, days);
+    result.severance = Math.floor(sev.amount);
+    result.annualLeavePay = Math.floor(annualLeavePay(result.ordinaryDaily, unusedDays));
+
+    // 구직급여. 자발적 퇴사는 원칙적으로 수급 대상이 아니고,
+    // 피보험 단위기간이 180일에 못 미쳐도 받지 못한다.
+    result.insuredMonths = monthsBetween(hire, quit);
+    if (voluntary) {
+      result.reason = 'voluntary';
+    } else if (days < RATES.unemployment.minInsuredDays) {
+      result.reason = 'shortInsured';
+    } else {
+      result.benefitEligible = true;
+      var ui = unemploymentBenefit({
+        baseDaily: Math.max(result.averageDaily, result.ordinaryDaily),
+        dailyHours: dailyHours,
+        insuredYears: result.insuredMonths / 12,
+        isOver50: isOver50
+      });
+      result.benefitDaily = Math.floor(ui.daily);
+      result.benefitDays = ui.days;
+      result.benefitTotal = result.benefitDaily * ui.days;
+    }
+
+    result.immediate = result.severance + result.annualLeavePay;
+    result.total = result.immediate + result.benefitTotal;
+
+    // 월별 현금흐름. 막연한 불안을 '몇 개월 버티는가' 로 바꾸는 것이 이 표의 목적이다.
+    var remaining = result.benefitDays;
+    var months = EXIT.benefitStartMonth - 1 + Math.ceil(remaining / 30);
+    if (months < 1) months = 1;
+    if (months > EXIT.maxFlowMonths) months = EXIT.maxFlowMonths;
+    var cumulative = 0;
+    for (var m = 1; m <= months; m++) {
+      var row = { month: m, severance: 0, leave: 0, benefit: 0, amount: 0, cumulative: 0 };
+      if (m === 1) {
+        row.severance = result.severance;
+        row.leave = result.annualLeavePay;
+      }
+      if (m >= EXIT.benefitStartMonth && remaining > 0) {
+        var d = Math.min(remaining, 30);
+        row.benefit = result.benefitDaily * d;
+        remaining -= d;
+      }
+      row.amount = row.severance + row.leave + row.benefit;
+      cumulative += row.amount;
+      row.cumulative = cumulative;
+      result.flow.push(row);
+    }
+
+    if (monthlyCost > 0) result.survivalMonths = result.total / monthlyCost;
+    return result;
+  }
+
   /* ---- 주택임대소득 (월세) ---- */
 
   // 소득세법 제12조·제25조·제64조의2, 시행령 제8조의2
@@ -1026,6 +1130,8 @@ var Calc = (function () {
   }
 
   return {
+    EXIT: EXIT,
+    exitPackage: exitPackage,
     RENTAL: RENTAL,
     rentalTaxable: rentalTaxable,
     deemedRent: deemedRent,

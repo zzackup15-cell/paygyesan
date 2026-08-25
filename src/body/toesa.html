@@ -1,0 +1,217 @@
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 조건 입력</h2>
+    <p class="section-desc">퇴직금·연차수당·실업급여를 <strong>한 번에</strong> 계산합니다. 따로 계산하면 빠뜨리는 항목이 생깁니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="date-hire">입사일</label>
+        <input type="date" id="date-hire" class="date-input" autocomplete="off">
+      </div>
+      <div class="net-field">
+        <label for="date-last">마지막 근무일</label>
+        <input type="date" id="date-last" class="date-input" autocomplete="off">
+      </div>
+      <div class="net-field">
+        <label for="monthly-wage">월 급여 (세전)</label>
+        <div class="input-unit">
+          <input type="text" id="monthly-wage" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">기본급 + 고정수당</p>
+      </div>
+      <div class="net-field">
+        <label for="annual-bonus">연간 상여금 <span class="label-opt">선택</span></label>
+        <div class="input-unit">
+          <input type="text" id="annual-bonus" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">퇴직금이 늘어납니다. 빠뜨리면 손해입니다</p>
+      </div>
+      <div class="net-field">
+        <label for="unused-days">미사용 연차</label>
+        <div class="input-unit">
+          <input type="text" id="unused-days" inputmode="numeric" placeholder="0" maxlength="3" autocomplete="off">
+          <span class="unit">일</span>
+        </div>
+        <p class="hint">남은 연차는 <strong>돈으로 받습니다</strong></p>
+      </div>
+      <div class="net-field">
+        <label for="quit-reason">퇴사 사유</label>
+        <select id="quit-reason" class="date-input">
+          <option value="involuntary">권고사직·계약만료·해고 등</option>
+          <option value="voluntary">자발적 퇴사</option>
+        </select>
+        <p class="hint">실업급여 수급 여부가 갈립니다</p>
+      </div>
+      <div class="net-field">
+        <label for="monthly-cost">월 생활비 <span class="label-opt">선택</span></label>
+        <div class="input-unit">
+          <input type="text" id="monthly-cost" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">몇 개월 버틸 수 있는지 알려 드립니다</p>
+      </div>
+    </div>
+
+    <label class="chk">
+      <input type="checkbox" id="over-50">
+      <span>만 50세 이상</span>
+    </label>
+    <p class="hint">실업급여를 받는 기간(소정급여일수)이 늘어납니다.</p>
+
+    <div class="list-actions">
+      <span class="item-count">퇴직금과 연차수당은 퇴직일로부터 14일 이내에 지급해야 합니다</span>
+      <button type="button" id="reset-all" class="btn btn-ghost">초기화</button>
+    </div>
+  </section>
+
+  <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+    <h2 id="result-title">2. 퇴사하면 받는 돈</h2>
+
+    <div class="result-grid">
+      <div class="result-box">
+        <span class="result-label">바로 받는 돈 (14일 이내)</span>
+        <strong class="result-value"><span id="out-immediate">0</span><em>원</em></strong>
+      </div>
+      <div class="result-box result-primary">
+        <span class="result-label">총 받는 돈</span>
+        <strong class="result-value"><span id="out-total">0</span><em>원</em></strong>
+      </div>
+    </div>
+
+    <dl class="result-meta">
+      <div>
+        <dt>재직기간</dt>
+        <dd><span id="out-service">-</span></dd>
+      </div>
+      <div>
+        <dt>퇴직금</dt>
+        <dd><span id="out-severance">0</span>원</dd>
+      </div>
+      <div>
+        <dt>연차수당</dt>
+        <dd><span id="out-leave">0</span>원</dd>
+      </div>
+      <div>
+        <dt>실업급여</dt>
+        <dd><span id="out-benefit">0</span>원</dd>
+      </div>
+    </dl>
+
+    <p class="formula" id="out-survival"></p>
+    <p class="formula" id="out-note"></p>
+
+    <div id="detail-block" hidden>
+      <h3>놓치기 쉬운 돈</h3>
+      <div class="table-scroll">
+        <table class="data-table">
+          <tbody id="miss-rows"></tbody>
+        </table>
+      </div>
+
+      <h3>언제 얼마가 들어오나</h3>
+      <p class="section-desc">퇴직금과 연차수당은 한 번에, 실업급여는 매달 나눠서 들어옵니다. 대기기간 7일과 신청 절차 때문에 첫 실업급여는 대개 한 달 뒤부터입니다.</p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr><th>시점</th><th>퇴직금·연차수당</th><th>실업급여</th><th>합계</th><th>누적</th></tr>
+          </thead>
+          <tbody id="flow-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  {{OTHER_CALCS}}
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <article class="card content" aria-labelledby="guide-title">
+    <h2 id="guide-title">퇴사하면 받는 돈, 전부 정리</h2>
+
+    <h3>받을 수 있는 돈은 세 가지입니다</h3>
+    <p>퇴사할 때 나오는 돈은 크게 셋입니다. 그런데 각각 다른 곳에서 다른 시점에 들어오다 보니, <strong>따로 계산하다가 하나를 통째로 빠뜨리는 일</strong>이 자주 생깁니다.</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>항목</th><th>주는 곳</th><th>언제</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>퇴직금</td><td>회사</td><td>퇴직일부터 14일 이내</td></tr>
+        <tr><td>미사용 연차수당</td><td>회사</td><td>퇴직일부터 14일 이내</td></tr>
+        <tr><td>실업급여</td><td>고용보험</td><td>신청 후 약 한 달 뒤부터 매달</td></tr>
+      </tbody>
+    </table>
+    <p>퇴직금과 연차수당은 <strong>회사가 14일 안에 줘야 하는 법적 의무</strong>입니다(근로기준법 제36조). 주지 않으면 지연이자가 붙고 진정 대상이 됩니다.</p>
+
+    <h3>가장 많이 놓치는 것 — 미사용 연차</h3>
+    <p>남은 연차는 사라지는 게 아니라 <strong>돈으로 받습니다.</strong> 그런데 퇴사할 때 이걸 정산받지 못하고 나오는 사람이 많습니다. 회사가 먼저 알려주지 않기 때문입니다.</p>
+    <p>연차수당은 <strong>통상임금</strong>을 기준으로 계산합니다.</p>
+    <p class="formula">연차수당 = 1일 통상임금 × 미사용 일수</p>
+    <p>월 급여 350만 원이고 10일이 남았다면 130만 원이 넘습니다. 적은 돈이 아닙니다. 며칠이 남았는지 모르겠다면 <a href="/yeoncha">연차수당 계산기</a>에서 입사일로 발생일수부터 확인할 수 있습니다.</p>
+
+    <!-- 광고 위치 3: 설명 콘텐츠 중간 (애드센스 승인 후 삽입) -->
+    <!-- <div class="ad-slot ad-inline"></div> -->
+
+    <h3>두 번째로 많이 놓치는 것 — 상여금</h3>
+    <p>퇴직금은 <strong>평균임금</strong>으로 계산하는데, 여기에는 <strong>연간 상여금의 3/12</strong>가 들어갑니다. 월급만 넣고 계산하면 실제보다 적게 나옵니다.</p>
+    <p class="formula">1일 평균임금 = (3개월 임금 + 연간 상여금 × 3/12) ÷ 산정기간 일수</p>
+    <p>연 600만 원의 상여금을 받았다면 150만 원이 3개월 임금총액에 더해집니다. 퇴직금이 수십만 원 단위로 달라집니다.</p>
+    <p>반대로 평균임금이 통상임금보다 적게 나오면 <strong>통상임금을 기준으로 계산합니다</strong>(근로기준법 제2조 제2항). 근로자에게 불리하지 않도록 정해진 규정이라, 둘 중 높은 쪽이 적용됩니다.</p>
+
+    <h3>실업급여는 신청 기한이 있습니다</h3>
+    <p>이게 가장 위험합니다. 실업급여는 <strong>퇴직일 다음 날부터 12개월 안에</strong> 받아야 합니다. 이 기간이 지나면 소정급여일수가 남아 있어도 <strong>더 이상 받지 못합니다.</strong></p>
+    <p>"나중에 신청하지" 하고 미루다가 기간을 넘기거나, 재취업했다가 다시 실직했을 때 남은 일수를 못 받는 경우가 실제로 생깁니다. 퇴사했다면 <strong>일단 고용센터에 수급자격 신청부터</strong> 해 두는 편이 안전합니다.</p>
+    <p>자발적 퇴사는 원칙적으로 대상이 아니지만 예외가 있습니다. 임금 체불, 최저임금 미달, 직장 내 괴롭힘, 통근 곤란(왕복 3시간 이상), 질병, 가족 간병 등은 <strong>정당한 이직 사유</strong>로 인정됩니다. 자발적 퇴사라고 지레 포기하지 말고 고용센터에 확인해 보세요.</p>
+
+    <h3>퇴직금은 1년, 실업급여는 180일</h3>
+    <p>두 기준이 다릅니다. <strong>퇴직금은 계속근로기간 1년(365일) 이상</strong>이어야 나옵니다. 364일이면 한 푼도 없습니다. 퇴사일을 며칠 미루는 것만으로 수백만 원이 갈리는 경우가 있습니다.</p>
+    <p><strong>실업급여는 이직 전 18개월 동안 피보험 단위기간 180일 이상</strong>이 필요합니다. 여기서 180일은 재직일수가 아니라 <strong>보수를 받은 날</strong>을 셉니다. 주 5일 근무라면 대략 7~8개월 근무해야 채워집니다.</p>
+
+    <h3>퇴직소득세는 별도입니다</h3>
+    <p>이 계산기의 퇴직금은 <strong>세전 금액</strong>입니다. 퇴직소득세는 근속연수공제와 환산급여공제를 거쳐 계산되는데, 근속기간이 길수록 세율이 크게 낮아집니다. 근속 5년에 퇴직금 2천만 원 수준이면 실제 부담은 크지 않습니다.</p>
+    <p>실업급여는 <strong>비과세</strong>라 세금이 붙지 않습니다. 계산된 금액이 그대로 들어옵니다.</p>
+
+    <h3>자주 묻는 질문</h3>
+    <div class="faq">
+      <details>
+        <summary>퇴사하면 받는 돈이 총 얼마인가요?</summary>
+        <p>퇴직금, 미사용 연차수당, 실업급여 세 가지를 합한 금액입니다. 퇴직금과 연차수당은 회사가 퇴직일로부터 14일 이내에 지급해야 하고, 실업급여는 고용센터에 신청한 뒤 약 한 달 후부터 매달 나눠서 받습니다. 위 계산기에 입사일과 퇴사일, 월 급여를 넣으면 세 가지를 한 번에 계산합니다.</p>
+      </details>
+      <details>
+        <summary>연차 안 쓰면 돈으로 받나요?</summary>
+        <p>받습니다. 퇴사 시점에 남은 연차는 <strong>연차수당으로 정산</strong>받아야 합니다. 계산식은 1일 통상임금 × 미사용 일수입니다. 회사가 먼저 알려주지 않는 경우가 많으니 퇴사 전에 남은 일수를 반드시 확인하세요.</p>
+      </details>
+      <details>
+        <summary>자발적 퇴사인데 실업급여를 받을 수 있나요?</summary>
+        <p>원칙적으로는 어렵지만 예외가 넓습니다. 임금 체불, 최저임금 미달, 직장 내 괴롭힘, 왕복 3시간 이상의 통근 곤란, 질병, 가족 간병 등은 정당한 이직 사유로 인정되어 수급이 가능합니다. 스스로 판단하지 말고 고용센터에 문의해 보시기 바랍니다.</p>
+      </details>
+      <details>
+        <summary>퇴직금은 며칠 일해야 받나요?</summary>
+        <p>계속근로기간이 <strong>1년(365일) 이상</strong>이어야 합니다. 364일이면 퇴직금이 발생하지 않습니다. 주 15시간 미만 근로자는 대상에서 제외됩니다. 실업급여의 180일 기준과는 별개이므로 두 조건을 각각 확인해야 합니다.</p>
+      </details>
+      <details>
+        <summary>실업급여는 언제까지 신청해야 하나요?</summary>
+        <p>퇴직일 다음 날부터 <strong>12개월 이내</strong>입니다. 이 기간이 지나면 소정급여일수가 남아 있어도 받을 수 없습니다. 퇴사했다면 우선 고용센터에 수급자격 신청을 해 두는 편이 안전합니다.</p>
+      </details>
+      <details>
+        <summary>퇴직금에 상여금도 포함되나요?</summary>
+        <p>포함됩니다. 퇴직금 산정 기준인 평균임금에는 <strong>연간 상여금의 3/12</strong>가 더해집니다. 월급만으로 계산하면 실제보다 적게 나오므로, 상여금을 받았다면 반드시 입력하세요.</p>
+      </details>
+      <details>
+        <summary>회사가 퇴직금을 안 줍니다.</summary>
+        <p>퇴직금과 연차수당은 퇴직일로부터 <strong>14일 이내</strong>에 지급해야 하는 법적 의무입니다(근로기준법 제36조). 지급하지 않으면 지연이자가 발생하고, 고용노동부에 진정을 제기할 수 있습니다. 고객상담센터 1350으로 문의하세요.</p>
+      </details>
+      <details>
+        <summary>입력한 정보가 저장되나요?</summary>
+        <p>저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>에서 확인할 수 있습니다.</p>
+      </details>
+    </div>
+  </article>
+
+</main>

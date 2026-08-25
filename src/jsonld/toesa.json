@@ -1,0 +1,20 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "퇴사하면 받는 돈 계산기",
+   "url": "https://paygyesan.com/toesa",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "All",
+   "inLanguage": "ko",
+   "description": "입사일과 퇴사일, 월 급여를 입력하면 퇴직금·미사용 연차수당·실업급여를 한 번에 계산하고 월별로 언제 얼마가 들어오는지 보여 주는 무료 웹 도구입니다.",
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+   "browserRequirements": "JavaScript 사용 가능한 브라우저"
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": []
+  }
+ ]
+}

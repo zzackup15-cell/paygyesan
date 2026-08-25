@@ -20,6 +20,7 @@ const SUITES = [
   'pension',
   'sideincome',
   'rental',
+  'exit',
   'consistency',
   'precision'
 ];
