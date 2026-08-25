@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>월세 세금 계산기 | 주택임대소득 비과세 판정 - 페이계산</title>
+<meta name="description" content="주택임대소득 과세 여부와 세금을 계산합니다. 부부합산 주택 수와 기준시가로 비과세를 판정하고, 3주택 이상의 간주임대료((보증금−3억)×60%×3.1%), 분리과세 14%와 종합과세 비교, 등록임대주택 필요경비 60%·기본공제 400만 원을 모두 반영했습니다.">
+<meta name="keywords" content="월세 세금, 주택임대소득, 월세 소득세, 임대소득 비과세, 간주임대료, 주택임대 분리과세, 2주택 월세 세금, 월세 신고, 임대소득 계산기">
+<link rel="canonical" href="https://paygyesan.com/wolse">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" content="#1b4d8f">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="페이계산">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://paygyesan.com/wolse">
+<meta property="og:title" content="월세 세금 계산기 | 주택임대소득 비과세 판정">
+<meta property="og:description" content="월세에 세금이 붙는지부터 가려 드립니다. 간주임대료와 분리·종합과세 비교까지.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="월세 세금 계산기">
+<meta name="twitter:description" content="1주택이면 대개 비과세입니다. 주택 수와 월세로 바로 확인하세요.">
+
+<link rel="stylesheet" href="/assets/style.css?v=5b8c7be6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b4d8f'/%3E%3Ctext x='16' y='23' font-size='19' font-family='sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'%3E₩%3C/text%3E%3C/svg%3E">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"월세 세금 계산기","url":"https://paygyesan.com/wolse","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ko","description":"보유 주택 수와 월세를 입력하면 주택임대소득의 과세 여부와 세금을 계산하는 무료 웹 도구입니다. 1주택 비과세 판정, 3주택 이상 간주임대료, 분리과세와 종합과세 비교를 모두 반영합니다.","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"},"browserRequirements":"JavaScript 사용 가능한 브라우저"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"월세를 받으면 무조건 세금을 내나요?","acceptedAnswer":{"@type":"Answer","text":"아닙니다. 부부합산 1주택이고 그 주택의 기준시가가 12억 원 이하라면 월세 수입은 비과세이며 신고 의무도 없습니다. 기준시가 12억 원을 초과하는 고가주택이거나 2주택 이상이면 월세가 과세 대상이 됩니다."}},{"@type":"Question","name":"본인이 월세로 살면서 월세를 받으면 어떻게 되나요?","acceptedAnswer":{"@type":"Answer","text":"본인이 세입자인지는 과세 판정에 영향을 주지 않습니다. 판정 기준은 부부합산 보유 주택 수와 기준시가뿐입니다. 월세로 살면서 집 한 채를 월세 놓는 경우도 1주택자이므로, 그 주택 기준시가가 12억 원 이하라면 비과세입니다."}},{"@type":"Question","name":"전세 보증금에도 세금이 붙나요?","acceptedAnswer":{"@type":"Answer","text":"2주택 이하라면 붙지 않습니다. 3주택 이상이면서 보증금 합계가 3억 원을 넘을 때만 초과분에 간주임대료가 부과됩니다. 계산식은 (보증금 합계 − 3억 원) × 60% × 정기예금이자율이며, 2025~2026년 귀속 이자율은 3.1%입니다."}},{"@type":"Question","name":"분리과세와 종합과세 중 무엇이 유리한가요?","acceptedAnswer":{"@type":"Answer","text":"주택임대 총수입이 연 2,000만 원 이하면 둘 중 유리한 쪽을 선택할 수 있습니다. 분리과세는 세율 14% 고정에 필요경비 50%(등록임대주택 60%)와 기본공제 200만 원(등록 400만 원)을 인정합니다. 다른 소득이 적어 한계세율이 6% 구간이면 종합과세가 더 유리할 수 있습니다."}},{"@type":"Question","name":"주택 수는 어떻게 세나요?","acceptedAnswer":{"@type":"Answer","text":"부부합산으로 셉니다. 다만 전용면적 40제곱미터 이하이면서 기준시가 2억 원 이하인 소형주택은 2026년 12월 31일까지 주택 수에서 제외합니다. 기준시가는 시세가 아니라 공시가격 기준입니다."}},{"@type":"Question","name":"월세 수입을 신고하지 않으면 어떻게 되나요?","acceptedAnswer":{"@type":"Answer","text":"무신고가산세 20%와 납부지연가산세가 부과됩니다. 세입자가 월세 세액공제를 신청하면 임대 사실이 국세청에 파악되며 확정일자와 전입신고 기록도 자료가 됩니다. 수입금액이 연 2,000만 원을 넘으면 사업자등록 의무도 있어 미등록 시 수입금액의 0.2%가 가산세로 붙습니다."}}]}]}
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1984750615156688" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">페이계산<span class="brand-dot">.</span></a>
+    <h1>월세 세금 계산기</h1>
+    <p class="lead">월세 수입에 <strong>세금이 붙는지부터</strong> 가려 드립니다. 1주택이고 기준시가 12억 원 이하면 비과세입니다. 과세 대상이면 분리과세와 종합과세 중 유리한 쪽을 비교합니다.</p>
+    <p class="privacy-badge">입력값은 서버로 전송되지 않고 브라우저 안에서만 계산됩니다.</p>
+  </div>
+</header>
+
+<nav class="site-nav" aria-label="계산기 목록">
+  <div class="wrap">
+      <a href="/yeonbong" class="nav-pill">실수령액</a>
+      <a href="/tongsang" class="nav-pill">통상임금</a>
+      <a href="/busuip" class="nav-pill">부수입 세금</a>
+      <a href="/wolse" class="nav-pill is-current" aria-current="page">월세 세금</a>
+      <a href="/boheom" class="nav-pill">4대보험</a>
+      <a href="/yeongeum" class="nav-pill">국민연금</a>
+      <a href="/juhyu" class="nav-pill">주휴수당</a>
+      <a href="/toejik" class="nav-pill">퇴직금</a>
+      <a href="/yeoncha" class="nav-pill">연차수당</a>
+      <a href="/silup" class="nav-pill">실업급여</a>
+      <a href="/yuka" class="nav-pill">육아휴직</a>
+  </div>
+</nav>
+
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 조건 입력</h2>
+    <p class="section-desc">과세 여부는 <strong>부부합산 주택 수와 기준시가</strong>로 정해집니다. 본인이 전세나 월세로 사는지는 따지지 않습니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="house-count">보유 주택 수</label>
+        <select id="house-count" class="date-input">
+          <option value="1">1채</option>
+          <option value="2">2채</option>
+          <option value="3">3채 이상</option>
+        </select>
+        <p class="hint">부부합산. 소형주택은 제외하고 세세요</p>
+      </div>
+      <div class="net-field">
+        <label for="monthly-rent">월세 (월)</label>
+        <div class="input-unit">
+          <input type="text" id="monthly-rent" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">받는 월세 합계</p>
+      </div>
+      <div class="net-field" id="deposit-field" hidden>
+        <label for="deposit">보증금 합계</label>
+        <div class="input-unit">
+          <input type="text" id="deposit" inputmode="numeric" placeholder="0" maxlength="15" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">3억 원 초과분만 간주임대료로 잡힙니다</p>
+      </div>
+      <div class="net-field">
+        <label for="annual-salary">연봉 (세전) <span class="label-opt">선택</span></label>
+        <div class="input-unit">
+          <input type="text" id="annual-salary" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">종합과세와 비교하려면 넣어 주세요</p>
+      </div>
+    </div>
+
+    <label class="chk" id="highvalue-label">
+      <input type="checkbox" id="high-value">
+      <span>기준시가 12억 원 초과</span>
+    </label>
+    <p class="hint" id="highvalue-hint">시세가 아니라 <strong>공시가격</strong> 기준입니다. 부동산공시가격 알리미에서 확인할 수 있습니다.</p>
+
+    <label class="chk">
+      <input type="checkbox" id="registered">
+      <span>등록임대주택 (세무서 + 지자체 모두 등록)</span>
+    </label>
+    <p class="hint">필요경비율이 50%에서 60%로, 기본공제가 200만 원에서 400만 원으로 올라갑니다.</p>
+
+    <div class="list-actions">
+      <span class="item-count" id="rule-note">1주택이고 기준시가 12억 원 이하면 월세는 비과세입니다</span>
+      <button type="button" id="reset-all" class="btn btn-ghost">초기화</button>
+    </div>
+  </section>
+
+  <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+    <h2 id="result-title">2. 계산 결과</h2>
+
+    <div class="result-grid">
+      <div class="result-box">
+        <span class="result-label">연간 총수입금액</span>
+        <strong class="result-value"><span id="out-revenue">0</span><em>원</em></strong>
+      </div>
+      <div class="result-box result-primary">
+        <span class="result-label" id="tax-label">내야 할 세금</span>
+        <strong class="result-value"><span id="out-tax">0</span><em>원</em></strong>
+      </div>
+    </div>
+
+    <dl class="result-meta">
+      <div>
+        <dt>과세 여부</dt>
+        <dd><span id="out-status">-</span></dd>
+      </div>
+      <div>
+        <dt>유리한 방식</dt>
+        <dd><span id="out-method">-</span></dd>
+      </div>
+      <div>
+        <dt>필요경비</dt>
+        <dd><span id="out-expense">0</span>원</dd>
+      </div>
+      <div>
+        <dt>세금 뺀 실수령</dt>
+        <dd><span id="out-net">0</span>원</dd>
+      </div>
+    </dl>
+
+    <p class="formula" id="out-note"></p>
+
+    <div id="detail-block" hidden>
+      <h3>수입 내역</h3>
+      <div class="table-scroll">
+        <table class="data-table">
+          <tbody id="revenue-rows"></tbody>
+        </table>
+      </div>
+
+      <h3>분리과세 vs 종합과세</h3>
+      <p class="section-desc">총수입 2,000만 원 이하면 <strong>둘 중 유리한 쪽을 고를 수 있습니다.</strong> 분리과세는 세율이 14%로 고정이라, 소득이 적어 한계세율이 6%인 사람은 종합과세가 더 쌉니다.</p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr><th>방식</th><th>세율</th><th>세금</th><th>선택</th></tr>
+          </thead>
+          <tbody id="compare-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="card calc-links" aria-labelledby="other-calc-title">
+      <h2 id="other-calc-title">다른 계산기</h2>
+      <div class="calc-grid">
+        <a class="calc-card" href="/yeonbong">
+          <span class="calc-card-title">연봉 실수령액 계산기</span>
+          <span class="calc-card-desc">세전 연봉만 넣으면 4대보험과 소득세를 뗀 월 실수령액이 나옵니다. 연봉별 실수령액표도 함께 봅니다.</span>
+        </a>
+        <a class="calc-card" href="/tongsang">
+          <span class="calc-card-title">통상임금 계산기</span>
+          <span class="calc-card-desc">기본급과 수당을 넣으면 통상시급, 가산수당, 연봉, 세후 실수령액까지 한 번에 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/busuip">
+          <span class="calc-card-title">부수입 세금 계산기</span>
+          <span class="calc-card-desc">연봉과 추가 수입을 넣으면 5월에 더 낼 돈이 나옵니다. 사업소득과 기타소득 중 어느 쪽이 유리한지도 비교해 줍니다.</span>
+        </a>
+        <a class="calc-card" href="/boheom">
+          <span class="calc-card-title">4대보험 계산기</span>
+          <span class="calc-card-desc">월 급여를 넣으면 근로자 부담과 사업주 부담을 나눠 계산합니다. 회사가 실제로 쓰는 인건비까지 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/yeongeum">
+          <span class="calc-card-title">국민연금 예상 수령액 계산기</span>
+          <span class="calc-card-desc">출생연도와 가입기간, 현재 소득만 넣으면 매달 받을 연금액이 나옵니다. 언제부터 받느냐에 따라 얼마나 달라지는지도 함께 비교합니다.</span>
+        </a>
+        <a class="calc-card" href="/juhyu">
+          <span class="calc-card-title">주휴수당 계산기</span>
+          <span class="calc-card-desc">시급과 근무시간을 넣으면 주휴수당과 주급, 월 환산액을 계산합니다. 최저임금 미달도 확인합니다.</span>
+        </a>
+        <a class="calc-card" href="/toejik">
+          <span class="calc-card-title">퇴직금 계산기</span>
+          <span class="calc-card-desc">입사일과 퇴직 전 3개월 임금을 넣으면 평균임금과 예상 퇴직금이 나옵니다. 통상임금과 비교해 유리한 쪽을 적용합니다.</span>
+        </a>
+        <a class="calc-card" href="/yeoncha">
+          <span class="calc-card-title">연차수당 계산기</span>
+          <span class="calc-card-desc">입사일만 넣으면 발생 연차일수가 나오고, 통상임금으로 미사용 연차수당까지 계산합니다.</span>
+        </a>
+        <a class="calc-card" href="/silup">
+          <span class="calc-card-title">실업급여 계산기</span>
+          <span class="calc-card-desc">이직 전 3개월 임금과 근무 기간을 넣으면 1일 구직급여와 소정급여일수, 총 수급액이 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/yuka">
+          <span class="calc-card-title">육아휴직 급여 계산기</span>
+          <span class="calc-card-desc">통상임금과 사용 기간을 넣으면 월별 육아휴직 급여와 총 수령액이 나옵니다. 6+6 부모육아휴직제도 반영합니다.</span>
+        </a>
+      </div>
+    </section>
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <article class="card content" aria-labelledby="guide-title">
+    <h2 id="guide-title">월세 수입 세금 완전 정리</h2>
+
+    <h3>내가 월세로 살아도 상관없습니다</h3>
+    <p>가장 많이 오해하는 부분입니다. <strong>본인이 세입자인지는 과세 판정에 전혀 영향을 주지 않습니다.</strong> 전세로 살든 월세로 살든, 판정 기준은 <strong>부부합산 보유 주택 수</strong>와 <strong>기준시가</strong> 둘뿐입니다.</p>
+    <p>월세 살면서 집 한 채를 월세 놓는 경우도 <strong>1주택자</strong>입니다. 그 집 기준시가가 12억 원 이하라면 월세 수입은 비과세이고, 신고 의무도 없습니다.</p>
+
+    <h3>주택 수별 과세 기준</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>보유 주택</th><th>월세</th><th>보증금</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1주택 (기준시가 12억 이하)</td><td><strong>비과세</strong></td><td>비과세</td></tr>
+        <tr><td>1주택 (기준시가 12억 초과)</td><td>과세</td><td>비과세</td></tr>
+        <tr><td>2주택</td><td>과세</td><td>비과세</td></tr>
+        <tr><td>3주택 이상</td><td>과세</td><td>3억 초과분 간주임대료 과세</td></tr>
+      </tbody>
+    </table>
+    <p>기준시가는 시세가 아니라 <strong>공시가격</strong>입니다. 시세보다 낮게 잡히므로 실제로는 상당히 여유가 있습니다. 부동산공시가격 알리미에서 확인할 수 있습니다.</p>
+    <p>주택 수를 셀 때 <strong>소형주택은 빼고</strong> 셉니다. 전용면적 40㎡ 이하이면서 기준시가 2억 원 이하인 주택이 여기 해당하며, 2026년 12월 31일까지 적용되는 특례입니다.</p>
+
+    <!-- 광고 위치 3: 설명 콘텐츠 중간 (애드센스 승인 후 삽입) -->
+    <!-- <div class="ad-slot ad-inline"></div> -->
+
+    <h3>보증금에도 세금이 붙는 경우</h3>
+    <p>보증금은 돌려줄 돈이라 원칙적으로 소득이 아닙니다. 다만 <strong>3주택 이상</strong>이면 보증금을 굴려 이자 수익을 얻는다고 보고 일부를 수입으로 간주합니다. 이것이 <strong>간주임대료</strong>입니다.</p>
+    <p class="formula">간주임대료 = (보증금 합계 − 3억 원) × 60% × 3.1%</p>
+    <p>3.1%는 정기예금이자율로, 2025~2026년 귀속에 적용되는 값이며 매년 개정됩니다. 보증금 합계가 3억 원 이하면 간주임대료는 0원입니다.</p>
+    <p>예를 들어 3주택자가 보증금 5억 원을 받고 있다면 <code>(5억 − 3억) × 60% × 3.1% = 372만 원</code>이 수입에 더해집니다.</p>
+    <p>2026년 귀속부터는 기준시가 12억 원을 넘는 주택 2채를 보유하고 보증금 합계가 12억 원을 넘는 경우에도 간주임대료가 과세됩니다. 이 계산기는 주택 수 기준만 반영하므로, 해당하신다면 국세청에 확인하세요.</p>
+
+    <h3>분리과세와 종합과세 중 고르기</h3>
+    <p>주택임대 <strong>총수입이 연 2,000만 원 이하</strong>면 두 가지 중 유리한 쪽을 고를 수 있습니다.</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>구분</th><th>분리과세</th><th>종합과세</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>세율</td><td>14% 고정</td><td>6~45% 누진</td></tr>
+        <tr><td>필요경비</td><td>50% (등록 60%)</td><td>실제 지출 또는 경비율</td></tr>
+        <tr><td>기본공제</td><td>200만 원 (등록 400만 원)</td><td>없음</td></tr>
+        <tr><td>다른 소득</td><td>합산하지 않음</td><td>합산</td></tr>
+      </tbody>
+    </table>
+    <p><strong>분리과세가 항상 유리한 것은 아닙니다.</strong> 세율이 14%로 고정이라, 다른 소득이 적어 한계세율이 6% 구간인 사람은 종합과세가 더 쌉니다. 반대로 연봉이 높아 한계세율이 24%를 넘으면 분리과세가 확실히 유리합니다.</p>
+    <p>기본공제 200만 원에는 조건이 하나 붙습니다. <strong>임대소득을 뺀 종합소득금액이 2,000만 원 이하</strong>일 때만 받을 수 있습니다. 연봉이 어느 정도 있으면 이 공제가 사라지므로 계산이 달라집니다.</p>
+
+    <h3>등록임대주택의 혜택</h3>
+    <p>세무서 사업자등록과 지자체 임대사업자등록을 <strong>모두</strong> 하고 임대료 증액 제한 같은 요건을 지키면 필요경비율이 60%로, 기본공제가 400만 원으로 올라갑니다.</p>
+    <p>다만 등록하면 <strong>의무임대기간</strong>이 생기고 임대료를 5% 넘게 올릴 수 없습니다. 중도에 요건을 어기면 감면받은 세금을 추징당합니다. 세금만 보고 정할 문제가 아닙니다.</p>
+
+    <h3>신고는 언제 어떻게</h3>
+    <p>과세 대상이면 이듬해 <strong>5월 1일부터 31일까지</strong> 종합소득세를 신고합니다. 홈택스에서 직접 할 수 있고, 국세청이 <strong>종합·분리과세 예상세액 비교</strong> 서비스도 제공합니다.</p>
+    <p>수입금액이 연 2,000만 원을 넘으면 <strong>사업자등록</strong> 의무도 생깁니다. 임대 개시일부터 20일 이내에 신청해야 하며, 하지 않으면 수입금액의 0.2%가 가산세로 붙습니다.</p>
+
+    <h3>자주 묻는 질문</h3>
+    <div class="faq">
+      <details>
+        <summary>전세만 놓고 있는데 세금을 내나요?</summary>
+        <p>2주택 이하라면 <strong>내지 않습니다.</strong> 보증금은 돌려줄 돈이라 소득으로 보지 않기 때문입니다. 3주택 이상이면서 보증금 합계가 3억 원을 넘을 때만 초과분에 간주임대료가 붙습니다.</p>
+      </details>
+      <details>
+        <summary>비과세인데도 신고해야 하나요?</summary>
+        <p>하지 않아도 됩니다. 1주택자의 기준시가 12억 원 이하 주택 월세는 <strong>과세 대상 자체가 아니므로</strong> 신고 의무가 없습니다. 다만 주택 수가 늘거나 공시가격이 12억 원을 넘어서면 그 해부터 과세 대상이 되므로 매년 확인이 필요합니다.</p>
+      </details>
+      <details>
+        <summary>공동명의면 어떻게 되나요?</summary>
+        <p>주택 수는 <strong>부부합산</strong>으로 세고, 부부가 아닌 공동소유는 원칙적으로 지분이 가장 큰 사람의 주택으로 봅니다. 임대소득은 지분 비율대로 나눠 각자 신고합니다. 관계가 복잡하면 국세청 상담(126)을 받으시는 편이 확실합니다.</p>
+      </details>
+      <details>
+        <summary>월세를 현금으로 받으면 모르지 않나요?</summary>
+        <p>세입자가 <strong>월세 세액공제</strong>를 신청하면 국세청에 임대 사실이 그대로 잡힙니다. 확정일자나 전입신고 기록도 자료가 됩니다. 무신고가 확인되면 무신고가산세 20%와 납부지연가산세가 함께 부과됩니다.</p>
+      </details>
+      <details>
+        <summary>건강보험료도 오르나요?</summary>
+        <p>오를 수 있습니다. 직장가입자는 근로 외 소득이 연 2,000만 원을 넘으면 초과분에 소득월액보험료가 붙고, 지역가입자는 임대소득이 보험료 산정에 그대로 반영됩니다. 자세한 계산은 <a href="/busuip">부수입 세금 계산기</a>를 참고하세요.</p>
+      </details>
+      <details>
+        <summary>입력한 정보가 저장되나요?</summary>
+        <p>저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>에서 확인할 수 있습니다.</p>
+      </details>
+    </div>
+  </article>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="disclaimer"><strong>면책조항</strong> 이 계산기는 일반적인 법령과 판례를 바탕으로 한 참고용 도구이며, 계산 결과는 법적 효력이 없습니다. 실제 금액은 취업규칙, 단체협약, 근로계약서의 구체적인 내용과 사업장 상황에 따라 달라질 수 있습니다. 정확한 판단이 필요한 경우 공인노무사 또는 고용노동부 고객상담센터(1350)의 상담을 받으시기 바랍니다. 본 사이트는 계산 결과 이용으로 발생한 손해에 대해 책임지지 않습니다.</p>
+    <nav class="footer-nav">
+      <a href="/">홈</a>
+      <a href="/yeonbong">연봉 실수령액 계산기</a>
+      <a href="/tongsang">통상임금 계산기</a>
+      <a href="/busuip">부수입 세금 계산기</a>
+      <a href="/wolse" aria-current="page">월세 세금 계산기</a>
+      <a href="/boheom">4대보험 계산기</a>
+      <a href="/yeongeum">국민연금 예상 수령액 계산기</a>
+      <a href="/juhyu">주휴수당 계산기</a>
+      <a href="/toejik">퇴직금 계산기</a>
+      <a href="/yeoncha">연차수당 계산기</a>
+      <a href="/silup">실업급여 계산기</a>
+      <a href="/yuka">육아휴직 급여 계산기</a>
+      <a href="/about">사이트 소개</a>
+      <a href="/contact">문의</a>
+      <a href="/privacy">개인정보처리방침</a>
+    </nav>
+    <p class="copyright">© 2026 paygyesan.com</p>
+  </div>
+</footer>
+<script src="/assets/calc.js?v=7c664fe1" defer></script>
+<script src="/assets/wolse.js?v=3702d20e" defer></script>
+</body>
+</html>

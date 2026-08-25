@@ -706,6 +706,125 @@ var Calc = (function () {
     };
   }
 
+  /* ---- 주택임대소득 (월세) ---- */
+
+  // 소득세법 제12조·제25조·제64조의2, 시행령 제8조의2
+  var RENTAL = {
+    highValue: 1200000000,        // 1주택 비과세 예외 기준시가 12억원
+    deemedFrom: 300000000,        // 간주임대료 보증금 공제액 3억원
+    deemedPct: 60,                // 보증금 초과분의 60%
+    depositRatePct: 31,           // 정기예금이자율 3.1% (2025~2026년 귀속, 1000분율)
+    deemedMinHouses: 3,           // 간주임대료는 비소형주택 3채 이상부터
+    separateLimit: 20000000,      // 총수입 2,000만원 이하면 분리과세 선택 가능
+    separateTaxPct: 14,
+    expensePct: 50,               // 분리과세 필요경비율
+    expensePctRegistered: 60,     // 등록임대주택
+    deduction: 2000000,           // 분리과세 기본공제
+    deductionRegistered: 4000000,
+    deductionIncomeLimit: 20000000 // 임대소득 제외 종합소득금액이 이 이하일 때만 공제
+  };
+
+  /* 과세 대상인지부터 가른다. 이게 이 계산기의 첫 번째 답이다.
+   *
+   * 본인이 월세로 사는지는 따지지 않는다. 부부합산 주택 수와 기준시가로만
+   * 정해진다. 1주택이고 기준시가 12억원 이하면 월세는 비과세이고 신고 의무도
+   * 없다. 이 사실을 몰라 불안해하는 사람이 많다.
+   */
+  function rentalTaxable(houses, isHighValue) {
+    var n = Math.floor(houses) || 0;
+    if (n <= 0) return { taxable: false, reason: 'none' };
+    if (n === 1) {
+      return isHighValue
+        ? { taxable: true, reason: 'highValue' }   // 기준시가 12억 초과 고가주택
+        : { taxable: false, reason: 'oneHouse' };  // 비과세
+    }
+    return { taxable: true, reason: n >= RENTAL.deemedMinHouses ? 'multi' : 'two' };
+  }
+
+  // 간주임대료. 보증금은 3주택 이상일 때만 수입으로 잡는다.
+  function deemedRent(deposit, houses) {
+    var n = Math.floor(houses) || 0;
+    if (n < RENTAL.deemedMinHouses) return 0;
+    var over = toAmount(deposit) - RENTAL.deemedFrom;
+    if (over <= 0) return 0;
+    // 정수 연산. 0.031 을 그대로 곱하면 부동소수 오차가 남는다.
+    return Math.floor(over * RENTAL.deemedPct / 100 * RENTAL.depositRatePct / 1000);
+  }
+
+  /* 월세 수입의 세금.
+   *
+   * 총수입 2,000만원 이하면 분리과세(14%)와 종합과세 중 고를 수 있다.
+   * 분리과세는 필요경비 50%(등록 60%)를 자동으로 빼 주고 기본공제까지 있어
+   * 대개 유리하지만, 한계세율이 6% 구간인 저소득자는 종합과세가 나을 수 있다.
+   * 그래서 양쪽을 다 계산해 비교한다.
+   */
+  function rentalIncomeTax(opts) {
+    opts = opts || {};
+    var houses = Math.min(Math.max(Math.floor(toAmount(opts.houses)) || 0, 0), 100);
+    var isHighValue = !!opts.isHighValue;
+    var registered = !!opts.registered;
+    var status = rentalTaxable(houses, isHighValue);
+
+    var yearlyRent = toAmount(opts.monthlyRent) * 12;
+    var deemed = deemedRent(opts.deposit, houses);
+    var revenue = status.taxable ? yearlyRent + deemed : 0;
+
+    // 근로소득만 있는 사람의 종합소득금액 = 총급여 - 근로소득공제
+    var salary = toAmount(opts.annualSalary);
+    var otherIncome = salary > 0 ? salary - earnedIncomeDeduction(salary) : 0;
+
+    var result = {
+      taxable: status.taxable,
+      reason: status.reason,
+      houses: houses,
+      yearlyRent: yearlyRent,
+      deemedRent: deemed,
+      revenue: revenue,
+      otherIncome: otherIncome,
+      canSeparate: status.taxable && revenue > 0 && revenue <= RENTAL.separateLimit,
+      expense: 0,
+      deduction: 0,
+      separateBase: 0,
+      separateTax: 0,
+      comprehensiveTax: 0,
+      betterIsSeparate: true,
+      tax: 0,
+      netIncome: revenue
+    };
+
+    if (!status.taxable || revenue <= 0) return result;
+
+    var expensePct = registered ? RENTAL.expensePctRegistered : RENTAL.expensePct;
+    result.expense = Math.floor(revenue * expensePct / 100);
+
+    // 기본공제는 분리과세 전용이고, 임대소득을 뺀 종합소득금액이 2,000만원
+    // 이하일 때만 받는다. 연봉이 높으면 이 공제가 사라진다.
+    if (otherIncome <= RENTAL.deductionIncomeLimit) {
+      result.deduction = registered ? RENTAL.deductionRegistered : RENTAL.deduction;
+    }
+
+    var base = revenue - result.expense - result.deduction;
+    result.separateBase = base > 0 ? base : 0;
+    var sepIncomeTax = Math.floor(result.separateBase * RENTAL.separateTaxPct / 100);
+    result.separateTax = sepIncomeTax + Math.floor(sepIncomeTax * 10 / 100); // 지방소득세 10%
+
+    // 종합과세: 임대소득금액을 기존 과세표준 위에 얹어 늘어난 세액을 본다.
+    // 기본공제는 분리과세에만 있으므로 여기서는 빼지 않는다.
+    var rentalIncome = revenue - result.expense;
+    var baseBefore = estimatedTaxBase(salary, opts.family);
+    var added = comprehensiveTax(baseBefore + rentalIncome) - comprehensiveTax(baseBefore);
+    if (added < 0) added = 0;
+    result.comprehensiveTax = added + Math.floor(added * 10 / 100);
+
+    // 2,000만원을 넘으면 분리과세를 고를 수 없다
+    result.betterIsSeparate = result.canSeparate
+      ? result.separateTax <= result.comprehensiveTax
+      : false;
+    result.tax = result.betterIsSeparate ? result.separateTax : result.comprehensiveTax;
+    result.netIncome = revenue - result.tax;
+    return result;
+  }
+
   /* ---- 국민연금 노령연금 (예상 수령액) ---- */
 
   // 국민연금법 제51조 급여산식.
@@ -907,6 +1026,10 @@ var Calc = (function () {
   }
 
   return {
+    RENTAL: RENTAL,
+    rentalTaxable: rentalTaxable,
+    deemedRent: deemedRent,
+    rentalIncomeTax: rentalIncomeTax,
     TAX_BRACKETS: TAX_BRACKETS,
     SIDE: SIDE,
     comprehensiveTax: comprehensiveTax,

@@ -1,0 +1,210 @@
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 조건 입력</h2>
+    <p class="section-desc">과세 여부는 <strong>부부합산 주택 수와 기준시가</strong>로 정해집니다. 본인이 전세나 월세로 사는지는 따지지 않습니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="house-count">보유 주택 수</label>
+        <select id="house-count" class="date-input">
+          <option value="1">1채</option>
+          <option value="2">2채</option>
+          <option value="3">3채 이상</option>
+        </select>
+        <p class="hint">부부합산. 소형주택은 제외하고 세세요</p>
+      </div>
+      <div class="net-field">
+        <label for="monthly-rent">월세 (월)</label>
+        <div class="input-unit">
+          <input type="text" id="monthly-rent" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">받는 월세 합계</p>
+      </div>
+      <div class="net-field" id="deposit-field" hidden>
+        <label for="deposit">보증금 합계</label>
+        <div class="input-unit">
+          <input type="text" id="deposit" inputmode="numeric" placeholder="0" maxlength="15" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">3억 원 초과분만 간주임대료로 잡힙니다</p>
+      </div>
+      <div class="net-field">
+        <label for="annual-salary">연봉 (세전) <span class="label-opt">선택</span></label>
+        <div class="input-unit">
+          <input type="text" id="annual-salary" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">종합과세와 비교하려면 넣어 주세요</p>
+      </div>
+    </div>
+
+    <label class="chk" id="highvalue-label">
+      <input type="checkbox" id="high-value">
+      <span>기준시가 12억 원 초과</span>
+    </label>
+    <p class="hint" id="highvalue-hint">시세가 아니라 <strong>공시가격</strong> 기준입니다. 부동산공시가격 알리미에서 확인할 수 있습니다.</p>
+
+    <label class="chk">
+      <input type="checkbox" id="registered">
+      <span>등록임대주택 (세무서 + 지자체 모두 등록)</span>
+    </label>
+    <p class="hint">필요경비율이 50%에서 60%로, 기본공제가 200만 원에서 400만 원으로 올라갑니다.</p>
+
+    <div class="list-actions">
+      <span class="item-count" id="rule-note">1주택이고 기준시가 12억 원 이하면 월세는 비과세입니다</span>
+      <button type="button" id="reset-all" class="btn btn-ghost">초기화</button>
+    </div>
+  </section>
+
+  <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+    <h2 id="result-title">2. 계산 결과</h2>
+
+    <div class="result-grid">
+      <div class="result-box">
+        <span class="result-label">연간 총수입금액</span>
+        <strong class="result-value"><span id="out-revenue">0</span><em>원</em></strong>
+      </div>
+      <div class="result-box result-primary">
+        <span class="result-label" id="tax-label">내야 할 세금</span>
+        <strong class="result-value"><span id="out-tax">0</span><em>원</em></strong>
+      </div>
+    </div>
+
+    <dl class="result-meta">
+      <div>
+        <dt>과세 여부</dt>
+        <dd><span id="out-status">-</span></dd>
+      </div>
+      <div>
+        <dt>유리한 방식</dt>
+        <dd><span id="out-method">-</span></dd>
+      </div>
+      <div>
+        <dt>필요경비</dt>
+        <dd><span id="out-expense">0</span>원</dd>
+      </div>
+      <div>
+        <dt>세금 뺀 실수령</dt>
+        <dd><span id="out-net">0</span>원</dd>
+      </div>
+    </dl>
+
+    <p class="formula" id="out-note"></p>
+
+    <div id="detail-block" hidden>
+      <h3>수입 내역</h3>
+      <div class="table-scroll">
+        <table class="data-table">
+          <tbody id="revenue-rows"></tbody>
+        </table>
+      </div>
+
+      <h3>분리과세 vs 종합과세</h3>
+      <p class="section-desc">총수입 2,000만 원 이하면 <strong>둘 중 유리한 쪽을 고를 수 있습니다.</strong> 분리과세는 세율이 14%로 고정이라, 소득이 적어 한계세율이 6%인 사람은 종합과세가 더 쌉니다.</p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr><th>방식</th><th>세율</th><th>세금</th><th>선택</th></tr>
+          </thead>
+          <tbody id="compare-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  {{OTHER_CALCS}}
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <article class="card content" aria-labelledby="guide-title">
+    <h2 id="guide-title">월세 수입 세금 완전 정리</h2>
+
+    <h3>내가 월세로 살아도 상관없습니다</h3>
+    <p>가장 많이 오해하는 부분입니다. <strong>본인이 세입자인지는 과세 판정에 전혀 영향을 주지 않습니다.</strong> 전세로 살든 월세로 살든, 판정 기준은 <strong>부부합산 보유 주택 수</strong>와 <strong>기준시가</strong> 둘뿐입니다.</p>
+    <p>월세 살면서 집 한 채를 월세 놓는 경우도 <strong>1주택자</strong>입니다. 그 집 기준시가가 12억 원 이하라면 월세 수입은 비과세이고, 신고 의무도 없습니다.</p>
+
+    <h3>주택 수별 과세 기준</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>보유 주택</th><th>월세</th><th>보증금</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1주택 (기준시가 12억 이하)</td><td><strong>비과세</strong></td><td>비과세</td></tr>
+        <tr><td>1주택 (기준시가 12억 초과)</td><td>과세</td><td>비과세</td></tr>
+        <tr><td>2주택</td><td>과세</td><td>비과세</td></tr>
+        <tr><td>3주택 이상</td><td>과세</td><td>3억 초과분 간주임대료 과세</td></tr>
+      </tbody>
+    </table>
+    <p>기준시가는 시세가 아니라 <strong>공시가격</strong>입니다. 시세보다 낮게 잡히므로 실제로는 상당히 여유가 있습니다. 부동산공시가격 알리미에서 확인할 수 있습니다.</p>
+    <p>주택 수를 셀 때 <strong>소형주택은 빼고</strong> 셉니다. 전용면적 40㎡ 이하이면서 기준시가 2억 원 이하인 주택이 여기 해당하며, 2026년 12월 31일까지 적용되는 특례입니다.</p>
+
+    <!-- 광고 위치 3: 설명 콘텐츠 중간 (애드센스 승인 후 삽입) -->
+    <!-- <div class="ad-slot ad-inline"></div> -->
+
+    <h3>보증금에도 세금이 붙는 경우</h3>
+    <p>보증금은 돌려줄 돈이라 원칙적으로 소득이 아닙니다. 다만 <strong>3주택 이상</strong>이면 보증금을 굴려 이자 수익을 얻는다고 보고 일부를 수입으로 간주합니다. 이것이 <strong>간주임대료</strong>입니다.</p>
+    <p class="formula">간주임대료 = (보증금 합계 − 3억 원) × 60% × 3.1%</p>
+    <p>3.1%는 정기예금이자율로, 2025~2026년 귀속에 적용되는 값이며 매년 개정됩니다. 보증금 합계가 3억 원 이하면 간주임대료는 0원입니다.</p>
+    <p>예를 들어 3주택자가 보증금 5억 원을 받고 있다면 <code>(5억 − 3억) × 60% × 3.1% = 372만 원</code>이 수입에 더해집니다.</p>
+    <p>2026년 귀속부터는 기준시가 12억 원을 넘는 주택 2채를 보유하고 보증금 합계가 12억 원을 넘는 경우에도 간주임대료가 과세됩니다. 이 계산기는 주택 수 기준만 반영하므로, 해당하신다면 국세청에 확인하세요.</p>
+
+    <h3>분리과세와 종합과세 중 고르기</h3>
+    <p>주택임대 <strong>총수입이 연 2,000만 원 이하</strong>면 두 가지 중 유리한 쪽을 고를 수 있습니다.</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>구분</th><th>분리과세</th><th>종합과세</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>세율</td><td>14% 고정</td><td>6~45% 누진</td></tr>
+        <tr><td>필요경비</td><td>50% (등록 60%)</td><td>실제 지출 또는 경비율</td></tr>
+        <tr><td>기본공제</td><td>200만 원 (등록 400만 원)</td><td>없음</td></tr>
+        <tr><td>다른 소득</td><td>합산하지 않음</td><td>합산</td></tr>
+      </tbody>
+    </table>
+    <p><strong>분리과세가 항상 유리한 것은 아닙니다.</strong> 세율이 14%로 고정이라, 다른 소득이 적어 한계세율이 6% 구간인 사람은 종합과세가 더 쌉니다. 반대로 연봉이 높아 한계세율이 24%를 넘으면 분리과세가 확실히 유리합니다.</p>
+    <p>기본공제 200만 원에는 조건이 하나 붙습니다. <strong>임대소득을 뺀 종합소득금액이 2,000만 원 이하</strong>일 때만 받을 수 있습니다. 연봉이 어느 정도 있으면 이 공제가 사라지므로 계산이 달라집니다.</p>
+
+    <h3>등록임대주택의 혜택</h3>
+    <p>세무서 사업자등록과 지자체 임대사업자등록을 <strong>모두</strong> 하고 임대료 증액 제한 같은 요건을 지키면 필요경비율이 60%로, 기본공제가 400만 원으로 올라갑니다.</p>
+    <p>다만 등록하면 <strong>의무임대기간</strong>이 생기고 임대료를 5% 넘게 올릴 수 없습니다. 중도에 요건을 어기면 감면받은 세금을 추징당합니다. 세금만 보고 정할 문제가 아닙니다.</p>
+
+    <h3>신고는 언제 어떻게</h3>
+    <p>과세 대상이면 이듬해 <strong>5월 1일부터 31일까지</strong> 종합소득세를 신고합니다. 홈택스에서 직접 할 수 있고, 국세청이 <strong>종합·분리과세 예상세액 비교</strong> 서비스도 제공합니다.</p>
+    <p>수입금액이 연 2,000만 원을 넘으면 <strong>사업자등록</strong> 의무도 생깁니다. 임대 개시일부터 20일 이내에 신청해야 하며, 하지 않으면 수입금액의 0.2%가 가산세로 붙습니다.</p>
+
+    <h3>자주 묻는 질문</h3>
+    <div class="faq">
+      <details>
+        <summary>전세만 놓고 있는데 세금을 내나요?</summary>
+        <p>2주택 이하라면 <strong>내지 않습니다.</strong> 보증금은 돌려줄 돈이라 소득으로 보지 않기 때문입니다. 3주택 이상이면서 보증금 합계가 3억 원을 넘을 때만 초과분에 간주임대료가 붙습니다.</p>
+      </details>
+      <details>
+        <summary>비과세인데도 신고해야 하나요?</summary>
+        <p>하지 않아도 됩니다. 1주택자의 기준시가 12억 원 이하 주택 월세는 <strong>과세 대상 자체가 아니므로</strong> 신고 의무가 없습니다. 다만 주택 수가 늘거나 공시가격이 12억 원을 넘어서면 그 해부터 과세 대상이 되므로 매년 확인이 필요합니다.</p>
+      </details>
+      <details>
+        <summary>공동명의면 어떻게 되나요?</summary>
+        <p>주택 수는 <strong>부부합산</strong>으로 세고, 부부가 아닌 공동소유는 원칙적으로 지분이 가장 큰 사람의 주택으로 봅니다. 임대소득은 지분 비율대로 나눠 각자 신고합니다. 관계가 복잡하면 국세청 상담(126)을 받으시는 편이 확실합니다.</p>
+      </details>
+      <details>
+        <summary>월세를 현금으로 받으면 모르지 않나요?</summary>
+        <p>세입자가 <strong>월세 세액공제</strong>를 신청하면 국세청에 임대 사실이 그대로 잡힙니다. 확정일자나 전입신고 기록도 자료가 됩니다. 무신고가 확인되면 무신고가산세 20%와 납부지연가산세가 함께 부과됩니다.</p>
+      </details>
+      <details>
+        <summary>건강보험료도 오르나요?</summary>
+        <p>오를 수 있습니다. 직장가입자는 근로 외 소득이 연 2,000만 원을 넘으면 초과분에 소득월액보험료가 붙고, 지역가입자는 임대소득이 보험료 산정에 그대로 반영됩니다. 자세한 계산은 <a href="/busuip">부수입 세금 계산기</a>를 참고하세요.</p>
+      </details>
+      <details>
+        <summary>입력한 정보가 저장되나요?</summary>
+        <p>저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>에서 확인할 수 있습니다.</p>
+      </details>
+    </div>
+  </article>
+
+</main>

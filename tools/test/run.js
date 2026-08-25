@@ -19,6 +19,7 @@ const SUITES = [
   'parental',
   'pension',
   'sideincome',
+  'rental',
   'consistency',
   'precision'
 ];
