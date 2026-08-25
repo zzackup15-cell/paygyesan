@@ -114,6 +114,38 @@ function buildHubCards() {
     .join('');
 }
 
+/* 소개 페이지에 적는 검증 건수.
+ *
+ * 손으로 적어 두면 어긋난다. 실제로 652건이 된 뒤에도 페이지에는 556건이
+ * 남아 있었다. 하필 정확도를 자랑하는 문장이라 틀리면 더 나쁘다.
+ *
+ * 그래서 빌드가 검증 스위트를 직접 돌려 나온 수를 넣는다. 페이지에 적힌
+ * 숫자가 곧 방금 통과한 검증의 수가 된다. 하나라도 실패하면 빌드가 멈춘다.
+ */
+let cachedTestCount = null;
+function testCount() {
+  if (cachedTestCount !== null) return cachedTestCount;
+  const names = ['ordinary', 'tax', 'insurance', 'severance', 'leave',
+    'unemployment', 'parental', 'pension', 'sideincome', 'rental',
+    'consistency', 'precision'];
+  const log = console.log;
+  console.log = () => {}; // 검증 스위트의 출력을 빌드 로그에 섞지 않는다
+  let pass = 0;
+  let fail = 0;
+  try {
+    for (const name of names) {
+      const r = require(path.join(__dirname, 'test', name + '.js'));
+      pass += r.pass;
+      fail += r.fail;
+    }
+  } finally {
+    console.log = log;
+  }
+  if (fail) throw new Error('검증 실패 ' + fail + '건. 빌드를 중단한다.');
+  cachedTestCount = pass;
+  return pass;
+}
+
 /* 본문 안에서 계산기를 줄글로 나열할 때 쓴다.
  *
  * 손으로 적어 두면 계산기를 추가할 때마다 어긋난다. 실제로 홈 FAQ 가
@@ -222,6 +254,7 @@ for (const page of pages) {
     .replace(/\{\{TOP_NAV\}\}/g, buildTopNav(page.slug))
     .replace(/\{\{CALC_NAMES\}\}/g, calcNamesText())
     .replace(/\{\{CALC_COUNT\}\}/g, calcCountText())
+    .replace(/\{\{TEST_COUNT\}\}/g, String(testCount()))
     .replace(/\{\{SCRIPTS\}\}/g, scripts)
     .replace(/\{\{CSS\}\}/g, assetUrl('/assets/style.css'))
     // 본문 안에서도 쓸 수 있어야 하므로 BODY 치환 뒤에 처리한다
