@@ -201,12 +201,48 @@ const layout = read(SRC, 'layout.html');
 const hashes = [];
 const sitemapEntries = [];
 
+/* 화면의 FAQ 를 그대로 구조화 데이터로 만든다.
+ *
+ * 구글 FAQPage 정책은 마크업에 넣은 질문과 답이 페이지에 그대로 보일 것을
+ * 요구한다. 그런데 본문과 JSON-LD 를 따로 손으로 쓰다 보니 11개 페이지가
+ * 전부 어긋나 있었다. 화면은 "정말 무료인가요? 가입해야 하나요?" 인데
+ * 마크업은 "임금 계산기는 무료인가요?" 였다.
+ *
+ * 이제 본문의 <details> 에서 뽑아 쓴다. 두 벌을 쓰지 않으니 갈라질 수 없다.
+ */
+function faqFromBody(body) {
+  const strip = (s) => s.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  const out = [];
+  const re = /<details>\s*<summary>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>/g;
+  let m;
+  while ((m = re.exec(body)) !== null) {
+    const name = strip(m[1]);
+    const text = strip(m[2]);
+    if (name && text) {
+      out.push({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } });
+    }
+  }
+  return out;
+}
+
 for (const page of pages) {
-  const body = read(SRC, 'body', page.body).trim();
+  // 자리표시자를 먼저 푼다. FAQ 를 본문에서 뽑아 쓰므로 그 전에 치환되어야
+  // 마크업에도 실제 문장이 들어간다.
+  const body = read(SRC, 'body', page.body).trim()
+    .replace(/\{\{CALC_NAMES\}\}/g, calcNamesText())
+    .replace(/\{\{CALC_COUNT\}\}/g, calcCountText())
+    .replace(/\{\{TEST_COUNT\}\}/g, String(testCount()));
 
   let jsonldBlock = '';
   if (page.jsonld) {
     const data = JSON.parse(read(SRC, 'jsonld', page.jsonld));
+
+    const faqs = faqFromBody(body);
+    if (faqs.length) {
+      const node = (data['@graph'] || []).find(n => n['@type'] === 'FAQPage');
+      if (node) node.mainEntity = faqs;
+      else data['@graph'].push({ '@type': 'FAQPage', mainEntity: faqs });
+    }
     // 홈의 계산기 목록도 pages.js 에서 생성한다. 손으로 관리하던 때에는
     // 계산기를 추가해도 갱신되지 않아 2개에 머물러 있었다.
     for (const node of data['@graph'] || []) {
