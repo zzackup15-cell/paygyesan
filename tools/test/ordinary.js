@@ -72,7 +72,10 @@ s.check('문자', C.toAmount('abc'), 0);
 s.check('Infinity', C.toAmount(Infinity), 0);
 s.check('콤마 포함', C.toAmount('3,000,000'), 3000000);
 s.check('금액 상한', C.toAmount('999999999999999'), C.MAX_AMOUNT);
-s.check('시간 음수 → 절댓값', C.toHours('-8'), 8);
+// 음수는 0 이다. 예전에는 정규식이 '-' 를 지워 8 이 나왔고 그걸 '절댓값 규칙'
+// 이라고 적어 두었지만, toAmount 는 음수를 0 으로 처리하고 README 도 그렇게
+// 밝히고 있었다. 잘못된 입력에 값을 만들어 주는 쪽이 위험하다.
+s.check('시간 음수 → 0', C.toHours('-8'), 0);
 s.check('시간 문자', C.toHours('..'), 0);
 s.check('시간 상한', C.toHours('99999'), 999);
 s.check('0시간 → 시급 0', C.hourlyOrdinaryWage(3000000, 0), 0);
@@ -80,5 +83,22 @@ s.check('총액에 Infinity', C.totalOrdinaryWage([{ amount: Infinity, period: '
 s.check('급여총액에 Infinity', C.totalGrossWage([{ amount: Infinity, period: 'monthly', included: false }]), 0);
 s.check('연봉 환산 음수', C.toAnnual(-100), 0);
 s.check('연봉 환산 NaN', C.toAnnual(NaN), 0);
+
+s.section('입력 방어 — toHours 는 음수를 0 으로 본다');
+// 정규식이 '-' 를 지워 버려 -40 이 40 으로 되살아나던 버그가 있었다.
+// 그 탓에 주 -40시간이 월 209시간으로 계산됐다. toAmount 는 숫자 분기가
+// 따로 있어 같은 문제가 없었고, 두 함수가 이제 같게 동작해야 한다.
+s.check('toHours(-1)', C.toHours(-1), 0);
+s.check('toHours(-40)', C.toHours(-40), 0);
+s.check("toHours('-40')", C.toHours('-40'), 0);
+s.check("toHours('-40시간')", C.toHours('-40시간'), 0);
+s.check('toAmount(-5) 와 같은 방향', C.toAmount(-5), 0);
+s.check('음수 주간시간 → 월 소정근로시간 0', C.monthlyScheduledHours(-40), 0);
+s.check('음수 주간시간 → 주휴시간 0', C.weeklyHolidayHours(C.toHours(-40)), 0);
+s.check('양수는 그대로', C.toHours(40), 40);
+s.check('숫자형 소수 반올림 유지', C.toHours(45.67), 45.7);
+s.check('숫자형 상한 클램프 유지', C.toHours(9999), 999);
+s.check('NaN', C.toHours(NaN), 0);
+s.check('Infinity', C.toHours(Infinity), 0);
 
 module.exports = s.done();

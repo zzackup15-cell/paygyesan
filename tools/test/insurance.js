@@ -42,7 +42,8 @@ s.check('미입력 시 0', C.employerInsurance(3000000, {}).accident, 0);
 s.check('0.7% 입력', C.employerInsurance(3000000, { accidentRate: '0.7' }).accident, exactFloor10(3000000, 7, 1000));
 s.check('1.5% 입력', C.employerInsurance(3000000, { accidentRate: '1.5' }).accident, exactFloor10(3000000, 15, 1000));
 s.check('문자 입력 → 0', C.employerInsurance(3000000, { accidentRate: 'abc' }).accident, 0);
-s.check('음수 → 절댓값(toHours 규칙)', C.employerInsurance(3000000, { accidentRate: '-2' }).accident, exactFloor10(3000000, 2, 100));
+// 음수 요율은 0 으로 본다. 예전에는 -2% 가 2% 로 되살아났다.
+s.check('음수 요율 → 0', C.employerInsurance(3000000, { accidentRate: '-2' }).accident, 0);
 s.check('99% → 20% 상한', C.employerInsurance(3000000, { accidentRate: '99' }).accident, exactFloor10(3000000, 20, 100));
 
 s.section('합계와 인건비 (월 300만 / 150인 미만)');

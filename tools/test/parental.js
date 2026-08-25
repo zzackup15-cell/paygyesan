@@ -59,7 +59,8 @@ s.check('18개월 총액', C.parentalLeave(4000000, 18, false).total, 2500000 * 
 
 s.section('방어');
 s.check('개월 0', C.parentalLeave(4000000, 0, false).total, 0);
-s.check('개월 음수 → 절댓값(toHours 규칙)', C.parentalLeave(4000000, -5, false).months, 5);
+// 음수 개월은 0 개월. 예전에는 -5개월이 5개월치 급여로 나왔다.
+s.check('개월 음수 → 0개월', C.parentalLeave(4000000, -5, false).months, 0);
 s.check('개월 상한 초과 → 18로 제한', C.parentalLeave(4000000, 99, false).months, 18);
 s.check('개월 문자', C.parentalLeave(4000000, 'abc', false).total, 0);
 s.check('통상임금 0 → 하한 70만', amt(1, 0, false), 700000);

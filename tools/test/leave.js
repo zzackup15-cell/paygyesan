@@ -54,7 +54,8 @@ s.section('방어');
 s.check('통상임금 0', C.annualLeavePay(0, 15), 0);
 s.check('통상임금 음수', C.annualLeavePay(-1000, 15), 0);
 s.check('통상임금 NaN', C.annualLeavePay(NaN, 15), 0);
-s.check('일수 음수 → 절댓값', C.annualLeavePay(daily, -5), C.annualLeavePay(daily, 5));
+// 음수 일수는 0 원. 예전에는 -5일이 5일치 수당으로 나왔다.
+s.check('일수 음수 → 0원', C.annualLeavePay(daily, -5), 0);
 s.check('일수 문자', C.annualLeavePay(daily, 'abc'), 0);
 s.check('날짜 없음', C.annualLeaveDays(null, null).currentDays, 0);
 s.check('입사일이 미래', at('2027-01-01', '2026-01-01').currentDays, 0);

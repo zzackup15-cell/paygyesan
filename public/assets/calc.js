@@ -26,7 +26,18 @@ var Calc = (function () {
   }
 
   function toHours(raw) {
-    var cleaned = String(raw == null ? '' : raw).replace(/[^0-9.]/g, '');
+    if (typeof raw === 'number') {
+      if (!isFinite(raw) || raw < 0) return 0;
+      return Math.min(Math.round(raw * 10) / 10, MAX_HOURS);
+    }
+    var text = String(raw == null ? '' : raw);
+    // 음수 부호를 먼저 걸러내야 한다. 아래 정규식이 '-' 를 지워 버려서
+    // -40 이 40 으로 되살아나기 때문이다. 그 탓에 아래의 n < 0 검사는
+    // 문자열 입력에 대해 한 번도 참이 되지 않는 죽은 코드였고,
+    // 주 -40시간을 넣으면 월 소정근로시간이 209시간으로 나왔다.
+    // toAmount 는 숫자 분기가 따로 있어 같은 문제가 없었다.
+    if (text.indexOf('-') !== -1) return 0;
+    var cleaned = text.replace(/[^0-9.]/g, '');
     var parts = cleaned.split('.');
     if (parts.length > 2) cleaned = parts[0] + '.' + parts[1];
     var n = parseFloat(cleaned);
