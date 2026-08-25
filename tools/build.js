@@ -101,6 +101,27 @@ function buildHubCards() {
     .join('');
 }
 
+/* 본문 안에서 계산기를 줄글로 나열할 때 쓴다.
+ *
+ * 손으로 적어 두면 계산기를 추가할 때마다 어긋난다. 실제로 홈 FAQ 가
+ * "일곱 가지" 에 멈춰 있는 동안 계산기는 열 개가 되어 있었다. 탭·카드·
+ * 사이트맵은 이미 pages.js 에서 생성하고 있었는데 줄글만 빠져 있었다.
+ */
+function calcNamesText() {
+  return pages
+    .filter(p => p.calculator)
+    // navLabel 에서 '계산기' 를 떼면 줄글에 그대로 넣을 수 있는 이름이 된다
+    .map(p => '<a href="/' + p.slug + '">' + p.navLabel.replace(/\s*계산기$/, '') + '</a>')
+    .join(', ');
+}
+
+function calcCountText() {
+  const n = pages.filter(p => p.calculator).length;
+  const words = ['', '한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열',
+    '열한', '열두', '열세', '열네', '열다섯', '열여섯', '열일곱', '열여덟', '열아홉', '스무'];
+  return (words[n] || String(n)) + ' 가지';
+}
+
 // 계산이 끝난 자리에서 다음 계산기로 넘어가게 하는 카드
 function buildOtherCalcs(current) {
   const items = pages.filter(p => p.calculator && p.slug !== current);
@@ -186,6 +207,8 @@ for (const page of pages) {
     .replace(/\{\{DISCLAIMER\}\}/g, page.disclaimer ? '    <p class="disclaimer">' + page.disclaimer + '</p>\n' : '')
     .replace(/\{\{NAV\}\}/g, buildNav(page.slug))
     .replace(/\{\{TOP_NAV\}\}/g, buildTopNav(page.slug))
+    .replace(/\{\{CALC_NAMES\}\}/g, calcNamesText())
+    .replace(/\{\{CALC_COUNT\}\}/g, calcCountText())
     .replace(/\{\{SCRIPTS\}\}/g, scripts)
     .replace(/\{\{CSS\}\}/g, assetUrl('/assets/style.css'))
     // 본문 안에서도 쓸 수 있어야 하므로 BODY 치환 뒤에 처리한다
