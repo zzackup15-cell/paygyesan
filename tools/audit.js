@@ -227,9 +227,35 @@ for (const h of ['Content-Security-Policy', 'X-Frame-Options: DENY', 'X-Content-
   ok('_headers: ' + h, headers.includes(h));
 }
 
-/* ── 8. UI 가 calc.js 를 우회하지 않는가 ────────────────────────────── */
+/* ── 8. 애드센스 설정이 서로 맞는가 ─────────────────────────────────── */
 
-section('8. 계산 로직 우회 여부');
+section('8. 애드센스');
+
+const { ADS_TXT, ADSENSE } = require(path.join(ROOT, 'src', 'pages.js'));
+const adsTxt = fs.readFileSync(path.join(OUT, 'ads.txt'), 'utf8').trim();
+// 게시자 ID 가 광고 스크립트와 ads.txt 두 군데에 손으로 적혀 있다.
+// 한쪽만 바뀌면 광고가 조용히 나가지 않는다.
+const idInScript = (ADSENSE.match(/client=(ca-pub-\d+)/) || [])[1] || '';
+const idInAdsTxt = (adsTxt.match(/(pub-\d+)/) || [])[1] || '';
+ok('광고 스크립트에 게시자 ID', !!idInScript, idInScript);
+ok('ads.txt 에 게시자 ID', !!idInAdsTxt, idInAdsTxt);
+ok('두 곳의 게시자 ID 일치', idInScript === 'ca-' + idInAdsTxt,
+  idInScript + ' vs ' + idInAdsTxt);
+ok('ads.txt 가 pages.js 정의와 일치', adsTxt === ADS_TXT.trim());
+ok('ads.txt 형식 (4개 필드)', adsTxt.split(',').length === 4, adsTxt);
+
+// 콘텐츠가 없는 페이지에 광고를 달면 정책 위반 소지가 있다
+for (const p of pages) {
+  const key = slugFile(p.slug);
+  if (!html[key]) continue;
+  const has = html[key].includes('adsbygoogle.js');
+  if (p.slug === '404') ok('/404 는 광고 제외', !has);
+  else ok('/' + p.slug + ' 광고 스크립트', has);
+}
+
+/* ── 9. UI 가 calc.js 를 우회하지 않는가 ────────────────────────────── */
+
+section('9. 계산 로직 우회 여부');
 
 // UI 파일이 요율이나 법정 상수를 직접 들고 있으면 calc.js 와 갈라진다.
 const rateLike = /(?<![.\w])0\.0\d{2,}|\b209\b|\b4\.75\b|\b3\.595\b|\b13\.14\b|\b10320\b|\b68100\b|\b66048\b/;
