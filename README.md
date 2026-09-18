@@ -22,6 +22,8 @@
 | `/contact` | 문의 — 계산 오류 제보 |
 | `/privacy` | 개인정보처리방침 |
 
+페이지 기준과 작업 절차는 **[STANDARDS.md](STANDARDS.md)** 에 있습니다. 계산기를 추가하거나 요율을 갱신할 때 그 순서를 따르세요.
+
 계산기를 추가하면 상단 탭, 메인의 카드, 푸터 링크, `sitemap.xml` 이 모두 자동으로 갱신됩니다. 빌드 도구·서버·DB 없이 순수 HTML/CSS/JS로 동작하며, Cloudflare Workers 정적 자산(static assets) 호스팅을 전제로 합니다.
 
 모든 계산은 브라우저 안에서만 이루어집니다. 입력값을 서버로 전송하거나 쿠키·localStorage에 저장하지 않습니다.
