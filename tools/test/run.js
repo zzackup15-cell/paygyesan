@@ -22,6 +22,7 @@ const SUITES = [
   'rental',
   'exit',
   'reverse',
+  'table',
   'consistency',
   'precision'
 ];

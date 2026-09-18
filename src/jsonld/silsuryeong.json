@@ -1,0 +1,17 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "연봉 실수령액표",
+   "url": "https://paygyesan.com/silsuryeong",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "All",
+   "inLanguage": "ko",
+   "description": "연봉 2,000만 원부터 1억 5,000만 원까지 100만 원 단위로 월 실수령액을 정리한 표입니다. 2026년 4대보험 요율과 근로소득 간이세액표를 그대로 적용했고, 연봉을 올렸을 때 실수령액이 얼마나 늘어나는지도 함께 보여 줍니다.",
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+   "browserRequirements": "JavaScript 사용 가능한 브라우저"
+  },
+  { "@type": "FAQPage", "mainEntity": [] }
+ ]
+}

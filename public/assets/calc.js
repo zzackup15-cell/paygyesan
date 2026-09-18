@@ -706,6 +706,61 @@ var Calc = (function () {
     };
   }
 
+  /* ---- 연봉 구간별 실수령액표 ---- */
+
+  var TABLE_MAX_ROWS = 300; // 입력 방어용. 표가 이보다 길 이유가 없다
+
+  /* 연봉 구간을 훑어 실수령액표를 만든다.
+   *
+   * 새로운 산식은 없다. netPay 를 구간마다 부르는 것이 전부다. 그래도
+   * calc.js 에 두는 이유는 '직전 구간 대비 실수령 증가' 때문이다. 그건
+   * 표시가 아니라 계산이고, UI 에 두면 검증이 닿지 못한다.
+   *
+   * 그 증가분이 이 표의 핵심이다. 연봉이 100만원 오를 때 실수령이 얼마
+   * 오르는지를 보여 준다. 누진세와 4대보험 때문에 인상분이 그대로 오지
+   * 않는다는 걸 숫자로 보는 자리다.
+   *
+   * segments 는 [{ from, to, step }] 배열이다. 구간마다 간격을 달리하려고
+   * 배열로 받는다. 2,000만~1억은 100만원 단위로 촘촘히, 그 위는 성기게.
+   */
+  function netPayTable(segments, nonTaxable, family, children) {
+    var rows = [];
+    if (!segments || !segments.length) return rows;
+
+    var prevNet = null;
+    for (var s = 0; s < segments.length; s++) {
+      var seg = segments[s] || {};
+      var from = toAmount(seg.from);
+      var to = toAmount(seg.to);
+      var step = toAmount(seg.step);
+      if (step <= 0 || to < from) continue;
+
+      for (var annual = from; annual <= to; annual += step) {
+        if (rows.length >= TABLE_MAX_ROWS) return rows;
+        // 이미 담은 연봉은 건너뛴다. 구간 경계가 겹칠 수 있다.
+        if (rows.length && rows[rows.length - 1].annual === annual) continue;
+
+        var monthlyGross = annual / 12;
+        var n = netPay(monthlyGross, nonTaxable, family, children);
+        // 어느 값도 여기서 반올림하지 않는다. 표는 netPay 의 '뷰' 이지
+        // 재계산이 아니다. 한쪽만 반올림하면 행 안에서
+        // 세전 - 공제 ≠ 실수령 이 되고, /yeonbong 과도 미세하게 갈라진다.
+        // 표시 반올림은 화면에서 한다.
+        rows.push({
+          annual: annual,
+          monthlyGross: n.gross,
+          monthlyNet: n.net,
+          annualNet: n.net * 12,
+          deduction: n.deduction,
+          deductionRate: n.gross > 0 ? n.deduction / n.gross : 0,
+          deltaNet: prevNet === null ? 0 : n.net - prevNet
+        });
+        prevNet = n.net;
+      }
+    }
+    return rows;
+  }
+
   /* ---- 실수령액으로 세전 급여 역산 ---- */
 
   var NET_SCAN = 5000;      // 계단 경계 보정용 탐색 폭
@@ -1192,6 +1247,8 @@ var Calc = (function () {
   }
 
   return {
+    netPayTable: netPayTable,
+    TABLE_MAX_ROWS: TABLE_MAX_ROWS,
     grossFromNet: grossFromNet,
     EXIT: EXIT,
     exitPackage: exitPackage,

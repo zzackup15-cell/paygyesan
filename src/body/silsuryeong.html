@@ -1,0 +1,175 @@
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 조건 설정</h2>
+    <p class="section-desc">연봉 <strong>2,000만 원부터 1억 5,000만 원까지</strong> 100만 원 단위로 실수령액을 계산해 둔 표입니다. 조건을 바꾸면 표 전체가 다시 계산됩니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="my-salary">내 연봉 <span class="label-opt">선택</span></label>
+        <div class="input-unit">
+          <input type="text" id="my-salary" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">넣으면 표에서 해당 줄을 표시합니다</p>
+      </div>
+      <div class="net-field">
+        <label for="non-taxable">비과세액 (월)</label>
+        <div class="input-unit">
+          <input type="text" id="non-taxable" inputmode="numeric" value="200,000" maxlength="9" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">식대 등. 모르면 20만 원 그대로</p>
+      </div>
+      <div class="net-field">
+        <label for="family-count">공제대상 가족 수</label>
+        <select id="family-count" class="date-input"></select>
+        <p class="hint">본인 포함</p>
+      </div>
+      <div class="net-field">
+        <label for="child-count">8~20세 자녀 수</label>
+        <select id="child-count" class="date-input"></select>
+        <p class="hint">자녀 세액공제</p>
+      </div>
+    </div>
+
+    <div class="list-actions">
+      <span class="item-count" id="row-count">2026년 요율과 근로소득 간이세액표 기준</span>
+      <button type="button" id="reset-all" class="btn btn-ghost">초기화</button>
+    </div>
+  </section>
+
+  <section class="card result-card" aria-labelledby="mine-title" aria-live="polite">
+    <h2 id="mine-title">2. 내 연봉</h2>
+
+    <div class="result-grid">
+      <div class="result-box">
+        <span class="result-label">월 실수령액</span>
+        <strong class="result-value"><span id="out-net">0</span><em>원</em></strong>
+      </div>
+      <div class="result-box result-primary">
+        <span class="result-label">연봉 100만 원 올리면 월 실수령 증가</span>
+        <strong class="result-value"><span id="out-delta">0</span><em>원</em></strong>
+      </div>
+    </div>
+
+    <dl class="result-meta">
+      <div>
+        <dt>월 세전</dt>
+        <dd><span id="out-gross">0</span>원</dd>
+      </div>
+      <div>
+        <dt>월 공제액</dt>
+        <dd><span id="out-deduction">0</span>원</dd>
+      </div>
+      <div>
+        <dt>공제율</dt>
+        <dd><span id="out-rate">0</span>%</dd>
+      </div>
+      <div>
+        <dt>인상분 중 남는 비율</dt>
+        <dd><span id="out-keep">0</span>%</dd>
+      </div>
+    </dl>
+
+    <p class="formula" id="out-note"></p>
+  </section>
+
+  <section class="card" aria-labelledby="table-title">
+    <h2 id="table-title">3. 연봉별 실수령액표</h2>
+    <p class="section-desc">맨 오른쪽 <strong>증가</strong> 열이 이 표의 핵심입니다. 연봉을 100만 원 올렸을 때 월 실수령액이 실제로 얼마나 늘어나는지 보여 줍니다.</p>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr><th>연봉</th><th>월 세전</th><th>월 실수령</th><th>연 실수령</th><th>공제율</th><th>증가</th></tr>
+        </thead>
+        <tbody id="table-rows"></tbody>
+      </table>
+    </div>
+    <p class="hint">모두 <strong>세전 연봉을 12로 나눈</strong> 월급 기준입니다. 상여금이 따로 있거나 퇴직금이 연봉에 포함된 경우에는 달라집니다.</p>
+  </section>
+
+  {{OTHER_CALCS}}
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <article class="card content" aria-labelledby="guide-title">
+    <h2 id="guide-title">연봉 실수령액표 보는 법</h2>
+
+    <h3>왜 연봉이 올라도 체감이 없을까</h3>
+    <p>연봉을 100만 원 올려도 통장에 100만 원이 더 들어오지 않습니다. 세금과 4대보험이 먼저 나가기 때문입니다. 그런데 얼마나 빠지는지는 <strong>연봉 구간마다 다릅니다.</strong></p>
+    <table class="data-table">
+      <thead>
+        <tr><th>연봉 구간</th><th>인상분 100만 원 중 남는 금액</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>3,000만 원대</td><td>약 86만 원</td></tr>
+        <tr><td>5,000만 원대</td><td>약 76만 원</td></tr>
+        <tr><td>8,000만 원대</td><td>약 66만 원</td></tr>
+      </tbody>
+    </table>
+    <p>연봉이 높을수록 인상분에서 남는 돈이 줄어듭니다. 소득세가 <strong>누진세</strong>라 위 구간으로 갈수록 세율이 올라가고, 여기에 4대보험이 더해지기 때문입니다.</p>
+    <p>연봉 협상을 할 때 이 차이를 알고 있는 것과 모르는 것은 다릅니다. 같은 인상 폭이라도 실제로 손에 쥐는 돈은 지금 내 연봉이 어디인지에 따라 달라집니다.</p>
+
+    <h3>표에서 빠지는 것들</h3>
+    <p>이 표는 <strong>세전 연봉을 12로 나눈 월급</strong>을 기준으로 합니다. 실제 급여명세서와 다를 수 있는 이유가 몇 가지 있습니다.</p>
+    <p><strong>상여금과 성과급.</strong> 명절 상여나 연말 성과급이 따로 있다면 매달 받는 금액은 표보다 적고, 상여를 받는 달에 몰립니다.</p>
+    <p><strong>퇴직금 포함 연봉.</strong> 채용공고의 "연봉 4,000만 원(퇴직금 포함)"은 실제로 13으로 나눈 금액이 월급이 됩니다. 이 경우 <a href="/yeonbong">연봉 실수령액 계산기</a>에서 퇴직금 포함 여부를 체크하고 계산하세요.</p>
+    <p><strong>비과세 항목.</strong> 식대는 월 20만 원까지 비과세입니다. 차량유지비나 연구보조비가 있으면 비과세액이 커지고 실수령액도 늘어납니다. 기본값 20만 원은 가장 흔한 경우입니다.</p>
+    <p><strong>연말정산.</strong> 매달 떼는 소득세는 간이세액표에 따른 <strong>임시 금액</strong>입니다. 실제 세금은 이듬해 연말정산에서 확정되므로, 공제 항목이 많으면 돌려받고 적으면 더 냅니다.</p>
+
+    <!-- 광고 위치 3: 설명 콘텐츠 중간 (애드센스 승인 후 삽입) -->
+    <!-- <div class="ad-slot ad-inline"></div> -->
+
+    <h3>공제되는 항목</h3>
+    <p>월급에서 빠지는 것은 크게 두 가지입니다.</p>
+    <table class="data-table">
+      <thead>
+        <tr><th>항목</th><th>2026년 요율</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>국민연금</td><td>4.75% (기준소득월액 상한 659만 원)</td></tr>
+        <tr><td>건강보험</td><td>3.595%</td></tr>
+        <tr><td>장기요양</td><td>건강보험료의 13.14%</td></tr>
+        <tr><td>고용보험</td><td>0.9%</td></tr>
+        <tr><td>소득세</td><td>근로소득 간이세액표</td></tr>
+        <tr><td>지방소득세</td><td>소득세의 10%</td></tr>
+      </tbody>
+    </table>
+    <p>국민연금에는 <strong>상한</strong>이 있습니다. 기준소득월액이 659만 원을 넘으면 그 위로는 더 내지 않습니다. 그래서 고연봉 구간에서는 공제율 상승이 조금 완만해집니다.</p>
+    <p>소득세는 근사식이 아니라 <strong>소득세법 시행령 별표2의 근로소득 간이세액표를 그대로</strong> 적용했습니다. 588개 구간을 통째로 내장해 급여명세서의 원천징수 금액과 값이 일치합니다.</p>
+
+    <h3>자주 묻는 질문</h3>
+    <div class="faq">
+      <details>
+        <summary>연봉 5,000만 원이면 실수령액이 얼마인가요?</summary>
+        <p>비과세 20만 원에 1인 가구 기준으로 월 세전 약 417만 원, 월 실수령 약 357만 원입니다. 부양가족이 있으면 더 늘어납니다. 위 표에서 조건을 바꾸면 전체가 다시 계산됩니다.</p>
+      </details>
+      <details>
+        <summary>연봉을 올리면 실수령은 얼마나 늘어나나요?</summary>
+        <p>연봉 100만 원 인상 기준으로 3,000만 원대는 약 86만 원, 5,000만 원대는 약 76만 원, 8,000만 원대는 약 66만 원이 남습니다. 소득세가 누진세라 연봉이 높을수록 인상분에서 세금으로 빠지는 비율이 커집니다.</p>
+      </details>
+      <details>
+        <summary>표의 금액과 제 급여명세서가 다릅니다.</summary>
+        <p>상여금이 따로 있거나, 퇴직금이 연봉에 포함되어 13으로 나눠 지급되거나, 비과세 항목이 20만 원과 다른 경우입니다. 회사마다 수당 구성이 달라 세전 월급 자체가 달라질 수 있습니다.</p>
+      </details>
+      <details>
+        <summary>왜 고연봉일수록 공제율이 높아지나요?</summary>
+        <p>소득세가 누진세이기 때문입니다. 과세표준 구간마다 6%부터 45%까지 세율이 올라갑니다. 다만 국민연금은 기준소득월액 659만 원에서 상한에 걸려 그 위로는 더 내지 않습니다.</p>
+      </details>
+      <details>
+        <summary>매달 떼는 세금이 최종 세금인가요?</summary>
+        <p>아닙니다. 간이세액표로 미리 떼는 <strong>임시 금액</strong>이고, 실제 세금은 이듬해 연말정산에서 확정됩니다. 의료비·교육비·기부금 같은 공제가 많으면 돌려받고, 적으면 더 냅니다.</p>
+      </details>
+      <details>
+        <summary>입력한 정보가 저장되나요?</summary>
+        <p>저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>에서 확인할 수 있습니다.</p>
+      </details>
+    </div>
+  </article>
+
+</main>
