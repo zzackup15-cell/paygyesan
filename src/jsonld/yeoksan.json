@@ -1,0 +1,17 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "실수령액 연봉 역산 계산기",
+   "url": "https://paygyesan.com/yeoksan",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "All",
+   "inLanguage": "ko",
+   "description": "세후 월급만 알아도 세전 연봉을 거꾸로 계산하는 무료 웹 도구입니다. 근로소득 간이세액표와 2026년 4대보험 요율을 그대로 적용하며, 과세표준과 한계세율도 함께 보여 줍니다.",
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+   "browserRequirements": "JavaScript 사용 가능한 브라우저"
+  },
+  { "@type": "FAQPage", "mainEntity": [] }
+ ]
+}

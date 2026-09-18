@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>세후 월급으로 연봉 계산 | 실수령액 역산 - 페이계산</title>
+<meta name="description" content="세후 월급으로 세전 연봉을 역산합니다. 근로소득 간이세액표와 2026년 4대보험 요율을 그대로 적용해 실수령액이 정확히 맞아떨어지는 세전 금액을 찾고, 과세표준과 한계세율, 소득세 구간표까지 함께 보여 줍니다. 비과세액과 부양가족 수를 반영합니다.">
+<meta name="keywords" content="세후 월급 연봉 계산, 실수령액 역산, 실수령액으로 연봉, 월급 연봉 계산, 과세표준 계산, 한계세율, 소득세 구간, 연봉 거꾸로 계산">
+<link rel="canonical" href="https://paygyesan.com/yeoksan">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" content="#1b4d8f">
+<!-- 네이버 서치어드바이저 소유확인. 지우면 웹마스터도구 연결이 끊긴다. -->
+<meta name="naver-site-verification" content="2c93833ef7d92de143804173289212a6a6c67ce3">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="페이계산">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://paygyesan.com/yeoksan">
+<meta property="og:title" content="세후 월급으로 연봉 계산 | 실수령액 역산">
+<meta property="og:description" content="통장에 찍힌 금액만 알면 세전 연봉이 나옵니다. 과세표준과 한계세율까지.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="실수령액 연봉 역산 계산기">
+<meta name="twitter:description" content="세후 월급으로 세전 연봉을 거꾸로 계산합니다.">
+
+<link rel="stylesheet" href="/assets/style.css?v=5b8c7be6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b4d8f'/%3E%3Ctext x='16' y='23' font-size='19' font-family='sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'%3E₩%3C/text%3E%3C/svg%3E">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"실수령액 연봉 역산 계산기","url":"https://paygyesan.com/yeoksan","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ko","description":"세후 월급만 알아도 세전 연봉을 거꾸로 계산하는 무료 웹 도구입니다. 근로소득 간이세액표와 2026년 4대보험 요율을 그대로 적용하며, 과세표준과 한계세율도 함께 보여 줍니다.","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"},"browserRequirements":"JavaScript 사용 가능한 브라우저"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"세후 월급으로 연봉을 알 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"알 수 있습니다. 소득세와 4대보험 공제는 법으로 정해진 산식이라 거꾸로 계산할 수 있습니다. 다만 비과세 항목과 부양가족 수에 따라 달라지므로 추정치입니다. 상여금이 따로 있다면 실제 연봉은 계산된 값보다 큽니다."}},{"@type":"Question","name":"실수령액 300만 원이면 연봉이 얼마인가요?","acceptedAnswer":{"@type":"Answer","text":"비과세 20만 원에 1인 가구 기준이라면 세전 월 약 341만 원, 연봉으로는 약 4,095만 원입니다. 부양가족이 있으면 같은 실수령이라도 세전 금액이 더 낮아집니다. 위 계산기에 조건을 넣으면 정확한 값이 나옵니다."}},{"@type":"Question","name":"계산된 세전 금액이 실제와 조금 다릅니다.","acceptedAnswer":{"@type":"Answer","text":"같은 실수령액이 나오는 세전 금액이 몇 천 원 폭의 구간으로 존재하기 때문입니다. 소득세가 간이세액표라는 계단 함수로 정해져서, 세전이 조금 올라도 같은 구간에 머물면 세액이 변하지 않습니다. 이 계산기는 그 구간의 아래쪽 끝을 보여 줍니다."}},{"@type":"Question","name":"비과세액을 모르면 어떻게 하나요?","acceptedAnswer":{"@type":"Answer","text":"기본값인 20만 원을 그대로 두세요. 식대 비과세 한도가 월 20만 원이고 대부분의 회사가 이를 적용합니다. 급여명세서에 '식대'나 '비과세' 항목이 있다면 그 금액을 넣으면 더 정확합니다."}},{"@type":"Question","name":"한계세율과 실효세율은 어떻게 다른가요?","acceptedAnswer":{"@type":"Answer","text":"한계세율은 지금 소득에서 1원을 더 벌 때 붙는 세율이고, 실효세율은 전체 소득 대비 실제 세금의 비율입니다. 누진세라 낮은 구간부터 차례로 세율이 붙으므로 실효세율은 항상 한계세율보다 낮습니다. 연봉 인상분에 붙는 것은 한계세율입니다."}},{"@type":"Question","name":"입력한 정보가 저장되나요?","acceptedAnswer":{"@type":"Answer","text":"저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 개인정보처리방침에서 확인할 수 있습니다."}}]}]}
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1984750615156688" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">페이계산<span class="brand-dot">.</span></a>
+    <h1>실수령액으로 연봉 역산</h1>
+    <p class="lead">통장에 찍힌 <strong>세후 금액</strong>만 알면 됩니다. 세전 연봉을 거꾸로 계산하고, 내 <strong>과세표준과 한계세율</strong>까지 함께 보여 드립니다.</p>
+    <p class="privacy-badge">입력값은 서버로 전송되지 않고 브라우저 안에서만 계산됩니다.</p>
+  </div>
+</header>
+
+<nav class="site-nav" aria-label="계산기 목록">
+  <div class="wrap">
+      <a href="/yeonbong" class="nav-pill">실수령액</a>
+      <a href="/tongsang" class="nav-pill">통상임금</a>
+      <a href="/busuip" class="nav-pill">부수입 세금</a>
+      <a href="/yeoksan" class="nav-pill is-current" aria-current="page">연봉 역산</a>
+      <a href="/toesa" class="nav-pill">퇴사 정산</a>
+      <a href="/wolse" class="nav-pill">월세 세금</a>
+      <a href="/boheom" class="nav-pill">4대보험</a>
+      <a href="/yeongeum" class="nav-pill">국민연금</a>
+      <a href="/juhyu" class="nav-pill">주휴수당</a>
+      <a href="/toejik" class="nav-pill">퇴직금</a>
+      <a href="/yeoncha" class="nav-pill">연차수당</a>
+      <a href="/silup" class="nav-pill">실업급여</a>
+      <a href="/yuka" class="nav-pill">육아휴직</a>
+  </div>
+</nav>
+
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 조건 입력</h2>
+    <p class="section-desc">통장에 찍힌 <strong>세후 금액</strong>만 알면 됩니다. 세전 연봉을 거꾸로 계산합니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="net-monthly">월 실수령액 (세후)</label>
+        <div class="input-unit">
+          <input type="text" id="net-monthly" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">통장에 들어오는 금액</p>
+      </div>
+      <div class="net-field">
+        <label for="non-taxable">비과세액 (월)</label>
+        <div class="input-unit">
+          <input type="text" id="non-taxable" inputmode="numeric" value="200,000" maxlength="9" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">식대 등. 모르면 20만 원 그대로 두세요</p>
+      </div>
+      <div class="net-field">
+        <label for="family-count">공제대상 가족 수</label>
+        <select id="family-count" class="date-input"></select>
+        <p class="hint">본인 포함</p>
+      </div>
+      <div class="net-field">
+        <label for="child-count">8~20세 자녀 수</label>
+        <select id="child-count" class="date-input"></select>
+        <p class="hint">자녀 세액공제</p>
+      </div>
+    </div>
+
+    <div class="list-actions">
+      <span class="item-count">상여금·성과급은 반영되지 않습니다. 매달 같은 금액을 받는 경우 기준입니다</span>
+      <button type="button" id="reset-all" class="btn btn-ghost">초기화</button>
+    </div>
+  </section>
+
+  <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+    <h2 id="result-title">2. 계산 결과</h2>
+
+    <div class="result-grid">
+      <div class="result-box">
+        <span class="result-label">월 급여 (세전)</span>
+        <strong class="result-value"><span id="out-gross">0</span><em>원</em></strong>
+      </div>
+      <div class="result-box result-primary">
+        <span class="result-label">연봉 (세전)</span>
+        <strong class="result-value"><span id="out-annual">0</span><em>원</em></strong>
+      </div>
+    </div>
+
+    <dl class="result-meta">
+      <div>
+        <dt>월 공제액</dt>
+        <dd><span id="out-deduction">0</span>원</dd>
+      </div>
+      <div>
+        <dt>공제율</dt>
+        <dd><span id="out-rate">0</span>%</dd>
+      </div>
+      <div>
+        <dt>과세표준 (추정)</dt>
+        <dd><span id="out-base">0</span>원</dd>
+      </div>
+      <div>
+        <dt>한계세율</dt>
+        <dd><span id="out-marginal">0</span>%</dd>
+      </div>
+    </dl>
+
+    <p class="formula" id="out-note"></p>
+
+    <div id="detail-block" hidden>
+      <h3>검산 — 이 세전 급여의 실수령액</h3>
+      <p class="section-desc">역산한 세전 급여를 정방향으로 다시 계산한 결과입니다. 입력하신 금액과 같아야 맞는 계산입니다.</p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <tbody id="verify-rows"></tbody>
+        </table>
+      </div>
+
+      <h3>내 소득세 구간</h3>
+      <p class="section-desc">과세표준이 어느 구간에 있는지, 다음 구간까지 얼마나 남았는지 보여 줍니다. <strong>한계세율</strong>은 여기서 1원을 더 벌 때 붙는 세율입니다.</p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr><th>과세표준</th><th>세율</th><th>누진공제</th><th></th></tr>
+          </thead>
+          <tbody id="bracket-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="card calc-links" aria-labelledby="other-calc-title">
+      <h2 id="other-calc-title">다른 계산기</h2>
+      <div class="calc-grid">
+        <a class="calc-card" href="/yeonbong">
+          <span class="calc-card-title">연봉 실수령액 계산기</span>
+          <span class="calc-card-desc">세전 연봉만 넣으면 4대보험과 소득세를 뗀 월 실수령액이 나옵니다. 연봉별 실수령액표도 함께 봅니다.</span>
+        </a>
+        <a class="calc-card" href="/tongsang">
+          <span class="calc-card-title">통상임금 계산기</span>
+          <span class="calc-card-desc">기본급과 수당을 넣으면 통상시급, 가산수당, 연봉, 세후 실수령액까지 한 번에 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/busuip">
+          <span class="calc-card-title">부수입 세금 계산기</span>
+          <span class="calc-card-desc">연봉과 추가 수입을 넣으면 5월에 더 낼 돈이 나옵니다. 사업소득과 기타소득 중 어느 쪽이 유리한지도 비교해 줍니다.</span>
+        </a>
+        <a class="calc-card" href="/toesa">
+          <span class="calc-card-title">퇴사하면 받는 돈 계산기</span>
+          <span class="calc-card-desc">퇴사할 때 받는 돈을 전부 합쳐 계산합니다. 월별로 언제 들어오는지, 그 돈으로 몇 개월 버틸 수 있는지까지 보여 줍니다.</span>
+        </a>
+        <a class="calc-card" href="/wolse">
+          <span class="calc-card-title">월세 세금 계산기</span>
+          <span class="calc-card-desc">보유 주택 수와 월세를 넣으면 신고 대상인지부터 알려 줍니다. 간주임대료와 분리·종합과세 비교까지 계산합니다.</span>
+        </a>
+        <a class="calc-card" href="/boheom">
+          <span class="calc-card-title">4대보험 계산기</span>
+          <span class="calc-card-desc">월 급여를 넣으면 근로자 부담과 사업주 부담을 나눠 계산합니다. 회사가 실제로 쓰는 인건비까지 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/yeongeum">
+          <span class="calc-card-title">국민연금 예상 수령액 계산기</span>
+          <span class="calc-card-desc">출생연도와 가입기간, 현재 소득만 넣으면 매달 받을 연금액이 나옵니다. 언제부터 받느냐에 따라 얼마나 달라지는지도 함께 비교합니다.</span>
+        </a>
+        <a class="calc-card" href="/juhyu">
+          <span class="calc-card-title">주휴수당 계산기</span>
+          <span class="calc-card-desc">시급과 근무시간을 넣으면 주휴수당과 주급, 월 환산액을 계산합니다. 최저임금 미달도 확인합니다.</span>
+        </a>
+        <a class="calc-card" href="/toejik">
+          <span class="calc-card-title">퇴직금 계산기</span>
+          <span class="calc-card-desc">입사일과 퇴직 전 3개월 임금을 넣으면 평균임금과 예상 퇴직금이 나옵니다. 통상임금과 비교해 유리한 쪽을 적용합니다.</span>
+        </a>
+        <a class="calc-card" href="/yeoncha">
+          <span class="calc-card-title">연차수당 계산기</span>
+          <span class="calc-card-desc">입사일만 넣으면 발생 연차일수가 나오고, 통상임금으로 미사용 연차수당까지 계산합니다.</span>
+        </a>
+        <a class="calc-card" href="/silup">
+          <span class="calc-card-title">실업급여 계산기</span>
+          <span class="calc-card-desc">이직 전 3개월 임금과 근무 기간을 넣으면 1일 구직급여와 소정급여일수, 총 수급액이 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/yuka">
+          <span class="calc-card-title">육아휴직 급여 계산기</span>
+          <span class="calc-card-desc">통상임금과 사용 기간을 넣으면 월별 육아휴직 급여와 총 수령액이 나옵니다. 6+6 부모육아휴직제도 반영합니다.</span>
+        </a>
+      </div>
+    </section>
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <article class="card content" aria-labelledby="guide-title">
+    <h2 id="guide-title">세후 월급으로 연봉 알아내기</h2>
+
+    <h3>왜 거꾸로 계산해야 하나</h3>
+    <p>사람들이 아는 건 <strong>통장에 찍힌 금액</strong>입니다. 그런데 세상의 계산기는 전부 세전 금액을 요구합니다. 배우자나 지인의 연봉이 궁금할 때, 이직 제안을 비교할 때, 대출 서류에 연봉을 적어야 할 때 막히는 지점이 여기입니다.</p>
+    <p>이 계산기는 반대로 갑니다. 세후 월급을 넣으면 <strong>그 금액이 나오려면 세전이 얼마여야 하는지</strong>를 찾습니다. 소득세는 <a href="/tongsang">근로소득 간이세액표</a>를 그대로 쓰고 4대보험은 2026년 요율을 적용하므로, 정방향 계산과 완전히 같은 기준입니다.</p>
+
+    <h3>같은 실수령액이 나오는 세전 구간이 있습니다</h3>
+    <p>역산에는 한 가지 성질이 있습니다. <strong>정답이 하나의 점이 아니라 구간입니다.</strong></p>
+    <p>소득세는 간이세액표라는 <strong>계단 함수</strong>로 정해집니다. 세전이 몇 천 원 올라도 같은 구간에 머무르면 세액이 그대로라, 실수령액도 똑같이 나옵니다. 그래서 "실수령 300만 원"에 대응하는 세전 금액은 하나가 아니라 몇 천 원 폭의 범위입니다.</p>
+    <p>이 계산기는 그 범위의 <strong>아래쪽 끝</strong>을 보여 주고, 범위가 넓을 때는 위쪽 끝도 함께 안내합니다. 오차가 아니라 세법의 성질이며, 숨기지 않는 편이 정확합니다.</p>
+
+    <!-- 광고 위치 3: 설명 콘텐츠 중간 (애드센스 승인 후 삽입) -->
+    <!-- <div class="ad-slot ad-inline"></div> -->
+
+    <h3>추정치인 이유</h3>
+    <p>실수령액은 같아도 세전 금액은 사람마다 다를 수 있습니다. 세 가지 때문입니다.</p>
+    <p><strong>비과세 항목.</strong> 식대처럼 세금을 매기지 않는 금액이 얼마인지에 따라 세전이 달라집니다. 기본값 20만 원은 가장 흔한 식대 비과세 한도입니다. 차량유지비나 연구보조비가 있다면 더 큽니다.</p>
+    <p><strong>공제대상 가족과 자녀.</strong> 부양가족이 많으면 같은 세전이라도 세금이 줄어 실수령이 늘어납니다. 거꾸로 말하면, 같은 실수령이라도 부양가족이 많은 사람의 세전은 더 낮습니다.</p>
+    <p><strong>상여금과 성과급.</strong> 이 계산기는 <strong>매달 같은 금액을 받는 경우</strong>를 전제합니다. 명절 상여나 연말 성과급이 따로 있다면 실제 연봉은 계산된 값보다 큽니다.</p>
+    <p>그래서 결과는 <strong>대략적인 추정치</strong>로 보시는 게 맞습니다. 정확한 연봉은 근로계약서나 원천징수영수증에 적힌 금액입니다.</p>
+
+    <h3>한계세율이 뭔가요</h3>
+    <p>결과에 함께 나오는 <strong>한계세율</strong>은 지금 소득에서 <strong>1원을 더 벌 때 붙는 세율</strong>입니다. 전체 소득에 붙는 평균 세율과는 다릅니다.</p>
+    <p>종합소득세는 구간마다 다른 세율을 적용하는 누진세입니다. 과세표준이 5,000만 원이라고 전체에 24%가 붙는 게 아니라, 1,400만 원까지는 6%, 그 위 구간은 15%가 붙는 식으로 쌓입니다. 그래서 실제 부담률은 한계세율보다 낮습니다.</p>
+    <p>한계세율이 중요한 이유는 <strong>연봉이 오를 때</strong>입니다. 연봉 인상분에는 한계세율이 그대로 적용됩니다. 한계세율 24% 구간에 있다면 인상분의 4분의 1 가까이가 세금으로 나갑니다. 4대보험까지 더하면 체감은 더 큽니다.</p>
+
+    <h3>과세표준 구간은 잘 바뀌지 않습니다</h3>
+    <p>소득세 과세표준 구간은 2008년 이후 큰 틀이 거의 그대로입니다. 2023년에 하위 두 구간이 조정된 것이 최근 변화이고, <strong>5,000만~8,800만 원 구간의 24%는 2010년 이후 유지</strong>되고 있습니다.</p>
+    <p>물가와 임금은 오르는데 구간은 그대로이면, 실질 소득이 늘지 않아도 <strong>더 높은 세율 구간으로 올라갑니다.</strong> 세율을 올리지 않아도 세 부담이 커지는 구조입니다. 연봉이 올랐는데 체감이 없다고 느끼는 이유 중 하나입니다.</p>
+
+    <h3>자주 묻는 질문</h3>
+    <div class="faq">
+      <details>
+        <summary>세후 월급으로 연봉을 알 수 있나요?</summary>
+        <p>알 수 있습니다. 소득세와 4대보험 공제는 법으로 정해진 산식이라 거꾸로 계산할 수 있습니다. 다만 비과세 항목과 부양가족 수에 따라 달라지므로 추정치입니다. 상여금이 따로 있다면 실제 연봉은 계산된 값보다 큽니다.</p>
+      </details>
+      <details>
+        <summary>실수령액 300만 원이면 연봉이 얼마인가요?</summary>
+        <p>비과세 20만 원에 1인 가구 기준이라면 세전 월 약 341만 원, 연봉으로는 약 4,095만 원입니다. 부양가족이 있으면 같은 실수령이라도 세전 금액이 더 낮아집니다. 위 계산기에 조건을 넣으면 정확한 값이 나옵니다.</p>
+      </details>
+      <details>
+        <summary>계산된 세전 금액이 실제와 조금 다릅니다.</summary>
+        <p>같은 실수령액이 나오는 세전 금액이 몇 천 원 폭의 구간으로 존재하기 때문입니다. 소득세가 간이세액표라는 계단 함수로 정해져서, 세전이 조금 올라도 같은 구간에 머물면 세액이 변하지 않습니다. 이 계산기는 그 구간의 아래쪽 끝을 보여 줍니다.</p>
+      </details>
+      <details>
+        <summary>비과세액을 모르면 어떻게 하나요?</summary>
+        <p>기본값인 20만 원을 그대로 두세요. 식대 비과세 한도가 월 20만 원이고 대부분의 회사가 이를 적용합니다. 급여명세서에 '식대'나 '비과세' 항목이 있다면 그 금액을 넣으면 더 정확합니다.</p>
+      </details>
+      <details>
+        <summary>한계세율과 실효세율은 어떻게 다른가요?</summary>
+        <p>한계세율은 지금 소득에서 1원을 더 벌 때 붙는 세율이고, 실효세율은 전체 소득 대비 실제 세금의 비율입니다. 누진세라 낮은 구간부터 차례로 세율이 붙으므로 실효세율은 항상 한계세율보다 낮습니다. 연봉 인상분에 붙는 것은 한계세율입니다.</p>
+      </details>
+      <details>
+        <summary>입력한 정보가 저장되나요?</summary>
+        <p>저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>에서 확인할 수 있습니다.</p>
+      </details>
+    </div>
+  </article>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="disclaimer"><strong>면책조항</strong> 이 계산기는 일반적인 법령과 판례를 바탕으로 한 참고용 도구이며, 계산 결과는 법적 효력이 없습니다. 실제 금액은 취업규칙, 단체협약, 근로계약서의 구체적인 내용과 사업장 상황에 따라 달라질 수 있습니다. 정확한 판단이 필요한 경우 공인노무사 또는 고용노동부 고객상담센터(1350)의 상담을 받으시기 바랍니다. 본 사이트는 계산 결과 이용으로 발생한 손해에 대해 책임지지 않습니다.</p>
+    <nav class="footer-nav">
+      <a href="/">홈</a>
+      <a href="/yeonbong">연봉 실수령액 계산기</a>
+      <a href="/tongsang">통상임금 계산기</a>
+      <a href="/busuip">부수입 세금 계산기</a>
+      <a href="/yeoksan" aria-current="page">실수령액 연봉 역산 계산기</a>
+      <a href="/toesa">퇴사하면 받는 돈 계산기</a>
+      <a href="/wolse">월세 세금 계산기</a>
+      <a href="/boheom">4대보험 계산기</a>
+      <a href="/yeongeum">국민연금 예상 수령액 계산기</a>
+      <a href="/juhyu">주휴수당 계산기</a>
+      <a href="/toejik">퇴직금 계산기</a>
+      <a href="/yeoncha">연차수당 계산기</a>
+      <a href="/silup">실업급여 계산기</a>
+      <a href="/yuka">육아휴직 급여 계산기</a>
+      <a href="/about">사이트 소개</a>
+      <a href="/contact">문의</a>
+      <a href="/privacy">개인정보처리방침</a>
+    </nav>
+    <p class="copyright">© 2026 paygyesan.com</p>
+  </div>
+</footer>
+<script src="/assets/tax-table.js?v=25a7b24d" defer></script>
+<script src="/assets/calc.js?v=c3592883" defer></script>
+<script src="/assets/yeoksan.js?v=b43b90bd" defer></script>
+</body>
+</html>

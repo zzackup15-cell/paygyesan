@@ -706,6 +706,68 @@ var Calc = (function () {
     };
   }
 
+  /* ---- 실수령액으로 세전 급여 역산 ---- */
+
+  var NET_SCAN = 5000;      // 계단 경계 보정용 탐색 폭
+  var NET_RANGE_MAX = 20000; // 같은 실수령이 나오는 세전 구간을 훑는 한계
+
+  /* 사람들이 아는 건 통장에 찍힌 금액이지 세전 금액이 아니다.
+   * 그런데 계산기는 전부 세전을 요구한다. 배우자 월급으로 연봉을 알아보려다
+   * 막히는 일이 실제로 있었다.
+   *
+   * netPay 는 세전에 대해 '거의' 비감소지만, 간이세액표가 계단 함수라
+   * 경계에서 실수령이 살짝 내려앉는 구간이 있다(최대 2만 7천원). 그래서
+   * 이분 탐색만으로는 빗나갈 수 있어 주변을 훑어 가장 가까운 값을 고른다.
+   *
+   * 그리고 한 실수령액에 대응하는 세전액은 점이 아니라 구간이다. 세전이
+   * 몇 천 원 올라도 세액이 그대로면 실수령은 같기 때문이다. 그 구간의
+   * 폭까지 돌려줘야 '연봉 얼마' 라고 단정하지 않을 수 있다.
+   */
+  function grossFromNet(targetNet, nonTaxable, family, children) {
+    var target = toAmount(targetNet);
+    var result = {
+      gross: 0, grossMax: 0, annual: 0, annualMax: 0,
+      net: 0, diff: 0, exact: false, spread: 0
+    };
+    if (target <= 0) return result;
+
+    var lo = 0;
+    var hi = Math.min(target * 3 + 20000000, MAX_AMOUNT);
+    for (var i = 0; i < 64 && lo < hi; i++) {
+      var mid = Math.floor((lo + hi) / 2);
+      if (netPay(mid, nonTaxable, family, children).net < target) lo = mid + 1;
+      else hi = mid;
+    }
+
+    // 탐색 범위도 금액 상한 안에 있어야 한다. 그러지 않으면 도달할 수 없는
+    // 실수령액을 넣었을 때 상한을 넘은 세전액이 결과로 나온다.
+    var best = lo;
+    var bestDiff = Infinity;
+    var scanTo = Math.min(lo + NET_SCAN, MAX_AMOUNT);
+    for (var g = Math.max(0, lo - NET_SCAN); g <= scanTo; g += 10) {
+      var d = Math.abs(netPay(g, nonTaxable, family, children).net - target);
+      if (d < bestDiff) { bestDiff = d; best = g; }
+      if (bestDiff === 0 && g > lo) break; // 정확히 맞으면 더 볼 필요 없다
+    }
+
+    var bestNet = netPay(best, nonTaxable, family, children).net;
+    var upper = best;
+    while (upper - best < NET_RANGE_MAX && upper + 10 <= MAX_AMOUNT &&
+           netPay(upper + 10, nonTaxable, family, children).net === bestNet) {
+      upper += 10;
+    }
+
+    result.gross = best;
+    result.grossMax = upper;
+    result.annual = best * 12;
+    result.annualMax = upper * 12;
+    result.net = bestNet;
+    result.diff = Math.abs(bestNet - target);
+    result.exact = result.diff === 0;
+    result.spread = upper - best;
+    return result;
+  }
+
   /* ---- 퇴사 시 받는 돈 (조합 계산) ---- */
 
   // 새로운 산식은 하나도 없다. 이미 검증된 퇴직금·연차수당·구직급여를
@@ -1130,6 +1192,7 @@ var Calc = (function () {
   }
 
   return {
+    grossFromNet: grossFromNet,
     EXIT: EXIT,
     exitPackage: exitPackage,
     RENTAL: RENTAL,

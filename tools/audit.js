@@ -269,6 +269,30 @@ for (const f of assets) {
   ok(f + ' Calc 사용', /\bCalc\./.test(src));
 }
 
+/* ── 10. 페이지가 필요한 스크립트를 다 싣는가 ──────────────────────── */
+
+section('10. 스크립트 의존성');
+
+// 간이세액표 없이 netPay/incomeTax 를 쓰면 소득세가 조용히 0 원으로 나온다.
+// 오류도 경고도 없이 숫자만 틀리기 때문에 가장 위험한 종류의 누락이다.
+// 실제로 /yeoksan 을 만들면서 tax-table.js 를 빠뜨려 소득세 0 원,
+// 부양가족 수 무반응 상태로 배포될 뻔했다.
+for (const p of pages) {
+  const list = p.scripts || [];
+  const ui = list.filter((x) => !/calc\.js|tax-table\.js/.test(x));
+  if (!ui.length) continue;
+  let needsTable = false;
+  for (const src of ui) {
+    const file = path.join(OUT, src.replace(/^\//, ''));
+    if (!fs.existsSync(file)) { ok('/' + p.slug + ' 스크립트 존재 ' + src, false, '파일 없음'); continue; }
+    if (/netPay\s*\(|incomeTax\s*\(/.test(fs.readFileSync(file, 'utf8'))) needsTable = true;
+  }
+  const hasTable = list.some((x) => x.indexOf('tax-table.js') !== -1);
+  ok('/' + p.slug + (needsTable ? ' 간이세액표 로드' : ' 간이세액표 불필요'),
+    needsTable ? hasTable : true, needsTable && !hasTable ? 'netPay/incomeTax 를 쓰는데 tax-table.js 가 없다' : '');
+  ok('/' + p.slug + ' calc.js 로드', list.some((x) => x.indexOf('/calc.js') !== -1));
+}
+
 /* ── 결과 ───────────────────────────────────────────────────────────── */
 
 console.log('\n' + '='.repeat(52));

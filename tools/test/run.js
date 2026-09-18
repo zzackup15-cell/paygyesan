@@ -21,6 +21,7 @@ const SUITES = [
   'sideincome',
   'rental',
   'exit',
+  'reverse',
   'consistency',
   'precision'
 ];
