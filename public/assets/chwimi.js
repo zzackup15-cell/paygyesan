@@ -12,7 +12,6 @@
 (function () {
   if (typeof document === 'undefined') return;
 
-  var SVG_NS = 'http://www.w3.org/2000/svg';
 
   // '왜 맞는지' 한 줄에 쓰는 말. 속성값을 낮음·중간·높음 세 칸으로 나눠 부른다.
   // 점수가 아니라 표현이라 UI 에 둔다. 순서는 계약서의 속성 순서이고,
@@ -106,8 +105,6 @@
   var answers = {};   // 질문 id → 보기 id
   var step = 0;       // 지금 보는 질문 순번. questions.length 면 다 답한 상태
   var lastResult = null;
-  var lastMapWidth = 0;
-  var mapHit = null;  // 지도 점을 눌렀을 때 찾을 자리. drawMap 이 채운다
 
   function isAnswered(q) {
     return !!findOption(q, answers[q.id]);
@@ -169,15 +166,6 @@
   function make(tag, className, text) {
     var node = document.createElement(tag);
     if (className) node.className = className;
-    if (text != null) node.textContent = text;
-    return node;
-  }
-
-  function svg(tag, attrs, text) {
-    var node = document.createElementNS(SVG_NS, tag);
-    for (var k in attrs) {
-      if (Object.prototype.hasOwnProperty.call(attrs, k)) node.setAttribute(k, String(attrs[k]));
-    }
     if (text != null) node.textContent = text;
     return node;
   }
@@ -395,7 +383,7 @@
       return;
     }
     out.excluded.textContent = '가장 적게 들 때도 월 예산(' + formatMan(budget) + ' 원)을 넘는 취미 ' +
-      over + '개는 추천에서 뺐습니다. 지도에는 속이 빈 점으로 남겨 두었습니다.';
+      over + '개는 추천에서 뺐습니다. 지도에는 흐리게 남겨 두었습니다.';
   }
 
   function renderTable(r, net) {
@@ -442,7 +430,7 @@
     }
     var top = make('li');
     top.appendChild(make('span', 'chw-swatch is-top'));
-    top.appendChild(document.createTextNode('추천 (세로 막대는 비용 범위)'));
+    top.appendChild(document.createTextNode('추천 (숫자는 순위)'));
     out.legend.appendChild(top);
 
     var anyOver = false;
@@ -503,309 +491,110 @@
 
   /* ── 취미 지도 ──────────────────────────────────────────────────────── */
 
-  // 세로 눈금 후보. 1·3 을 번갈아 쓰면 로그 눈금이 고르게 벌어진다.
-  function tickCandidates() {
-    var list = [];
-    for (var p = 1000; p <= 1000000000; p *= 10) list.push(p, p * 3);
-    return list;
+  // 처음엔 점그래프였다. 정적인 취미가 왼쪽에 몰려 이름을 다 달 수 없었고,
+  // 이름 없는 점은 무엇인지 알 수 없었다. 칸으로 나누면 모든 이름이 보이고 겹치지 않는다.
+  // 칸 경계는 취미 수가 칸마다 고르게 나뉘도록 잡았다(활동성은 0.1 단위 값).
+  var MAP_COLS = [
+    { name: '거의 안 움직임', max: 0.05 },
+    { name: '조금 움직임', max: 0.25 },
+    { name: '꽤 움직임', max: 0.55 },
+    { name: '땀 흘림', max: Infinity }
+  ];
+  // 위가 비싼 쪽. 기준은 비용 범위의 가운데값
+  var MAP_ROWS = [
+    { name: '30만 원 이상', min: 300000 },
+    { name: '10만~30만 원', min: 100000 },
+    { name: '3만~10만 원', min: 30000 },
+    { name: '3만 원 미만', min: -Infinity }
+  ];
+  var MAP_TIP_DEFAULT = '이름을 누르면 분류와 월 비용 범위가 여기에 나옵니다.';
+  var mapTexts = [];
+
+  function mapCol(active) {
+    var a = Number(active) || 0;
+    for (var i = 0; i < MAP_COLS.length; i++) if (a < MAP_COLS[i].max) return i;
+    return MAP_COLS.length - 1;
   }
 
-  function logTicks(minV, maxV) {
-    var all = tickCandidates();
-    var lo = all[0];
-    var hi = all[all.length - 1];
-    for (var i = 0; i < all.length; i++) if (all[i] <= minV) lo = all[i];
-    for (var j = all.length - 1; j >= 0; j--) if (all[j] >= maxV) hi = all[j];
-    if (hi <= lo) hi = lo * 10;
-    var ticks = [];
-    for (var k = 0; k < all.length; k++) if (all[k] >= lo && all[k] <= hi) ticks.push(all[k]);
-    return ticks;
-  }
-
-  function tickLabel(v) {
-    if (v >= 100000000) return (v / 100000000).toLocaleString('ko-KR') + '억';
-    if (v >= 10000) return (v / 10000).toLocaleString('ko-KR') + '만';
-    return (v / 1000).toLocaleString('ko-KR') + '천';
-  }
-
-  // 글자 폭 어림. 한글·한자는 글자 크기만큼, 그 밖은 0.6배.
-  // 실제로 재려면(getBBox) 그려진 뒤 레이아웃을 강제해야 하고, 숨겨진 상태에서는
-  // 0 이 나온다. 겹침 판정에는 어림으로 충분하다.
-  function textWidth(s, fs) {
-    var w = 0;
-    for (var i = 0; i < s.length; i++) w += s.charCodeAt(i) >= 0x2E80 ? fs : fs * 0.6;
-    return w;
-  }
-
-  var LABEL_GAP_X = 3;
-  var LABEL_GAP_Y = 1;
-  var MAP_PICK_RADIUS = 16;
-  var MAP_TIP_DEFAULT = '점을 누르면 취미 이름과 비용이 여기에 나옵니다.';
-
-  function overlaps(a, b) {
-    return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+  function mapRow(mid) {
+    for (var i = 0; i < MAP_ROWS.length; i++) if (mid >= MAP_ROWS[i].min) return i;
+    return MAP_ROWS.length - 1;
   }
 
   function drawMap(r) {
     clear(out.map);
-    var W = Math.floor(out.map.clientWidth || 0);
-    if (W <= 0) W = 600; // 아직 배치 전이면 기본 폭. 크기가 잡히면 resize 에서 다시 그린다
-    lastMapWidth = W;
+    mapTexts = [];
+    var topRank = {};
+    for (var t = 0; t < r.top.length; t++) topRank[r.top[t].hobby.id] = t + 1;
 
-    // 좁은 화면에서는 이름이 서로 덮이므로 추천 3개만 이름을 남긴다.
-    var narrow = W < 480;
-    var H = Math.round(Math.min(440, Math.max(300, W * 0.66)));
-    var dotR = narrow ? 3.5 : 4.5;
-    var topR = narrow ? 7 : 8;
-    var fs = narrow ? 11 : 11.5;
-    var fsTop = narrow ? 12 : 13;
-
-    var ranked = r.ranked;
-    var topIds = {};
-    for (var t = 0; t < r.top.length; t++) topIds[r.top[t].hobby.id] = t + 1;
-
-    // 세로 범위: 전체 취미의 가운데값과 추천 취미의 범위 양 끝이 모두 들어가게.
-    var minPos = Infinity;
-    var maxV = 0;
-    function see(v) {
-      if (!isFinite(v) || v <= 0) return;
-      if (v < minPos) minPos = v;
-      if (v > maxV) maxV = v;
+    // 칸마다 ranked 순서(답과 가까운 순)로 담는다
+    var cells = [];
+    for (var ri = 0; ri < MAP_ROWS.length; ri++) {
+      cells.push([]);
+      for (var ci = 0; ci < MAP_COLS.length; ci++) cells[ri].push([]);
     }
-    for (var i = 0; i < ranked.length; i++) {
-      see(ranked[i].costMid);
-      if (topIds[ranked[i].hobby.id]) { see(ranked[i].hobby.costMin); see(ranked[i].hobby.costMax); }
-    }
-    if (!isFinite(minPos)) { minPos = 10000; maxV = 100000; }
-    var ticks = logTicks(minPos, maxV);
-    var lo = ticks[0];
-    var hi = ticks[ticks.length - 1];
-    var hasBelow = false;
-    for (var b = 0; b < ranked.length; b++) if (!(ranked[b].costMid >= lo)) hasBelow = true;
-    var tickTexts = [];
-    var tickW = 0;
-    for (var tt = 0; tt < ticks.length; tt++) {
-      tickTexts.push(tickLabel(ticks[tt]) + (tt === 0 && hasBelow ? ' 이하' : ''));
-      tickW = Math.max(tickW, textWidth(tickTexts[tt], fs));
+    for (var i = 0; i < r.ranked.length; i++) {
+      var it = r.ranked[i];
+      cells[mapRow(it.costMid)][mapCol(it.hobby.active)].push(it);
     }
 
-    // 왼쪽 여백은 가장 긴 눈금 글자에 맞춘다. 고정값이면 '1,000만' 같은 눈금이 잘린다.
-    var pad = { l: Math.max(30, Math.ceil(tickW) + 9), r: 12, t: 30, b: 42 };
-    var pw = W - pad.l - pad.r;
-    var ph = H - pad.t - pad.b;
-    var lnLo = Math.log(lo);
-    var lnSpan = Math.log(hi) - lnLo;
-
-    function clamp01(v) { return v < 0 ? 0 : (v > 1 ? 1 : v); }
-    function sx(a) { return pad.l + clamp01(Number(a) || 0) * pw; }
-    // 0원 취미는 로그로 그릴 수 없어 맨 아래 눈금에 붙인다. 그 눈금에 '이하' 를 단다.
-    function sy(v) {
-      var f = v > lo ? (Math.log(v) - lnLo) / lnSpan : 0;
-      return pad.t + ph * (1 - clamp01(f));
+    var table = make('table', 'chw-grid-table');
+    table.appendChild(make('caption', 'chw-grid-caption',
+      '취미 지도. 가로는 활동성, 세로는 월 비용(범위의 가운데값). 추천 취미에는 순위 숫자가 붙어 있습니다.'));
+    var thead = document.createElement('thead');
+    var hr = document.createElement('tr');
+    var corner = make('th', 'chw-grid-corner', '월 비용 ↓ · 활동성 →');
+    corner.setAttribute('scope', 'col');
+    hr.appendChild(corner);
+    for (var hc = 0; hc < MAP_COLS.length; hc++) {
+      var th = make('th', null, MAP_COLS[hc].name);
+      th.setAttribute('scope', 'col');
+      hr.appendChild(th);
     }
+    thead.appendChild(hr);
+    table.appendChild(thead);
 
-    var names = [];
-    for (var n = 0; n < r.top.length; n++) names.push(n + 1 + '위 ' + r.top[n].hobby.name);
-    var root = svg('svg', {
-      width: W,
-      height: H,
-      viewBox: '0 0 ' + W + ' ' + H,
-      role: 'img',
-      focusable: 'false',
-      'class': 'chw-svg',
-      'aria-label': '취미 지도. 가로는 활동성(왼쪽 정적, 오른쪽 활동적), 세로는 월 비용(아래 적음, 위 많음, 로그 눈금). ' +
-        '전체 ' + ranked.length + '개 중 추천: ' + names.join(', ') + '.'
-    });
-
-    // 눈금과 격자
-    for (var g = 0; g < ticks.length; g++) {
-      var gy = Math.round(sy(ticks[g])) + 0.5; // 1px 선이 번지지 않게 픽셀 경계에 맞춘다
-      root.appendChild(svg('line', { x1: pad.l, x2: W - pad.r, y1: gy, y2: gy, 'class': 'chw-grid' }));
-      root.appendChild(svg('text', {
-        x: pad.l - 5, y: gy + 4, 'text-anchor': 'end', 'font-size': fs, 'class': 'chw-tick'
-      }, tickTexts[g]));
-    }
-    var midX = sx(0.5);
-    root.appendChild(svg('line', { x1: midX, x2: midX, y1: pad.t, y2: pad.t + ph, 'class': 'chw-grid is-mid' }));
-    root.appendChild(svg('line', { x1: pad.l, x2: W - pad.r, y1: pad.t + ph, y2: pad.t + ph, 'class': 'chw-axis' }));
-    root.appendChild(svg('line', { x1: pad.l, x2: pad.l, y1: pad.t, y2: pad.t + ph, 'class': 'chw-axis' }));
-
-    // 축 이름
-    var axisY = pad.t + ph + 16;
-    root.appendChild(svg('text', { x: pad.l, y: axisY, 'text-anchor': 'start', 'font-size': fs, 'class': 'chw-tick' }, '정적'));
-    root.appendChild(svg('text', { x: W - pad.r, y: axisY, 'text-anchor': 'end', 'font-size': fs, 'class': 'chw-tick' }, '활동적'));
-    root.appendChild(svg('text', { x: pad.l + pw / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': fs + 1, 'class': 'chw-axis-title' }, '활동성 →'));
-    var yTitle = '↑ 월 비용 (원, 로그 눈금)';
-    root.appendChild(svg('text', { x: 2, y: 14, 'text-anchor': 'start', 'font-size': fs + 1, 'class': 'chw-axis-title' }, yTitle));
-
-    // 점 위치. 활동성은 소수 한 자리라 같은 자리에 여러 점이 겹친다.
-    // 같은 픽셀에 떨어진 점은 가로로 조금씩 벌린다. 순서는 ranked 순서라 늘 같다.
-    var pts = [];
-    var groups = {};
-    for (var p = 0; p < ranked.length; p++) {
-      var it = ranked[p];
-      var x = sx(it.hobby.active);
-      var y = sy(it.costMid);
-      var key = Math.round(x) + ',' + Math.round(y);
-      (groups[key] = groups[key] || []).push(pts.length);
-      pts.push({ item: it, x: x, y: y, rank: topIds[it.hobby.id] || 0 });
-    }
-    var step2 = dotR * 2 + 1;
-    for (var gk in groups) {
-      if (!Object.prototype.hasOwnProperty.call(groups, gk)) continue;
-      var grp = groups[gk];
-      if (grp.length < 2) continue;
-      for (var m = 0; m < grp.length; m++) {
-        var pt = pts[grp[m]];
-        pt.x = Math.max(pad.l, Math.min(W - pad.r, pt.x + (m - (grp.length - 1) / 2) * step2));
+    var tbody = document.createElement('tbody');
+    for (var rr = 0; rr < MAP_ROWS.length; rr++) {
+      var tr = document.createElement('tr');
+      var rh = make('th', null, MAP_ROWS[rr].name);
+      rh.setAttribute('scope', 'row');
+      tr.appendChild(rh);
+      for (var cc = 0; cc < MAP_COLS.length; cc++) {
+        var td = document.createElement('td');
+        td.setAttribute('data-col', MAP_COLS[cc].name); // 좁은 화면에서 칸 이름으로 쓴다
+        var list = cells[rr][cc];
+        for (var k = 0; k < list.length; k++) {
+          var item = list[k];
+          var h = item.hobby;
+          var rank = topRank[h.id] || 0;
+          var btn = make('button', 'chw-chip ' + catClass(h) + (rank ? ' is-top' : '') + (item.overBudget ? ' is-over' : ''));
+          btn.type = 'button';
+          btn.setAttribute('data-i', String(mapTexts.length));
+          if (rank) btn.appendChild(make('span', 'chw-chip-rank', String(rank)));
+          else btn.appendChild(make('span', 'chw-chip-dot'));
+          btn.appendChild(document.createTextNode(h.name));
+          var text = (rank ? rank + '위 ' : '') + h.name + ' · ' + catOf(h).name + ' · ' + formatCostRange(h) +
+            (item.overBudget ? ' · 예산 초과' : '');
+          btn.setAttribute('aria-label', text);
+          mapTexts.push(text);
+          td.appendChild(btn);
+        }
+        tr.appendChild(td);
       }
+      tbody.appendChild(tr);
     }
-
-    // 이름 자리. 축 이름 자리는 미리 막아 둔다.
-    var placed = [{ x: 0, y: 0, w: textWidth(yTitle, fs + 1) + 8, h: 20 }];
-    var bounds = { x: pad.l + 2, y: pad.t - 16, w: pw - 2, h: ph + 14 };
-    function inBounds(rc) {
-      return rc.x >= bounds.x && rc.y >= bounds.y && rc.x + rc.w <= bounds.x + bounds.w && rc.y + rc.h <= bounds.y + bounds.h;
-    }
-    function tryLabel(pt, text, size, rr, force) {
-      var w = textWidth(text, size);
-      var h = size + 2;
-      var cands = [
-        { x: pt.x + rr + 3, y: pt.y - h / 2, tx: pt.x + rr + 3, ty: pt.y + size * 0.35, a: 'start' },
-        { x: pt.x - rr - 3 - w, y: pt.y - h / 2, tx: pt.x - rr - 3, ty: pt.y + size * 0.35, a: 'end' },
-        { x: pt.x - w / 2, y: pt.y - rr - 2 - h, tx: pt.x, ty: pt.y - rr - 4, a: 'middle' },
-        { x: pt.x - w / 2, y: pt.y + rr + 2, tx: pt.x, ty: pt.y + rr + 2 + size * 0.9, a: 'middle' }
-      ];
-      for (var c = 0; c < cands.length; c++) {
-        var rc = { x: cands[c].x, y: cands[c].y, w: w, h: h };
-        if (!inBounds(rc)) continue;
-        // 글자 폭은 어림이라 둘레에 틈을 두고 판정한다. 딱 붙은 이름은 한 덩어리로 읽힌다
-        var probe = { x: rc.x - LABEL_GAP_X, y: rc.y - LABEL_GAP_Y, w: rc.w + LABEL_GAP_X * 2, h: rc.h + LABEL_GAP_Y * 2 };
-        var hit = false;
-        for (var q = 0; q < placed.length; q++) if (overlaps(probe, placed[q])) { hit = true; break; }
-        if (hit) continue;
-        placed.push(rc);
-        return cands[c];
-      }
-      if (!force) return null;
-      // 추천 이름은 반드시 보여야 한다. 자리가 없으면 겹치더라도 화면 안쪽으로 붙인다.
-      var fallback = pt.x > pad.l + pw / 2 ? cands[1] : cands[0];
-      placed.push({ x: fallback.x, y: fallback.y, w: w, h: h });
-      return fallback;
-    }
-
-    var tops = [];
-    for (var a = 0; a < pts.length; a++) if (pts[a].rank) tops.push(pts[a]);
-    tops.sort(function (u, v) { return u.rank - v.rank; });
-    // 모든 점 자리를 먼저 막는다. 이름이 남의 점을 덮으면 글자가 깨져 읽힌다
-    // (가죽공예 위에 점이 얹혀 '가족공예' 처럼 보였다).
-    for (var tp = 0; tp < pts.length; tp++) {
-      var pr = (pts[tp].rank ? topR : dotR) + 1;
-      placed.push({ x: pts[tp].x - pr, y: pts[tp].y - pr, w: pr * 2, h: pr * 2 });
-    }
-
-    var labels = [];
-    for (var tl = 0; tl < tops.length; tl++) {
-      var spot = tryLabel(tops[tl], tops[tl].item.hobby.name, fsTop, topR, true);
-      labels.push({ pt: tops[tl], spot: spot, top: true });
-    }
-    if (!narrow) {
-      for (var o = 0; o < pts.length; o++) {
-        if (pts[o].rank) continue;
-        var s2 = tryLabel(pts[o], pts[o].item.hobby.name, fs, dotR, false);
-        if (s2) labels.push({ pt: pts[o], spot: s2, top: false });
-      }
-    }
-
-    // 그리기 순서: 일반 점 → 추천 범위 막대 → 추천 점 → 이름. 추천이 맨 위에 온다.
-    var dots = svg('g', { 'class': 'chw-dots' });
-    for (var d = 0; d < pts.length; d++) {
-      if (pts[d].rank) continue;
-      var h0 = pts[d].item.hobby;
-      var c0 = svg('circle', {
-        cx: pts[d].x.toFixed(1),
-        cy: pts[d].y.toFixed(1),
-        r: dotR,
-        'class': 'chw-dot ' + catClass(h0) + (pts[d].item.overBudget ? ' is-over' : '')
-      });
-      c0.appendChild(svg('title', {}, h0.name + ' · ' + catOf(h0).name + ' · ' + formatCostRange(h0) +
-        (pts[d].item.overBudget ? ' · 예산 초과' : '')));
-      dots.appendChild(c0);
-    }
-    root.appendChild(dots);
-
-    for (var e = 0; e < tops.length; e++) {
-      var tpt = tops[e];
-      var th = tpt.item.hobby;
-      var y1 = sy(th.costMin);
-      var y2 = sy(th.costMax);
-      if (Math.abs(y1 - y2) >= 1) {
-        root.appendChild(svg('line', {
-          x1: tpt.x.toFixed(1), x2: tpt.x.toFixed(1), y1: y1.toFixed(1), y2: y2.toFixed(1),
-          'class': 'chw-range ' + catClass(th)
-        }));
-      }
-    }
-    for (var f = 0; f < tops.length; f++) {
-      var fp = tops[f];
-      var fh = fp.item.hobby;
-      var big = svg('circle', {
-        cx: fp.x.toFixed(1), cy: fp.y.toFixed(1), r: topR,
-        'class': 'chw-dot is-top ' + catClass(fh)
-      });
-      big.appendChild(svg('title', {}, fp.rank + '위 ' + fh.name + ' · ' + catOf(fh).name + ' · ' + formatCostRange(fh)));
-      root.appendChild(big);
-      root.appendChild(svg('text', {
-        x: fp.x.toFixed(1), y: (fp.y + 3.5).toFixed(1), 'text-anchor': 'middle', 'font-size': 10, 'class': 'chw-rank-num',
-        'aria-hidden': 'true'
-      }, String(fp.rank)));
-    }
-
-    for (var lb = 0; lb < labels.length; lb++) {
-      var L = labels[lb];
-      root.appendChild(svg('text', {
-        x: L.spot.tx.toFixed(1),
-        y: L.spot.ty.toFixed(1),
-        'text-anchor': L.spot.a,
-        'font-size': L.top ? fsTop : fs,
-        'class': 'chw-label' + (L.top ? ' is-top' : '')
-      }, L.pt.item.hobby.name));
-    }
-
-    out.map.appendChild(root);
-
-    var hitPts = [];
-    for (var hp = 0; hp < pts.length; hp++) {
-      var hh = pts[hp].item.hobby;
-      hitPts.push({
-        x: pts[hp].x,
-        y: pts[hp].y,
-        text: (pts[hp].rank ? pts[hp].rank + '위 ' : '') + hh.name + ' · ' + catOf(hh).name + ' · ' +
-          formatCostRange(hh) + (pts[hp].item.overBudget ? ' · 예산 초과' : '')
-      });
-    }
-    mapHit = { svg: root, w: W, pts: hitPts };
+    table.appendChild(tbody);
+    out.map.appendChild(table);
     if (out.mapTip) out.mapTip.textContent = MAP_TIP_DEFAULT;
   }
 
-  // 지도 점은 작아서 손가락으로 정확히 누르기 어렵다. 누른 자리에서 가장 가까운 점을 고른다.
-  function pickMapPoint(ev) {
-    if (!mapHit || !out.mapTip) return;
-    var box = mapHit.svg.getBoundingClientRect();
-    if (!box.width) return;
-    var k = mapHit.w / box.width; // max-width 로 줄어든 경우 화면 좌표 → 그림 좌표
-    var x = (ev.clientX - box.left) * k;
-    var y = (ev.clientY - box.top) * k;
-    var best = null;
-    var bestD = MAP_PICK_RADIUS * MAP_PICK_RADIUS;
-    for (var i = 0; i < mapHit.pts.length; i++) {
-      var dx = mapHit.pts[i].x - x;
-      var dy = mapHit.pts[i].y - y;
-      var d = dx * dx + dy * dy;
-      if (d <= bestD) { bestD = d; best = mapHit.pts[i]; }
-    }
-    if (best) out.mapTip.textContent = best.text;
-    else if (ev.type === 'click') out.mapTip.textContent = MAP_TIP_DEFAULT;
+  function pickMapChip(ev) {
+    var t = ev.target;
+    while (t && t !== out.map && !(t.getAttribute && t.getAttribute('data-i'))) t = t.parentNode;
+    if (!t || t === out.map || !out.mapTip) return;
+    var text = mapTexts[Number(t.getAttribute('data-i'))];
+    if (text) out.mapTip.textContent = text;
   }
 
   /* ── 묶기 ───────────────────────────────────────────────────────────── */
@@ -892,22 +681,7 @@
     }
   });
 
-  out.map.addEventListener('click', pickMapPoint);
-  out.map.addEventListener('mousemove', pickMapPoint);
-
-  // 지도는 실제 픽셀 폭으로 그린다. viewBox 로 줄이기만 하면 375px 화면에서
-  // 글자가 5px 로 쪼그라든다. 그래서 폭이 바뀌면 다시 그린다.
-  var resizeQueued = false;
-  window.addEventListener('resize', function () {
-    if (resizeQueued || !lastResult) return;
-    resizeQueued = true;
-    var run = function () {
-      resizeQueued = false;
-      if (lastResult && !out.block.hidden && Math.floor(out.map.clientWidth) !== lastMapWidth) drawMap(lastResult);
-    };
-    if (typeof window.requestAnimationFrame === 'function') window.requestAnimationFrame(run);
-    else setTimeout(run, 100);
-  });
+  out.map.addEventListener('click', pickMapChip);
 
   var fromLink = ready && loadFromHash();
   render(false);

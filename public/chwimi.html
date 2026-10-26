@@ -22,7 +22,7 @@
 <meta name="twitter:title" content="내 월급으로 즐기는 취미">
 <meta name="twitter:description" content="어울리는 취미와 한 달 비용 추정치를 월 실수령액과 함께 봅니다.">
 
-<link rel="stylesheet" href="/assets/style.css?v=9ef5bbe7">
+<link rel="stylesheet" href="/assets/style.css?v=6a2f2a11">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b4d8f'/%3E%3Ctext x='16' y='23' font-size='19' font-family='sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'%3E₩%3C/text%3E%3C/svg%3E">
 
 <script type="application/ld+json">
@@ -110,7 +110,7 @@
       <p class="hint warn" id="out-excluded"></p>
 
       <h3>취미 지도</h3>
-      <p class="section-desc">가로는 활동성, 세로는 한 달 비용입니다. 비용 차이가 커서 세로는 <strong>로그 눈금</strong>으로 그렸습니다. 큰 점이 추천 3개이고, 세로 막대는 그 취미의 비용 범위입니다.</p>
+      <p class="section-desc">가로는 활동성, 세로는 한 달 비용입니다. 취미 54개가 모두 칸 안에 들어 있고, 숫자가 붙은 것이 추천 3개입니다. 칸 안에서는 답과 가까운 순서로 놓였습니다.</p>
       <div class="chw-map" id="out-map"></div>
       <p class="chw-map-tip" id="out-map-tip" aria-live="polite"></p>
       <ul class="chw-legend" id="out-legend"></ul>
@@ -231,14 +231,13 @@
       <p>실수령액 300만 원에 한 달 6만 원이 드는 취미라면 2%입니다. 기준이 <strong>세전이 아니라 세후</strong>라는 점에 주의하세요. 입력은 선택이고, 비워 두면 금액만 보여 드립니다.</p>
 
       <h3>취미 지도 읽는 법</h3>
-      <p>결과 아래 지도에는 전체 취미가 점으로 찍혀 있고, 추천된 세 개가 강조되어 있습니다. 점 색은 분류(운동·스포츠, 아웃도어·여행, 문화·교양, 창작·만들기, 생활·여가, 게임·디지털)를 나타냅니다.</p>
-      <p><strong>가로축은 활동성</strong>입니다. 왼쪽일수록 앉아서 하는 취미, 오른쪽일수록 몸을 많이 쓰는 취미입니다. <strong>세로축은 한 달 비용</strong>이고, 위로 갈수록 비쌉니다.</p>
-      <p>세로축은 <strong>로그 눈금</strong>입니다. 1만 원에서 10만 원까지의 간격과 10만 원에서 100만 원까지의 간격이 같습니다. 그래서 위아래로 조금만 떨어져 있어도 실제 금액은 몇 배 차이일 수 있습니다.</p>
-      <p>추천된 취미 <strong>근처의 점</strong>은 활동성과 비용이 비슷한 취미입니다. 추천이 마음에 들지 않으면 주변을 살펴보세요.</p>
+      <p>결과 아래 지도는 전체 취미를 <strong>활동성 4칸 × 월 비용 4칸</strong>으로 나눠 담은 표입니다. 추천된 세 개에는 순위 숫자가 붙고, 이름 앞 색은 분류(운동·스포츠, 아웃도어·여행, 문화·교양, 창작·만들기, 생활·여가, 게임·디지털)를 나타냅니다.</p>
+      <p><strong>가로는 활동성</strong>입니다. 왼쪽일수록 앉아서 하는 취미, 오른쪽일수록 몸을 많이 쓰는 취미입니다. <strong>세로는 한 달 비용</strong>이고, 위로 갈수록 비쌉니다. 비용 칸은 범위의 <strong>가운데값</strong>으로 나눴습니다. 가볍게 즐기면 한 칸 아래, 제대로 하면 한 칸 위일 수 있습니다.</p>
+      <p>추천된 취미와 <strong>같은 칸이나 옆 칸</strong>에 있는 취미는 활동성과 비용이 비슷합니다. 추천이 마음에 들지 않으면 주변을 살펴보세요. 이름을 누르면 비용 범위가 나옵니다.</p>
 
       <h3>돈이 적게 드는 취미를 찾는다면</h3>
       <p>질문 중에 <strong>한 달 예산</strong>을 묻는 문항이 있습니다. 예산을 고르면 <strong>가볍게 즐기는 비용만으로도 예산을 넘는 취미</strong>는 추천에서 빠집니다. 빠진 취미가 있으면 결과 화면에 그 사실을 알려 드립니다.</p>
-      <p>지도에서는 아래쪽이 비용이 적은 취미입니다. 다만 돈이 적게 드는 취미도 <strong>시간과 이동 비용</strong>은 듭니다.</p>
+      <p>지도에서는 아래 칸이 비용이 적은 취미입니다. 다만 돈이 적게 드는 취미도 <strong>시간과 이동 비용</strong>은 듭니다.</p>
 
       <h3>얼마까지 써도 되는지는 정해져 있지 않습니다</h3>
       <p>"월급의 몇 %를 취미에 써야 한다"는 기준은 <strong>근거가 없습니다.</strong> 고정 지출, 저축 목표, 부양가족에 따라 같은 금액도 누구에게는 부담이고 누구에게는 여유입니다. 그래서 이 페이지는 비율을 보여 줄 뿐, 적당한지 아닌지는 판단하지 않습니다.</p>
@@ -313,6 +312,6 @@
 </footer>
 <script src="/assets/hobby-table.js?v=4a5de2f4" defer></script>
 <script src="/assets/calc.js?v=f034a3ab" defer></script>
-<script src="/assets/chwimi.js?v=ab67b185" defer></script>
+<script src="/assets/chwimi.js?v=65a74dd4" defer></script>
 </body>
 </html>
