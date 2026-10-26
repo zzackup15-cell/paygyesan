@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>내 연봉 상위 몇 % | 근로소득 백분위 - 페이계산</title>
+<meta name="description" content="연봉을 입력하면 근로소득자 중 상위 몇 퍼센트인지 알려 줍니다. 국세청이 공개한 근로소득 백분위 자료(2024년 귀속, 약 2,108만 명)를 그대로 사용하며, 평균 연봉 4,475만 원과 중위 연봉 3,387만 원, 백분위별 기준 금액도 함께 보여 줍니다.">
+<meta name="keywords" content="연봉 상위 몇 퍼센트, 내 연봉 순위, 연봉 백분위, 근로소득 상위 10%, 평균 연봉, 중위 연봉, 연봉 순위 계산기, 국세청 근로소득 통계">
+<link rel="canonical" href="https://paygyesan.com/sunwi">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="theme-color" content="#1b4d8f">
+<!-- 네이버 서치어드바이저 소유확인. 지우면 웹마스터도구 연결이 끊긴다. -->
+<meta name="naver-site-verification" content="2c93833ef7d92de143804173289212a6a6c67ce3">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="페이계산">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://paygyesan.com/sunwi">
+<meta property="og:title" content="내 연봉은 상위 몇 % | 근로소득 백분위">
+<meta property="og:description" content="국세청 자료로 근로소득자 2,108만 명 중 내 위치를 찾습니다.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="내 연봉 상위 몇 % 계산기">
+<meta name="twitter:description" content="국세청 근로소득 백분위로 보는 내 연봉 순위.">
+
+<link rel="stylesheet" href="/assets/style.css?v=5b8c7be6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231b4d8f'/%3E%3Ctext x='16' y='23' font-size='19' font-family='sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'%3E₩%3C/text%3E%3C/svg%3E">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"내 연봉 상위 몇 % 계산기","url":"https://paygyesan.com/sunwi","applicationCategory":"FinanceApplication","operatingSystem":"All","inLanguage":"ko","description":"국세청 근로소득 백분위 자료로 내 연봉이 근로소득자 중 상위 몇 퍼센트인지 알려 주는 무료 웹 도구입니다. 평균 연봉과 중위 연봉, 백분위별 기준 금액도 함께 보여 줍니다.","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"},"browserRequirements":"JavaScript 사용 가능한 브라우저"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"연봉 5,000만 원이면 상위 몇 %인가요?","acceptedAnswer":{"@type":"Answer","text":"근로소득자 기준 약 상위 30%입니다. 전체 근로소득자 2,108만 명 중 약 633만 등에 해당합니다. 평균 연봉 4,475만 원보다 높고 중위 연봉 3,387만 원보다는 한참 위입니다."}},{"@type":"Question","name":"평균 연봉보다 적으면 하위인가요?","acceptedAnswer":{"@type":"Answer","text":"아닙니다. 평균 연봉 4,475만 원을 받으면 이미 상위 35% 안쪽입니다. 아주 높은 소득이 평균을 끌어올리기 때문에 평균은 한가운데가 아닙니다. 진짜 한가운데는 중위 연봉 약 3,387만 원입니다."}},{"@type":"Question","name":"전 국민 기준인가요?","acceptedAnswer":{"@type":"Answer","text":"아닙니다. 연말정산을 신고한 근로소득자 약 2,108만 명이 모집단입니다. 자영업자, 프리랜서, 무직자는 포함되지 않습니다. \"직장인 중 상위 몇 %\"로 읽으셔야 합니다."}},{"@type":"Question","name":"뉴스에서 본 숫자와 다릅니다.","acceptedAnswer":{"@type":"Answer","text":"뉴스는 사업·이자·배당소득까지 합친 통합소득 기준인 경우가 많습니다. 근로소득만 보는 이 자료보다 금액이 높게 나옵니다. 어느 기준인지 확인하고 비교하셔야 합니다."}},{"@type":"Question","name":"세후 금액만 아는데 어떻게 하나요?","acceptedAnswer":{"@type":"Answer","text":"실수령액 연봉 역산 계산기에서 세후 월급으로 세전 연봉을 먼저 구하신 뒤 그 금액을 넣으시면 됩니다. 이 자료는 총급여(세전) 기준입니다."}},{"@type":"Question","name":"입력한 정보가 저장되나요?","acceptedAnswer":{"@type":"Answer","text":"저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 개인정보처리방침에서 확인할 수 있습니다."}}]}]}
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1984750615156688" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">페이계산<span class="brand-dot">.</span></a>
+    <h1>내 연봉은 상위 몇 %</h1>
+    <p class="lead">국세청 <strong>근로소득 백분위 자료</strong>로 내 위치를 찾습니다. 근로소득자 약 2,108만 명 중 상위 몇 퍼센트인지, <strong>평균과 중위 연봉</strong>은 얼마인지 함께 보여 드립니다.</p>
+    <p class="privacy-badge">입력값은 서버로 전송되지 않고 브라우저 안에서만 계산됩니다.</p>
+  </div>
+</header>
+
+<nav class="site-nav" aria-label="계산기 목록">
+  <div class="wrap">
+      <a href="/yeonbong" class="nav-pill">실수령액</a>
+      <a href="/tongsang" class="nav-pill">통상임금</a>
+      <a href="/busuip" class="nav-pill">부수입 세금</a>
+      <a href="/sunwi" class="nav-pill is-current" aria-current="page">연봉 순위</a>
+      <a href="/silsuryeong" class="nav-pill">실수령액표</a>
+      <a href="/yeoksan" class="nav-pill">연봉 역산</a>
+      <a href="/toesa" class="nav-pill">퇴사 정산</a>
+      <a href="/wolse" class="nav-pill">월세 세금</a>
+      <a href="/boheom" class="nav-pill">4대보험</a>
+      <a href="/yeongeum" class="nav-pill">국민연금</a>
+      <a href="/juhyu" class="nav-pill">주휴수당</a>
+      <a href="/toejik" class="nav-pill">퇴직금</a>
+      <a href="/yeoncha" class="nav-pill">연차수당</a>
+      <a href="/silup" class="nav-pill">실업급여</a>
+      <a href="/yuka" class="nav-pill">육아휴직</a>
+  </div>
+</nav>
+
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 연봉 입력</h2>
+    <p class="section-desc">국세청이 공개한 <strong>근로소득 백분위 자료</strong>로 내 위치를 찾습니다. 세전 연봉을 넣으세요.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="my-salary">연봉 (세전)</label>
+        <div class="input-unit">
+          <input type="text" id="my-salary" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">총급여 기준. 세후 금액만 안다면 <a href="/yeoksan">역산 계산기</a>에서 먼저 구하세요</p>
+      </div>
+    </div>
+
+    <div class="list-actions">
+      <span class="item-count" id="source-note">국세청 근로소득 백분위 자료</span>
+      <button type="button" id="reset-all" class="btn btn-ghost">초기화</button>
+    </div>
+  </section>
+
+  <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+    <h2 id="result-title">2. 내 위치</h2>
+
+    <div class="result-grid">
+      <div class="result-box result-primary">
+        <span class="result-label">상위</span>
+        <strong class="result-value"><span id="out-percentile">0</span><em>%</em></strong>
+      </div>
+      <div class="result-box">
+        <span class="result-label">근로소득자 중 순위</span>
+        <strong class="result-value">약 <span id="out-rank">0</span><em>등</em></strong>
+      </div>
+    </div>
+
+    <dl class="result-meta">
+      <div>
+        <dt>전체 근로소득자</dt>
+        <dd><span id="out-people">0</span>명</dd>
+      </div>
+      <div>
+        <dt>평균 연봉</dt>
+        <dd><span id="out-average">0</span>원</dd>
+      </div>
+      <div>
+        <dt>중위 연봉</dt>
+        <dd><span id="out-median">0</span>원</dd>
+      </div>
+      <div>
+        <dt>평균 대비</dt>
+        <dd><span id="out-vs">0</span>%</dd>
+      </div>
+    </dl>
+
+    <p class="formula" id="out-note"></p>
+
+    <div id="detail-block" hidden>
+      <h3>상위 몇 %면 연봉이 얼마인가</h3>
+      <p class="section-desc">백분위별 기준 금액입니다. 내 위치에 가장 가까운 줄을 표시했습니다.</p>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr><th>상위</th><th>연봉</th><th>인원(누적)</th><th></th></tr>
+          </thead>
+          <tbody id="ladder-rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="card calc-links" aria-labelledby="other-calc-title">
+      <h2 id="other-calc-title">다른 계산기</h2>
+      <div class="calc-grid">
+        <a class="calc-card" href="/yeonbong">
+          <span class="calc-card-title">연봉 실수령액 계산기</span>
+          <span class="calc-card-desc">세전 연봉만 넣으면 4대보험과 소득세를 뗀 월 실수령액이 나옵니다. 연봉별 실수령액표도 함께 봅니다.</span>
+        </a>
+        <a class="calc-card" href="/tongsang">
+          <span class="calc-card-title">통상임금 계산기</span>
+          <span class="calc-card-desc">기본급과 수당을 넣으면 통상시급, 가산수당, 연봉, 세후 실수령액까지 한 번에 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/busuip">
+          <span class="calc-card-title">부수입 세금 계산기</span>
+          <span class="calc-card-desc">연봉과 추가 수입을 넣으면 5월에 더 낼 돈이 나옵니다. 사업소득과 기타소득 중 어느 쪽이 유리한지도 비교해 줍니다.</span>
+        </a>
+        <a class="calc-card" href="/silsuryeong">
+          <span class="calc-card-title">연봉 실수령액표</span>
+          <span class="calc-card-desc">연봉별 실수령액을 한눈에 비교합니다. 연봉 100만 원을 올리면 실제로 얼마가 남는지가 핵심입니다.</span>
+        </a>
+        <a class="calc-card" href="/yeoksan">
+          <span class="calc-card-title">실수령액 연봉 역산 계산기</span>
+          <span class="calc-card-desc">세후 월급으로 세전 연봉을 알아냅니다. 배우자 연봉이 궁금하거나 이직 제안을 비교할 때 씁니다.</span>
+        </a>
+        <a class="calc-card" href="/toesa">
+          <span class="calc-card-title">퇴사하면 받는 돈 계산기</span>
+          <span class="calc-card-desc">퇴사할 때 받는 돈을 전부 합쳐 계산합니다. 월별로 언제 들어오는지, 그 돈으로 몇 개월 버틸 수 있는지까지 보여 줍니다.</span>
+        </a>
+        <a class="calc-card" href="/wolse">
+          <span class="calc-card-title">월세 세금 계산기</span>
+          <span class="calc-card-desc">보유 주택 수와 월세를 넣으면 신고 대상인지부터 알려 줍니다. 간주임대료와 분리·종합과세 비교까지 계산합니다.</span>
+        </a>
+        <a class="calc-card" href="/boheom">
+          <span class="calc-card-title">4대보험 계산기</span>
+          <span class="calc-card-desc">월 급여를 넣으면 근로자 부담과 사업주 부담을 나눠 계산합니다. 회사가 실제로 쓰는 인건비까지 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/yeongeum">
+          <span class="calc-card-title">국민연금 예상 수령액 계산기</span>
+          <span class="calc-card-desc">출생연도와 가입기간, 현재 소득만 넣으면 매달 받을 연금액이 나옵니다. 언제부터 받느냐에 따라 얼마나 달라지는지도 함께 비교합니다.</span>
+        </a>
+        <a class="calc-card" href="/juhyu">
+          <span class="calc-card-title">주휴수당 계산기</span>
+          <span class="calc-card-desc">시급과 근무시간을 넣으면 주휴수당과 주급, 월 환산액을 계산합니다. 최저임금 미달도 확인합니다.</span>
+        </a>
+        <a class="calc-card" href="/toejik">
+          <span class="calc-card-title">퇴직금 계산기</span>
+          <span class="calc-card-desc">입사일과 퇴직 전 3개월 임금을 넣으면 평균임금과 예상 퇴직금이 나옵니다. 통상임금과 비교해 유리한 쪽을 적용합니다.</span>
+        </a>
+        <a class="calc-card" href="/yeoncha">
+          <span class="calc-card-title">연차수당 계산기</span>
+          <span class="calc-card-desc">입사일만 넣으면 발생 연차일수가 나오고, 통상임금으로 미사용 연차수당까지 계산합니다.</span>
+        </a>
+        <a class="calc-card" href="/silup">
+          <span class="calc-card-title">실업급여 계산기</span>
+          <span class="calc-card-desc">이직 전 3개월 임금과 근무 기간을 넣으면 1일 구직급여와 소정급여일수, 총 수급액이 나옵니다.</span>
+        </a>
+        <a class="calc-card" href="/yuka">
+          <span class="calc-card-title">육아휴직 급여 계산기</span>
+          <span class="calc-card-desc">통상임금과 사용 기간을 넣으면 월별 육아휴직 급여와 총 수령액이 나옵니다. 6+6 부모육아휴직제도 반영합니다.</span>
+        </a>
+      </div>
+    </section>
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <article class="card content" aria-labelledby="guide-title">
+    <h2 id="guide-title">연봉 순위 제대로 읽기</h2>
+
+    <h3>평균과 중위는 다릅니다</h3>
+    <p>근로소득자의 <strong>평균 연봉은 약 4,475만 원</strong>이지만, <strong>중위 연봉은 약 3,387만 원</strong>입니다. 1,000만 원 넘게 차이가 납니다.</p>
+    <p>평균은 아주 높은 소득이 끌어올립니다. 상위 0.1%의 평균 연봉이 <strong>10억 원에 가깝기</strong> 때문에, 전체 평균이 실제 한가운데보다 위쪽에 놓입니다.</p>
+    <p>그래서 <strong>"평균 연봉보다 적다"고 평범 이하인 것이 아닙니다.</strong> 평균 연봉 4,475만 원을 받으면 이미 상위 35% 안쪽입니다. 절반보다 위입니다. 내 위치를 보려면 평균이 아니라 <strong>중위값과 백분위</strong>를 봐야 합니다.</p>
+
+    <h3>어떤 자료인가</h3>
+    <p>국세청이 공개하는 <strong>근로소득 백분위(천분위) 자료</strong>를 그대로 씁니다. 연말정산을 신고한 근로자 <strong>약 2,108만 명</strong>이 모집단이며, 상위 1% 안쪽은 0.1% 단위로 세분되어 있습니다.</p>
+    <p>모집단이 <strong>근로소득자</strong>라는 점이 중요합니다. 자영업자, 프리랜서, 무직자는 들어 있지 않습니다. "전 국민 중 몇 %"가 아니라 <strong>"직장인 중 몇 %"</strong>입니다.</p>
+    <p>사업소득이나 금융소득을 합친 <strong>통합소득</strong> 통계와도 다릅니다. 뉴스에서 "상위 10%가 연 1억 5,000만 원"처럼 인용되는 숫자는 대개 통합소득 기준이라 근로소득 기준보다 높게 나옵니다. 둘을 섞으면 안 됩니다.</p>
+
+    <!-- 광고 위치 3: 설명 콘텐츠 중간 (애드센스 승인 후 삽입) -->
+    <!-- <div class="ad-slot ad-inline"></div> -->
+
+    <h3>왜 추정치인가</h3>
+    <p>공개 자료는 구간마다 <strong>인원과 총급여 합계</strong>만 줍니다. "상위 10%는 연봉 얼마부터"라는 <strong>경계 금액은 들어 있지 않습니다.</strong></p>
+    <p>그래서 이 계산기는 각 구간의 1인 평균을 그 구간 가운데 지점의 대표값으로 놓고 사이를 이어 백분위를 추정합니다. 실제 경계와는 조금 차이가 날 수 있습니다. <strong>소수점까지 정확한 순위가 아니라 위치를 가늠하는 도구</strong>로 보시는 것이 맞습니다.</p>
+    <p>추정이 들어간 부분을 숨기지 않는 이유는, 그래야 결과를 어디까지 믿을지 판단할 수 있기 때문입니다.</p>
+
+    <h3>상위로 갈수록 격차가 벌어집니다</h3>
+    <p>상위 50%에서 상위 30%로 올라가는 데 필요한 연봉 차이보다, 상위 5%에서 상위 1%로 가는 차이가 훨씬 큽니다.</p>
+    <p>중간 구간에서는 연봉이 몇 백만 원만 달라져도 순위가 크게 움직입니다. 비슷한 연봉을 받는 사람이 그만큼 많기 때문입니다. 반대로 상위 1% 안쪽은 사람 수가 적고 금액 차이가 커서, 연봉이 크게 올라야 순위가 조금 움직입니다.</p>
+    <p>그래서 <strong>중간 구간의 연봉 인상은 순위를 크게 바꿉니다.</strong> 다만 실수령액은 세금 때문에 인상분만큼 늘지 않습니다. <a href="/silsuryeong">실수령액표</a>에서 구간별로 얼마가 남는지 확인할 수 있습니다.</p>
+
+    <h3>자주 묻는 질문</h3>
+    <div class="faq">
+      <details>
+        <summary>연봉 5,000만 원이면 상위 몇 %인가요?</summary>
+        <p>근로소득자 기준 약 상위 30%입니다. 전체 근로소득자 2,108만 명 중 약 633만 등에 해당합니다. 평균 연봉 4,475만 원보다 높고 중위 연봉 3,387만 원보다는 한참 위입니다.</p>
+      </details>
+      <details>
+        <summary>평균 연봉보다 적으면 하위인가요?</summary>
+        <p>아닙니다. 평균 연봉 4,475만 원을 받으면 이미 상위 35% 안쪽입니다. 아주 높은 소득이 평균을 끌어올리기 때문에 평균은 한가운데가 아닙니다. 진짜 한가운데는 중위 연봉 약 3,387만 원입니다.</p>
+      </details>
+      <details>
+        <summary>전 국민 기준인가요?</summary>
+        <p>아닙니다. 연말정산을 신고한 <strong>근로소득자 약 2,108만 명</strong>이 모집단입니다. 자영업자, 프리랜서, 무직자는 포함되지 않습니다. "직장인 중 상위 몇 %"로 읽으셔야 합니다.</p>
+      </details>
+      <details>
+        <summary>뉴스에서 본 숫자와 다릅니다.</summary>
+        <p>뉴스는 사업·이자·배당소득까지 합친 <strong>통합소득</strong> 기준인 경우가 많습니다. 근로소득만 보는 이 자료보다 금액이 높게 나옵니다. 어느 기준인지 확인하고 비교하셔야 합니다.</p>
+      </details>
+      <details>
+        <summary>세후 금액만 아는데 어떻게 하나요?</summary>
+        <p><a href="/yeoksan">실수령액 연봉 역산 계산기</a>에서 세후 월급으로 세전 연봉을 먼저 구하신 뒤 그 금액을 넣으시면 됩니다. 이 자료는 <strong>총급여(세전)</strong> 기준입니다.</p>
+      </details>
+      <details>
+        <summary>입력한 정보가 저장되나요?</summary>
+        <p>저장되지 않습니다. 모든 계산은 브라우저 안에서만 이루어지며 입력값을 서버로 전송하거나 쿠키·로컬스토리지에 저장하지 않습니다. 자세한 내용은 <a href="/privacy">개인정보처리방침</a>에서 확인할 수 있습니다.</p>
+      </details>
+    </div>
+  </article>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="disclaimer"><strong>면책조항</strong> 이 계산기는 일반적인 법령과 판례를 바탕으로 한 참고용 도구이며, 계산 결과는 법적 효력이 없습니다. 실제 금액은 취업규칙, 단체협약, 근로계약서의 구체적인 내용과 사업장 상황에 따라 달라질 수 있습니다. 정확한 판단이 필요한 경우 공인노무사 또는 고용노동부 고객상담센터(1350)의 상담을 받으시기 바랍니다. 본 사이트는 계산 결과 이용으로 발생한 손해에 대해 책임지지 않습니다.</p>
+    <nav class="footer-nav">
+      <a href="/">홈</a>
+      <a href="/yeonbong">연봉 실수령액 계산기</a>
+      <a href="/tongsang">통상임금 계산기</a>
+      <a href="/busuip">부수입 세금 계산기</a>
+      <a href="/sunwi" aria-current="page">내 연봉 상위 몇 % 계산기</a>
+      <a href="/silsuryeong">연봉 실수령액표</a>
+      <a href="/yeoksan">실수령액 연봉 역산 계산기</a>
+      <a href="/toesa">퇴사하면 받는 돈 계산기</a>
+      <a href="/wolse">월세 세금 계산기</a>
+      <a href="/boheom">4대보험 계산기</a>
+      <a href="/yeongeum">국민연금 예상 수령액 계산기</a>
+      <a href="/juhyu">주휴수당 계산기</a>
+      <a href="/toejik">퇴직금 계산기</a>
+      <a href="/yeoncha">연차수당 계산기</a>
+      <a href="/silup">실업급여 계산기</a>
+      <a href="/yuka">육아휴직 급여 계산기</a>
+      <a href="/about">사이트 소개</a>
+      <a href="/contact">문의</a>
+      <a href="/privacy">개인정보처리방침</a>
+    </nav>
+    <p class="copyright">© 2026 paygyesan.com</p>
+  </div>
+</footer>
+<script src="/assets/income-table.js?v=9116c340" defer></script>
+<script src="/assets/calc.js?v=b9791901" defer></script>
+<script src="/assets/sunwi.js?v=b5143958" defer></script>
+</body>
+</html>

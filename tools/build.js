@@ -126,7 +126,7 @@ let cachedTestCount = null;
 function testCount() {
   if (cachedTestCount !== null) return cachedTestCount;
   const names = ['ordinary', 'tax', 'insurance', 'severance', 'leave',
-    'unemployment', 'parental', 'pension', 'sideincome', 'rental', 'exit', 'reverse', 'table',
+    'unemployment', 'parental', 'pension', 'sideincome', 'rental', 'exit', 'reverse', 'table', 'percentile',
     'consistency', 'precision'];
   const log = console.log;
   console.log = () => {}; // 검증 스위트의 출력을 빌드 로그에 섞지 않는다

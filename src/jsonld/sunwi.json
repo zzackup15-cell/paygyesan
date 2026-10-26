@@ -1,0 +1,17 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "내 연봉 상위 몇 % 계산기",
+   "url": "https://paygyesan.com/sunwi",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "All",
+   "inLanguage": "ko",
+   "description": "국세청 근로소득 백분위 자료로 내 연봉이 근로소득자 중 상위 몇 퍼센트인지 알려 주는 무료 웹 도구입니다. 평균 연봉과 중위 연봉, 백분위별 기준 금액도 함께 보여 줍니다.",
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "KRW" },
+   "browserRequirements": "JavaScript 사용 가능한 브라우저"
+  },
+  { "@type": "FAQPage", "mainEntity": [] }
+ ]
+}

@@ -260,7 +260,9 @@ section('9. 계산 로직 우회 여부');
 // UI 파일이 요율이나 법정 상수를 직접 들고 있으면 calc.js 와 갈라진다.
 const rateLike = /(?<![.\w])0\.0\d{2,}|\b209\b|\b4\.75\b|\b3\.595\b|\b13\.14\b|\b10320\b|\b68100\b|\b66048\b/;
 for (const f of assets) {
-  if (f === 'calc.js' || f === 'tax-table.js') continue;
+  // calc.js 는 로직 원천이고, *-table.js 는 생성된 데이터 파일이다.
+  // 둘 다 Calc 를 부르지 않는 것이 정상이다.
+  if (f === 'calc.js' || /-table\.js$/.test(f)) continue;
   const src = fs.readFileSync(path.join(OUT, 'assets', f), 'utf8')
     .replace(/\/\/[^\n]*/g, '')       // 주석 제외
     .replace(/\/\*[\s\S]*?\*\//g, '');

@@ -23,6 +23,7 @@ const SUITES = [
   'exit',
   'reverse',
   'table',
+  'percentile',
   'consistency',
   'precision'
 ];

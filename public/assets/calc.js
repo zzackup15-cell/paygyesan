@@ -706,6 +706,91 @@ var Calc = (function () {
     };
   }
 
+  /* ---- 연봉 백분위 (내 연봉은 상위 몇 %) ---- */
+
+  /* 국세청 근로소득 백분위 자료를 쓴다. 전역 INCOME_TABLE 에서 읽는다.
+   *
+   * 원자료는 구간별 '인원' 과 '총급여 합계' 만 준다. 경계 금액이 없어서
+   * 구간 평균을 그 구간 가운데 백분위의 대표값으로 놓고 사이를 잇는다.
+   * 그래서 결과는 정확한 순위가 아니라 추정치다. 화면에도 그렇게 밝힌다.
+   *
+   * 자료가 없으면 0 을 돌려준다. 근사식으로 대신 채우지 않는다.
+   */
+  function incomeTable() {
+    return (typeof INCOME_TABLE !== 'undefined' && INCOME_TABLE) ? INCOME_TABLE : null;
+  }
+
+  // 연봉 → 상위 몇 %
+  function incomePercentile(annual) {
+    var t = incomeTable();
+    var pay = toAmount(annual);
+    var result = {
+      percentile: 0, rank: 0, people: t ? t.people : 0,
+      // 평균과 중위는 연봉 입력과 무관한 자료값이다. 연봉을 넣기 전에도
+      // 화면에 띄워야 하므로 여기서 함께 채운다. 평균만 채우고 중위를
+      // 비워 두면 빈 화면에서 한쪽만 0 으로 보인다.
+      average: t ? t.averagePay : 0,
+      median: t ? incomeAtPercentile(50) : 0,
+      vsAverage: 0, hasData: !!t, year: t ? t.year : 0
+    };
+    if (!t || pay <= 0) return result;
+
+    var b = t.bands;
+    var pct;
+    if (pay >= b[0][1]) {
+      pct = b[0][0];
+    } else if (pay <= b[b.length - 1][1]) {
+      pct = b[b.length - 1][0];
+    } else {
+      pct = b[b.length - 1][0];
+      for (var i = 0; i < b.length - 1; i++) {
+        if (pay <= b[i][1] && pay > b[i + 1][1]) {
+          var span = b[i][1] - b[i + 1][1];
+          var ratio = span > 0 ? (b[i][1] - pay) / span : 0;
+          pct = b[i][0] + ratio * (b[i + 1][0] - b[i][0]);
+          break;
+        }
+      }
+    }
+
+    result.percentile = pct;
+    result.rank = Math.round(t.people * pct / 100);
+    result.vsAverage = t.averagePay > 0 ? pay / t.averagePay : 0;
+    return result;
+  }
+
+  /* 백분위 전용 파서. toHours() 를 쓰면 안 된다.
+   * 그쪽은 소수 1자리로 반올림해서 0.01% 가 0 이 되는데,
+   * 이 자료의 최상위 구간은 0.05% 다. 시간용 파서를 백분위에 쓴 탓에
+   * 상위 0.1% 안쪽을 통째로 잃을 뻔했다. */
+  function toPercent(raw) {
+    var n = typeof raw === 'number'
+      ? raw
+      : parseFloat(String(raw == null ? '' : raw).replace(/[^0-9.]/g, ''));
+    if (!isFinite(n) || n <= 0) return 0;
+    return n > 100 ? 100 : n;
+  }
+
+  // 상위 몇 % → 그 지점의 연봉 (위 함수의 역방향)
+  function incomeAtPercentile(percentile) {
+    var t = incomeTable();
+    if (!t) return 0;
+    var p = toPercent(percentile);
+    if (!(p > 0)) return 0;
+
+    var b = t.bands;
+    if (p <= b[0][0]) return b[0][1];
+    if (p >= b[b.length - 1][0]) return b[b.length - 1][1];
+    for (var i = 0; i < b.length - 1; i++) {
+      if (p >= b[i][0] && p <= b[i + 1][0]) {
+        var span = b[i + 1][0] - b[i][0];
+        var ratio = span > 0 ? (p - b[i][0]) / span : 0;
+        return Math.round(b[i][1] + ratio * (b[i + 1][1] - b[i][1]));
+      }
+    }
+    return 0;
+  }
+
   /* ---- 연봉 구간별 실수령액표 ---- */
 
   var TABLE_MAX_ROWS = 300; // 입력 방어용. 표가 이보다 길 이유가 없다
@@ -1247,6 +1332,8 @@ var Calc = (function () {
   }
 
   return {
+    incomePercentile: incomePercentile,
+    incomeAtPercentile: incomeAtPercentile,
     netPayTable: netPayTable,
     TABLE_MAX_ROWS: TABLE_MAX_ROWS,
     grossFromNet: grossFromNet,
