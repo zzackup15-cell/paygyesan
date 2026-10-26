@@ -1021,3 +1021,26 @@ input[type="text"]:focus, select:focus, button:focus-visible {
 @media (min-width: 640px) {
   .chw-picks { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+/* 홈 취미 결과 밑: 계산기로 이어지는 다음 단계 */
+.chw-next {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+.chw-next a {
+  display: block;
+  padding: 11px 14px;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.chw-next a::after { content: ' →'; }
+.chw-next a:hover { border-color: var(--accent); }

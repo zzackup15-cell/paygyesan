@@ -35,6 +35,10 @@ const DISCLAIMER_HOBBY =
   '<strong>면책조항</strong> 취미 비용과 속성 점수는 일반적인 경우를 바탕으로 한 추정치이며 공식 통계가 아닙니다. ' +
   '실제 비용은 지역, 장비 선택, 즐기는 정도에 따라 크게 달라질 수 있습니다. 추천은 참고용이며 결정은 본인의 몫입니다.';
 
+// 홈은 취미 추천과 계산기 목록이 함께 있다. 둘 다 말해야 한다.
+const DISCLAIMER_HOME = DISCLAIMER_HOBBY + ' ' +
+  '임금 계산기의 결과는 법적 효력이 없으며, 정확한 판단이 필요하면 공인노무사 또는 고용노동부 고객상담센터(1350)의 상담을 받으시기 바랍니다.';
+
 const BADGE = '입력값은 서버로 전송되지 않고 브라우저 안에서만 계산됩니다.';
 
 module.exports = {
@@ -43,25 +47,28 @@ module.exports = {
   ADSENSE,
   pages: [
     {
+      // 2026-10-26 홈을 취미 추천으로 바꿨다. 계산기 목록은 그 아래에 둔다.
+      // 예전 /chwimi 주소는 public/_redirects 에서 홈으로 넘긴다.
       slug: '',
       body: 'index.html',
       jsonld: 'index.json',
       navLabel: '홈',
       calculator: false,
       nav: true,
-      title: '페이계산 | 통상임금·주휴수당·실수령액 계산기',
-      h1: '근로자를 위한 임금 계산기',
-      lead: '통상시급부터 가산수당, 연봉, 실수령액, 주휴수당까지. <strong>가입 없이 무료로</strong> 계산하세요. 2026년 4대보험 요율과 국세청 간이세액표를 그대로 적용합니다.',
+      title: '내 월급으로 즐기는 취미 | 직장인 취미 추천·임금 계산기 - 페이계산',
+      h1: '내 월급으로 즐기는 취미',
+      lead: '질문 8개에 답하면 <strong>어울리는 취미 3개</strong>와 <strong>한 달에 얼마 드는지</strong>를 보여 드립니다. 월 실수령액을 넣으면 월급의 몇 %인지도 나옵니다. 아래에는 연봉·통상임금 같은 <strong>직장인 임금 계산기</strong>가 있습니다.',
       badge: BADGE,
-      description: '한국 근로자를 위한 무료 임금 계산기 모음입니다. 통상임금·통상시급, 연장·야간·휴일근로수당, 세전 연봉과 실수령액, 주휴수당을 가입 없이 계산합니다. 2026년 4대보험 요율과 국세청 근로소득 간이세액표를 반영했습니다.',
-      keywords: '임금 계산기, 급여 계산기, 통상임금 계산기, 주휴수당 계산기, 실수령액 계산기, 연봉 계산기, 최저임금, 4대보험 계산',
+      description: '질문 8개에 답하면 성향에 맞는 취미 3개를 추천하고, 취미별 한 달 비용 추정치와 월 실수령액 대비 비율을 보여 줍니다. 취미 54개를 활동성과 월 비용 칸 지도로 함께 봅니다. 연봉 실수령액·통상임금·주휴수당 등 직장인 임금 계산기도 가입 없이 무료로 씁니다.',
+      keywords: '취미 추천, 직장인 취미, 취미 테스트, 돈 안 드는 취미, 혼자 하는 취미, 취미 비용, 월급 대비 취미 비용, 연봉 실수령액 계산기, 임금 계산기',
       robots: 'index, follow, max-snippet:-1, max-image-preview:large',
       ogType: 'website',
-      ogTitle: '페이계산 | 통상임금·주휴수당·실수령액 계산기',
-      ogDescription: '통상시급부터 가산수당, 연봉, 실수령액, 주휴수당까지 가입 없이 무료로 계산하세요.',
-      twTitle: '페이계산 | 임금 계산기 모음',
-      twDescription: '통상임금·주휴수당·실수령액을 가입 없이 무료로 계산합니다.',
-      disclaimer: DISCLAIMER_CALC,
+      ogTitle: '내 월급으로 즐기는 취미 | 페이계산',
+      ogDescription: '질문 8개로 어울리는 취미 3개와 한 달 비용, 월급 대비 비율을 봅니다. 직장인 임금 계산기도 함께.',
+      twTitle: '내 월급으로 즐기는 취미 | 페이계산',
+      twDescription: '어울리는 취미와 한 달 비용을 월급과 함께 봅니다.',
+      disclaimer: DISCLAIMER_HOME,
+      scripts: ['/assets/hobby-table.js', '/assets/calc.js', '/assets/chwimi.js'],
       sitemap: { priority: '1.0', changefreq: 'monthly' }
     },
     {
@@ -171,33 +178,6 @@ module.exports = {
       disclaimer: DISCLAIMER_CALC,
       scripts: ['/assets/income-table.js', '/assets/calc.js', '/assets/sunwi.js'],
       sitemap: { priority: '0.9', changefreq: 'monthly' }
-    },
-    {
-      slug: 'chwimi',
-      hubDesc: '몇 가지 질문에 답하면 어울리는 취미 3개를 골라 줍니다. 취미마다 한 달에 얼마 드는지, 월 실수령액의 몇 %인지 함께 보여 줍니다.',
-      tags: ['취미 추천', '취미 비용', '월급 대비'],
-      body: 'chwimi.html',
-      jsonld: 'chwimi.json',
-      navLabel: '내 월급으로 즐기는 취미',
-      navShort: '취미 추천',
-      cardDesc: '질문에 답하면 어울리는 취미 3개와 한 달 비용이 나옵니다. 월 실수령액 대비 몇 %인지도 봅니다.',
-      calculator: true,
-      nav: true,
-      title: '내 월급으로 즐기는 취미 | 직장인 취미 추천과 비용 - 페이계산',
-      h1: '내 월급으로 즐기는 취미',
-      lead: '몇 가지 질문에 답하면 <strong>어울리는 취미 3개</strong>를 골라 드립니다. 취미마다 <strong>한 달에 얼마 드는지</strong>, 내 월 실수령액의 몇 %인지 함께 보여 드립니다.',
-      badge: BADGE,
-      description: '몇 가지 질문에 답하면 성향에 맞는 취미 3개를 추천하고, 각 취미의 한 달 비용 추정치와 월 실수령액 대비 비율을 보여 줍니다. 장비비는 24개월로 나눠 월 비용에 넣었고, 전체 취미를 활동성과 월 비용 지도 위에 표시합니다. 답변과 급여는 서버로 전송되지 않습니다.',
-      keywords: '취미 추천, 직장인 취미, 돈 안 드는 취미, 혼자 하는 취미, 취미 비용, 취미 테스트, 월급 대비 취미 비용',
-      robots: 'index, follow, max-snippet:-1, max-image-preview:large',
-      ogType: 'website',
-      ogTitle: '내 월급으로 즐기는 취미 | 직장인 취미 추천과 비용',
-      ogDescription: '질문에 답하면 어울리는 취미 3개와 한 달 비용, 월 실수령액 대비 비율이 나옵니다.',
-      twTitle: '내 월급으로 즐기는 취미',
-      twDescription: '어울리는 취미와 한 달 비용 추정치를 월 실수령액과 함께 봅니다.',
-      disclaimer: DISCLAIMER_HOBBY,
-      scripts: ['/assets/hobby-table.js', '/assets/calc.js', '/assets/chwimi.js'],
-      sitemap: { priority: '0.8', changefreq: 'monthly' }
     },
     {
       slug: 'silsuryeong',

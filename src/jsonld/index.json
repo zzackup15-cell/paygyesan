@@ -7,7 +7,22 @@
    "alternateName": "paygyesan",
    "url": "https://paygyesan.com/",
    "inLanguage": "ko",
-   "description": "한국 근로자를 위한 무료 임금 계산기 모음입니다. 통상임금·통상시급, 연장·야간·휴일근로수당, 연봉과 실수령액, 주휴수당을 가입 없이 계산합니다."
+   "description": "질문 8개로 내 성향과 월급에 맞는 취미를 추천하고 한 달 비용을 보여 주는 직장인 놀이터이자, 통상임금·연봉 실수령액·주휴수당 등 근로자 임금 계산기 모음입니다."
+  },
+  {
+   "@type": "WebApplication",
+   "name": "내 월급으로 즐기는 취미",
+   "url": "https://paygyesan.com/",
+   "applicationCategory": "LifestyleApplication",
+   "operatingSystem": "All",
+   "inLanguage": "ko",
+   "description": "몇 가지 질문에 답하면 성향에 맞는 취미 3개를 추천하고, 취미별 한 달 비용 추정치와 월 실수령액 대비 비율을 보여 주는 무료 웹 도구입니다. 전체 취미를 활동성과 월 비용 지도 위에 함께 표시합니다.",
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+   },
+   "browserRequirements": "JavaScript 사용 가능한 브라우저"
   },
   {
    "@type": "ItemList",
