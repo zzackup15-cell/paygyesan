@@ -26,3 +26,6 @@ desktop.ini
 *.log
 npm-debug.log*
 tmp/
+
+# 서브에이전트 작업 공간 (git worktree). 저장소에 들어가면 안 된다.
+.claude/worktrees/
