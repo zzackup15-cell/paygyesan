@@ -917,7 +917,8 @@ input[type="text"]:focus, select:focus, button:focus-visible {
    글자 크기는 스크립트가 font-size 속성으로 준다. 겹침 판정이 같은 크기로
    글자 폭을 어림하므로 여기서 font-size 를 주면 안 된다(CSS 가 속성을 이긴다). */
 .chw-map { margin: 4px 0 8px; min-height: 200px; }
-.chw-svg { display: block; max-width: 100%; height: auto; }
+.chw-svg { display: block; max-width: 100%; height: auto; cursor: pointer; }
+.chw-map-tip { margin: 0 0 6px; min-height: 1.5em; font-size: 13px; color: var(--ink-mid); }
 .chw-grid { stroke: var(--line); stroke-width: 1; }
 .chw-grid.is-mid { stroke-dasharray: 3 3; }
 .chw-axis { stroke: var(--ink-soft); stroke-width: 1; }

@@ -45,6 +45,7 @@
     picks: el('out-picks'),
     excluded: el('out-excluded'),
     map: el('out-map'),
+    mapTip: el('out-map-tip'),
     legend: el('out-legend'),
     note: el('out-note'),
     allSummary: el('all-summary'),
@@ -106,6 +107,7 @@
   var step = 0;       // 지금 보는 질문 순번. questions.length 면 다 답한 상태
   var lastResult = null;
   var lastMapWidth = 0;
+  var mapHit = null;  // 지도 점을 눌렀을 때 찾을 자리. drawMap 이 채운다
 
   function isAnswered(q) {
     return !!findOption(q, answers[q.id]);
@@ -330,21 +332,22 @@
 
   // 프로필과 가장 가까운 속성 두 개를 말로 바꾼다. 말은 취미 쪽 값으로 고른다
   // (그 취미가 어떤지 설명하는 문장이므로).
-  function whyLine(hobby, profile) {
-    var diffs = [];
-    for (var i = 0; i < ATTRS.length; i++) {
-      var a = ATTRS[i];
-      var hv = Number(hobby[a.key]);
-      var pv = Number(profile[a.key]);
-      if (!isFinite(hv) || !isFinite(pv)) continue;
-      diffs.push({ order: i, gap: Math.abs(hv - pv), attr: a, value: hv });
-    }
-    diffs.sort(function (x, y) { return x.gap - y.gap || x.order - y.order; });
+  //
+  // 어느 속성이 가까운지는 calc.js 의 hobbyRecommend 가 fit 으로 이미 정해 준다.
+  // 처음에는 여기서 차이를 다시 계산했는데, 같은 판단의 원천이 둘이 되면
+  // 동점 처리 같은 작은 규칙부터 갈라진다. 화면은 순서를 받아 말로만 바꾼다.
+  function whyLine(hobby, fit) {
+    if (!fit || !fit.length) return '';
     var words = [];
-    for (var k = 0; k < diffs.length && words.length < 2; k++) {
-      var v = diffs[k].value;
+    for (var k = 0; k < fit.length && words.length < 2; k++) {
+      var attr = null;
+      for (var i = 0; i < ATTRS.length; i++) {
+        if (ATTRS[i].key === fit[k]) { attr = ATTRS[i]; break; }
+      }
+      var v = attr ? Number(hobby[attr.key]) : NaN;
+      if (!attr || !isFinite(v)) continue;
       var level = v < 0.35 ? 0 : (v > 0.65 ? 2 : 1);
-      words.push(diffs[k].attr.words[level]);
+      words.push(attr.words[level]);
     }
     return words.length ? '잘 맞는 점: ' + words.join(' · ') : '';
   }
@@ -375,7 +378,7 @@
         li.appendChild(make('p', 'chw-pick-share', text));
       }
 
-      var why = whyLine(h, r.profile || {});
+      var why = whyLine(h, item.fit);
       if (why) li.appendChild(make('p', 'chw-pick-why', why));
       if (h.costNote) li.appendChild(make('p', 'chw-pick-note', '비용 추정: ' + h.costNote));
 
@@ -534,6 +537,11 @@
     return w;
   }
 
+  var LABEL_GAP_X = 3;
+  var LABEL_GAP_Y = 1;
+  var MAP_PICK_RADIUS = 16;
+  var MAP_TIP_DEFAULT = '점을 누르면 취미 이름과 비용이 여기에 나옵니다.';
+
   function overlaps(a, b) {
     return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
   }
@@ -671,8 +679,10 @@
       for (var c = 0; c < cands.length; c++) {
         var rc = { x: cands[c].x, y: cands[c].y, w: w, h: h };
         if (!inBounds(rc)) continue;
+        // 글자 폭은 어림이라 둘레에 틈을 두고 판정한다. 딱 붙은 이름은 한 덩어리로 읽힌다
+        var probe = { x: rc.x - LABEL_GAP_X, y: rc.y - LABEL_GAP_Y, w: rc.w + LABEL_GAP_X * 2, h: rc.h + LABEL_GAP_Y * 2 };
         var hit = false;
-        for (var q = 0; q < placed.length; q++) if (overlaps(rc, placed[q])) { hit = true; break; }
+        for (var q = 0; q < placed.length; q++) if (overlaps(probe, placed[q])) { hit = true; break; }
         if (hit) continue;
         placed.push(rc);
         return cands[c];
@@ -687,9 +697,11 @@
     var tops = [];
     for (var a = 0; a < pts.length; a++) if (pts[a].rank) tops.push(pts[a]);
     tops.sort(function (u, v) { return u.rank - v.rank; });
-    // 추천 점 자체도 다른 이름이 덮지 않게 막는다
-    for (var tp = 0; tp < tops.length; tp++) {
-      placed.push({ x: tops[tp].x - topR, y: tops[tp].y - topR, w: topR * 2, h: topR * 2 });
+    // 모든 점 자리를 먼저 막는다. 이름이 남의 점을 덮으면 글자가 깨져 읽힌다
+    // (가죽공예 위에 점이 얹혀 '가족공예' 처럼 보였다).
+    for (var tp = 0; tp < pts.length; tp++) {
+      var pr = (pts[tp].rank ? topR : dotR) + 1;
+      placed.push({ x: pts[tp].x - pr, y: pts[tp].y - pr, w: pr * 2, h: pr * 2 });
     }
 
     var labels = [];
@@ -761,6 +773,39 @@
     }
 
     out.map.appendChild(root);
+
+    var hitPts = [];
+    for (var hp = 0; hp < pts.length; hp++) {
+      var hh = pts[hp].item.hobby;
+      hitPts.push({
+        x: pts[hp].x,
+        y: pts[hp].y,
+        text: (pts[hp].rank ? pts[hp].rank + '위 ' : '') + hh.name + ' · ' + catOf(hh).name + ' · ' +
+          formatCostRange(hh) + (pts[hp].item.overBudget ? ' · 예산 초과' : '')
+      });
+    }
+    mapHit = { svg: root, w: W, pts: hitPts };
+    if (out.mapTip) out.mapTip.textContent = MAP_TIP_DEFAULT;
+  }
+
+  // 지도 점은 작아서 손가락으로 정확히 누르기 어렵다. 누른 자리에서 가장 가까운 점을 고른다.
+  function pickMapPoint(ev) {
+    if (!mapHit || !out.mapTip) return;
+    var box = mapHit.svg.getBoundingClientRect();
+    if (!box.width) return;
+    var k = mapHit.w / box.width; // max-width 로 줄어든 경우 화면 좌표 → 그림 좌표
+    var x = (ev.clientX - box.left) * k;
+    var y = (ev.clientY - box.top) * k;
+    var best = null;
+    var bestD = MAP_PICK_RADIUS * MAP_PICK_RADIUS;
+    for (var i = 0; i < mapHit.pts.length; i++) {
+      var dx = mapHit.pts[i].x - x;
+      var dy = mapHit.pts[i].y - y;
+      var d = dx * dx + dy * dy;
+      if (d <= bestD) { bestD = d; best = mapHit.pts[i]; }
+    }
+    if (best) out.mapTip.textContent = best.text;
+    else if (ev.type === 'click') out.mapTip.textContent = MAP_TIP_DEFAULT;
   }
 
   /* ── 묶기 ───────────────────────────────────────────────────────────── */
@@ -846,6 +891,9 @@
       if (isComplete()) scrollToNode(out.card);
     }
   });
+
+  out.map.addEventListener('click', pickMapPoint);
+  out.map.addEventListener('mousemove', pickMapPoint);
 
   // 지도는 실제 픽셀 폭으로 그린다. viewBox 로 줄이기만 하면 375px 화면에서
   // 글자가 5px 로 쪼그라든다. 그래서 폭이 바뀌면 다시 그린다.

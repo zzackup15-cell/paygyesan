@@ -29,6 +29,12 @@ const DISCLAIMER_SHORT =
   '<strong>면책조항</strong> 본 사이트의 계산기는 참고용 도구이며 계산 결과는 법적 효력이 없습니다. ' +
   '정확한 판단이 필요한 경우 공인노무사 또는 고용노동부 고객상담센터(1350)의 상담을 받으시기 바랍니다.';
 
+// 취미 추천 페이지용. 급여 계산기의 면책은 법령·판례·노무사를 말해서 맞지 않는다.
+// 여기서 틀릴 수 있는 것은 법이 아니라 우리가 매긴 비용과 속성 추정치다.
+const DISCLAIMER_HOBBY =
+  '<strong>면책조항</strong> 취미 비용과 속성 점수는 일반적인 경우를 바탕으로 한 추정치이며 공식 통계가 아닙니다. ' +
+  '실제 비용은 지역, 장비 선택, 즐기는 정도에 따라 크게 달라질 수 있습니다. 추천은 참고용이며 결정은 본인의 몫입니다.';
+
 const BADGE = '입력값은 서버로 전송되지 않고 브라우저 안에서만 계산됩니다.';
 
 module.exports = {
@@ -189,7 +195,7 @@ module.exports = {
       ogDescription: '질문에 답하면 어울리는 취미 3개와 한 달 비용, 월 실수령액 대비 비율이 나옵니다.',
       twTitle: '내 월급으로 즐기는 취미',
       twDescription: '어울리는 취미와 한 달 비용 추정치를 월 실수령액과 함께 봅니다.',
-      disclaimer: DISCLAIMER_CALC,
+      disclaimer: DISCLAIMER_HOBBY,
       scripts: ['/assets/hobby-table.js', '/assets/calc.js', '/assets/chwimi.js'],
       sitemap: { priority: '0.8', changefreq: 'monthly' }
     },
