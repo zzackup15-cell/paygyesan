@@ -1331,7 +1331,223 @@ var Calc = (function () {
     return result;
   }
 
+  /* ---- 취미 추천 (내 월급으로 즐기는 취미) ---- */
+
+  /* 전역 HOBBY_TABLE 에서 읽는다(INCOME_TABLE 과 같은 방식).
+   *
+   * 규칙 기반이다. 질문 답으로 다섯 속성의 프로필을 만들고, 각 취미와의
+   * 가중 거리로 점수를 매긴다. 무작위 요소가 없어서 같은 답이면 언제나
+   * 같은 결과가 나온다. 공유 링크로 들어온 사람이 보낸 사람과 다른 결과를
+   * 보면 안 되기 때문이다.
+   *
+   * 취미 비용은 공식 통계가 아니라 추정치다. 근거는 자료 파일의 costNote 에
+   * 있고, 여기서는 그 값을 옮겨 쓰기만 한다.
+   */
+  var HOBBY_ATTRS = ['active', 'social', 'indoor', 'time', 'entry'];
+
+  // 활동성을 가장 무겁게 본다. 몸을 쓰느냐는 취미가 맞고 안 맞고를 가르는
+  // 가장 큰 차이이고, 진입 장벽은 시작한 뒤에는 차이가 줄어든다.
+  var HOBBY_WEIGHTS = { active: 1.5, social: 1.0, indoor: 1.0, time: 0.8, entry: 0.7 };
+
+  var HOBBY_TOP = 3;
+  var HOBBY_NEUTRAL = 0.5; // 아무 질문도 건드리지 않은 속성
+
+  function hobbyTable() {
+    if (typeof HOBBY_TABLE === 'undefined' || !HOBBY_TABLE) return null;
+    if (!(HOBBY_TABLE.hobbies instanceof Array)) return null;
+    return HOBBY_TABLE;
+  }
+
+  // 0~1 속성값. 자료가 깨져 있어도 계산이 NaN 으로 번지지 않게 한다.
+  function hobbyAttr(v) {
+    if (typeof v !== 'number' || !isFinite(v)) return HOBBY_NEUTRAL;
+    return v < 0 ? 0 : (v > 1 ? 1 : v);
+  }
+
+  /* 비용·급여 파서. toAmount 를 그대로 쓰면 '-2,500,000' 같은 문자열의
+   * 부호가 지워져 음수가 양수로 되살아난다(toHours 가 겪은 문제와 같다).
+   * 비율을 만드는 입력이라 부호 있는 문자열은 0 으로 본다. */
+  function hobbyAmount(raw) {
+    if (typeof raw === 'string' && raw.indexOf('-') !== -1) return 0;
+    return toAmount(raw);
+  }
+
+  // 비용이 월 실수령액의 몇 배인가. 급여가 없거나 이상하면 0.
+  function hobbyCostShare(cost, monthlyNet) {
+    var c = hobbyAmount(cost);
+    var n = hobbyAmount(monthlyNet);
+    if (n <= 0) return 0;
+    return c / n;
+  }
+
+  /* 답 → 프로필.
+   *
+   * answers 는 { 질문 id: 보기 id }. 공유 링크의 해시에서 오는 값이라
+   * 무엇이든 들어올 수 있다. 질문 목록을 기준으로 돌면서 자기 속성만 읽고,
+   * 없는 질문 id·없는 보기 id·문자열이 아닌 값은 답하지 않은 것으로 본다.
+   * hasOwnProperty 로 읽는 것은 'constructor' 같은 키가 프로토타입에서
+   * 값을 끌어오지 않게 하기 위해서다.
+   *
+   * 평균은 0.1 단위 정수로 더한 뒤 한 번만 나눈다. 0.1 + 0.2 처럼 부동소수를
+   * 누적하면 0.30000000000000004 가 남아, 같은 프로필이 질문 순서에 따라
+   * 미세하게 다른 값이 될 수 있다.
+   */
+  function hobbyProfile(answers) {
+    var t = hobbyTable();
+    var questions = t && t.questions instanceof Array ? t.questions : [];
+    var src = answers && typeof answers === 'object' ? answers : {};
+    var has = Object.prototype.hasOwnProperty;
+
+    var sum = {};
+    var count = {};
+    for (var k = 0; k < HOBBY_ATTRS.length; k++) {
+      sum[HOBBY_ATTRS[k]] = 0;
+      count[HOBBY_ATTRS[k]] = 0;
+    }
+    var budget = null;
+    var answered = 0;
+
+    for (var i = 0; i < questions.length; i++) {
+      var q = questions[i];
+      if (!q || !has.call(src, q.id)) continue;
+      var pick = src[q.id];
+      if (typeof pick !== 'string') continue;
+
+      var opt = null;
+      var opts = q.options instanceof Array ? q.options : [];
+      for (var j = 0; j < opts.length; j++) {
+        if (opts[j] && opts[j].id === pick) { opt = opts[j]; break; }
+      }
+      if (!opt) continue;
+      answered++;
+
+      if (opt.set) {
+        for (k = 0; k < HOBBY_ATTRS.length; k++) {
+          var key = HOBBY_ATTRS[k];
+          var v = opt.set[key];
+          if (typeof v !== 'number' || !isFinite(v)) continue;
+          sum[key] += Math.round(hobbyAttr(v) * 10);
+          count[key]++;
+        }
+      }
+      // 예산 질문은 하나뿐이지만, 혹시 여럿이면 질문 순서상 마지막 답을 쓴다.
+      // null 은 '정해 두지 않았다'. 숫자가 아니거나 음수면 제한 없음으로 본다.
+      if (has.call(opt, 'budget')) {
+        var b = opt.budget;
+        budget = typeof b === 'number' && isFinite(b) && b >= 0 ? Math.floor(b) : null;
+      }
+    }
+
+    var profile = { budget: budget, answered: answered };
+    for (k = 0; k < HOBBY_ATTRS.length; k++) {
+      var a = HOBBY_ATTRS[k];
+      profile[a] = count[a] ? sum[a] / (count[a] * 10) : HOBBY_NEUTRAL;
+    }
+    return profile;
+  }
+
+  /* 프로필과 취미의 가까움. 계약서 4절의 식 그대로다.
+   *
+   *   거리  = sqrt( Σ w_k × (profile_k − hobby_k)² ) / sqrt( Σ w_k )
+   *   score = 1 − 거리
+   *
+   * 속성 차이가 모두 1 이어도 거리는 1 이므로 score 는 0~1 에 머문다.
+   * 소수 6자리로 반올림하는 것은 수학적으로 같은 점수가 부동소수 오차로
+   * 1e-16 만큼 달라져, 'id 사전순' 대신 오차가 순서를 정하는 일을 막기
+   * 위해서다. 6자리면 화면에 내는 어떤 표시보다 촘촘하다.
+   */
+  function hobbyScore(profile, hobby) {
+    var sum = 0;
+    var wsum = 0;
+    for (var k = 0; k < HOBBY_ATTRS.length; k++) {
+      var key = HOBBY_ATTRS[k];
+      var w = HOBBY_WEIGHTS[key];
+      var d = profile[key] - hobbyAttr(hobby[key]);
+      sum += w * d * d;
+      wsum += w;
+    }
+    var score = 1 - Math.sqrt(sum) / Math.sqrt(wsum);
+    if (!(score > 0)) score = 0;
+    if (score > 1) score = 1;
+    return Math.round(score * 1e6) / 1e6;
+  }
+
+  /* 왜 맞는지 말해 주기 위한 속성 순서. 차이가 작은(가까운) 속성부터.
+   * 같으면 HOBBY_ATTRS 순서. 화면은 앞의 두 개를 말로 풀면 된다.
+   * UI 가 직접 차이를 계산하면 점수 규칙이 두 군데로 갈라지므로 여기서 준다. */
+  function hobbyFit(profile, hobby) {
+    var rows = [];
+    for (var k = 0; k < HOBBY_ATTRS.length; k++) {
+      var key = HOBBY_ATTRS[k];
+      var d = Math.abs(profile[key] - hobbyAttr(hobby[key]));
+      rows.push({ key: key, d: Math.round(d * 1e6), order: k });
+    }
+    rows.sort(function (x, y) { return x.d - y.d || x.order - y.order; });
+    var out = [];
+    for (var i = 0; i < rows.length; i++) out.push(rows[i].key);
+    return out;
+  }
+
+  // 예산 안 → 점수 높은 순 → id 사전순. localeCompare 는 실행 환경의
+  // 언어 설정을 따르므로 쓰지 않는다. id 는 영문 소문자라 < 비교로 충분하다.
+  function hobbyOrder(x, y) {
+    if (x.overBudget !== y.overBudget) return x.overBudget ? 1 : -1;
+    if (x.score !== y.score) return y.score - x.score;
+    var a = x.hobby.id;
+    var b = y.hobby.id;
+    return a < b ? -1 : (a > b ? 1 : 0);
+  }
+
+  /* 답과 월 실수령액 → 전체 순위와 추천 3개.
+   *
+   * 예산을 넘는 취미(costMin > budget)는 지우지 않고 ranked 맨 뒤로 보낸다.
+   * 화면이 "예산 때문에 빠진 취미가 있다" 고 말하려면 남아 있어야 한다.
+   * 가장 가볍게 즐길 때도 예산을 넘어야 초과로 본다. costMax 로 자르면
+   * 대부분의 취미가 빠져 추천이 의미를 잃는다.
+   */
+  function hobbyRecommend(answers, monthlyNet) {
+    var profile = hobbyProfile(answers);
+    var result = { profile: profile, ranked: [], top: [] };
+    var t = hobbyTable();
+    if (!t) return result;
+
+    var net = hobbyAmount(monthlyNet);
+    var budget = profile.budget;
+    var ranked = [];
+    for (var i = 0; i < t.hobbies.length; i++) {
+      var h = t.hobbies[i];
+      if (!h || typeof h.id !== 'string') continue;
+      var lo = toAmount(h.costMin);
+      var hi = toAmount(h.costMax);
+      if (hi < lo) hi = lo;
+      // 둘 다 만원 단위라 합의 절반은 정수다. 자료가 어긋나도 정수를 지킨다.
+      var mid = Math.round((lo + hi) / 2);
+      ranked.push({
+        hobby: h,
+        score: hobbyScore(profile, h),
+        fit: hobbyFit(profile, h),
+        costMid: mid,
+        share: hobbyCostShare(mid, net),
+        overBudget: budget !== null && lo > budget
+      });
+    }
+    ranked.sort(hobbyOrder);
+
+    var top = [];
+    for (i = 0; i < ranked.length && top.length < HOBBY_TOP; i++) {
+      if (!ranked[i].overBudget) top.push(ranked[i]);
+    }
+    result.ranked = ranked;
+    result.top = top;
+    return result;
+  }
+
   return {
+    HOBBY_ATTRS: HOBBY_ATTRS,
+    HOBBY_WEIGHTS: HOBBY_WEIGHTS,
+    hobbyProfile: hobbyProfile,
+    hobbyRecommend: hobbyRecommend,
+    hobbyCostShare: hobbyCostShare,
     incomePercentile: incomePercentile,
     incomeAtPercentile: incomeAtPercentile,
     netPayTable: netPayTable,
