@@ -24,6 +24,7 @@ const SUITES = [
   'reverse',
   'table',
   'percentile',
+  'hobby',
   'consistency',
   'precision'
 ];
