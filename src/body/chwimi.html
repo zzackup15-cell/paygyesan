@@ -1,0 +1,84 @@
+<!-- 광고 위치 1: 본문 상단 (애드센스 승인 후 삽입) -->
+<!-- <div class="ad-slot ad-top"></div> -->
+
+<main class="wrap">
+
+  <section class="card" aria-labelledby="input-title">
+    <h2 id="input-title">1. 월 실수령액 <span class="label-opt">선택</span></h2>
+    <p class="section-desc">넣으면 취미마다 한 달 비용이 <strong>내 월 실수령액의 몇 %</strong>인지 함께 보여 드립니다. 이 값은 공유 링크에 담기지 않습니다.</p>
+
+    <div class="net-inputs">
+      <div class="net-field">
+        <label for="monthly-net">월 실수령액 (세후)</label>
+        <div class="input-unit">
+          <input type="text" id="monthly-net" inputmode="numeric" placeholder="0" maxlength="13" autocomplete="off">
+          <span class="unit">원</span>
+        </div>
+        <p class="hint">통장에 실제로 들어오는 금액. 비워 두면 금액만 보여 드립니다. 세전 연봉만 안다면 <a href="/yeonbong">연봉 실수령액 계산기</a>에서, 세후로 세전을 구하려면 <a href="/yeoksan">역산 계산기</a>에서 확인하세요</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="quiz-card" aria-labelledby="quiz-title">
+    <h2 id="quiz-title">2. 질문</h2>
+
+    <div class="chw-progress" id="quiz-progress">
+      <span class="chw-step" id="quiz-step">0 / 0</span>
+      <progress id="quiz-bar" max="1" value="0" aria-label="답한 질문 수"></progress>
+    </div>
+
+    <h3 class="chw-question" id="quiz-text" tabindex="-1">질문을 불러오는 중입니다.</h3>
+    <div class="chw-options" id="quiz-options" role="group" aria-labelledby="quiz-text"></div>
+
+    <div class="list-actions">
+      <button type="button" id="quiz-prev" class="btn btn-ghost">이전</button>
+      <button type="button" id="quiz-next" class="btn btn-ghost">다음</button>
+      <span class="item-count" id="quiz-note">같은 답이면 언제나 같은 결과가 나옵니다</span>
+    </div>
+  </section>
+
+  <section class="card result-card" id="result-card" aria-labelledby="result-title" aria-live="polite">
+    <h2 id="result-title">3. 어울리는 취미</h2>
+    <p class="section-desc" id="out-summary">질문에 모두 답하면 어울리는 취미 3개와 한 달 비용을 보여 드립니다.</p>
+
+    <div id="result-block" hidden>
+      <ol class="chw-picks" id="out-picks"></ol>
+      <p class="hint warn" id="out-excluded"></p>
+
+      <h3>취미 지도</h3>
+      <p class="section-desc">가로는 활동성, 세로는 한 달 비용입니다. 비용 차이가 커서 세로는 <strong>로그 눈금</strong>으로 그렸습니다. 큰 점이 추천 3개이고, 세로 막대는 그 취미의 비용 범위입니다.</p>
+      <div class="chw-map" id="out-map"></div>
+      <ul class="chw-legend" id="out-legend"></ul>
+
+      <p class="formula" id="out-note"></p>
+
+      <details class="chw-all">
+        <summary id="all-summary">전체 취미 보기</summary>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead id="all-head"></thead>
+            <tbody id="all-rows"></tbody>
+          </table>
+        </div>
+      </details>
+
+      <div class="list-actions">
+        <span class="item-count" id="share-status"></span>
+        <button type="button" id="share-btn" class="btn btn-secondary">결과 공유</button>
+        <button type="button" id="restart-btn" class="btn btn-ghost">다시 하기</button>
+      </div>
+      <div class="chw-share" id="share-box" hidden>
+        <label for="share-url">공유 링크 (답만 담깁니다. 월 실수령액은 담기지 않습니다)</label>
+        <input type="text" id="share-url" readonly>
+      </div>
+    </div>
+  </section>
+
+  {{OTHER_CALCS}}
+
+  <!-- 광고 위치 2: 결과 하단 (애드센스 승인 후 삽입) -->
+  <!-- <div class="ad-slot ad-result"></div> -->
+
+  <!-- GUIDE -->
+
+</main>

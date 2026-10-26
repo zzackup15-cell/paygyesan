@@ -778,3 +778,206 @@ input[type="text"]:focus, select:focus, button:focus-visible {
   background: var(--accent-soft, #eef3fa);
   font-weight: 600;
 }
+
+/* ---- 취미 추천 (/chwimi) ---- */
+
+/* 분류 6색. 기존 --accent(#1b4d8f) 옆에 놓아도 튀지 않게 채도를 낮췄다.
+   JS 는 분류 id 가 아니라 HOBBY_TABLE.categories 의 순서(0~5)로 이 클래스를 붙인다.
+   id 를 여기 한 번 더 적으면 자료와 CSS 를 같이 고쳐야 하기 때문이다. */
+.chw-c0 { --chw-color: #4a6fa5; }  /* 운동·스포츠 */
+.chw-c1 { --chw-color: #5d8a4e; }  /* 아웃도어·여행 */
+.chw-c2 { --chw-color: #8467a0; }  /* 문화·교양 */
+.chw-c3 { --chw-color: #b07c46; }  /* 창작·만들기 */
+.chw-c4 { --chw-color: #ad5f6b; }  /* 생활·여가 */
+.chw-c5 { --chw-color: #4a8f93; }  /* 게임·디지털 */
+.chw-cx { --chw-color: var(--ink-soft); }  /* 분류를 못 찾은 취미 */
+
+/* 문답 */
+.chw-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 14px;
+}
+.chw-step {
+  flex: 0 0 auto;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.chw-progress progress {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 6px;
+  border: none;
+  border-radius: 999px;
+  background: var(--line);
+  color: var(--accent);
+  overflow: hidden;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.chw-progress progress::-webkit-progress-bar { background: var(--line); border-radius: 999px; }
+.chw-progress progress::-webkit-progress-value { background: var(--accent); border-radius: 999px; }
+.chw-progress progress::-moz-progress-bar { background: var(--accent); border-radius: 999px; }
+
+.card h3.chw-question {
+  margin: 0 0 14px;
+  font-size: 17px;
+  line-height: 1.45;
+}
+/* 질문이 바뀔 때 스크립트가 초점을 옮긴다. 마우스 사용자에게 테두리는 군더더기다. */
+.chw-question:focus { outline: none; }
+
+.chw-options { display: grid; gap: 8px; }
+/* display 를 준 요소는 hidden 속성이 먹지 않으므로 따로 막는다 */
+.chw-options[hidden], .chw-share[hidden] { display: none; }
+
+.chw-option {
+  font: inherit;
+  font-size: 15px;
+  text-align: left;
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color .12s, border-color .12s;
+}
+.chw-option:hover { background: var(--accent-soft); border-color: var(--accent-line); }
+.chw-option[aria-pressed="true"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+#quiz-card .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* 추천 카드 */
+.chw-picks {
+  list-style: none;
+  margin: 16px 0 12px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.chw-pick {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--chw-color);
+  border-radius: 8px;
+  padding: 13px 14px;
+  background: var(--bg-alt);
+}
+.chw-pick-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+.chw-rank {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--chw-color);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+.chw-pick-name { font-size: 17px; letter-spacing: -0.01em; }
+.chw-cat { font-size: 12px; color: var(--ink-soft); }
+.chw-pick-cost {
+  margin: 8px 0 0;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.chw-pick-share {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.chw-pick-why { margin: 8px 0 0; font-size: 13.5px; color: var(--ink-mid); }
+.chw-pick-note { margin: 6px 0 0; font-size: 12px; line-height: 1.5; color: var(--ink-soft); }
+
+/* 취미 지도. SVG 는 스크립트가 컨테이너의 실제 폭으로 그린다.
+   max-width 는 그 사이 폭이 줄었을 때 문서가 가로로 넘치지 않게 하는 안전장치.
+   글자 크기는 스크립트가 font-size 속성으로 준다. 겹침 판정이 같은 크기로
+   글자 폭을 어림하므로 여기서 font-size 를 주면 안 된다(CSS 가 속성을 이긴다). */
+.chw-map { margin: 4px 0 8px; min-height: 200px; }
+.chw-svg { display: block; max-width: 100%; height: auto; }
+.chw-grid { stroke: var(--line); stroke-width: 1; }
+.chw-grid.is-mid { stroke-dasharray: 3 3; }
+.chw-axis { stroke: var(--ink-soft); stroke-width: 1; }
+.chw-tick { fill: var(--ink-soft); }
+.chw-axis-title { fill: var(--ink-mid); font-weight: 600; }
+.chw-dot { fill: var(--chw-color); fill-opacity: 0.6; }
+.chw-dot.is-over { fill: var(--bg); fill-opacity: 1; stroke: var(--chw-color); stroke-width: 1.5; }
+.chw-dot.is-top { fill-opacity: 1; stroke: var(--bg); stroke-width: 2; }
+.chw-range { stroke: var(--chw-color); stroke-width: 4; stroke-linecap: round; stroke-opacity: 0.4; }
+.chw-rank-num { fill: #fff; font-weight: 700; pointer-events: none; }
+/* 이름 뒤에 바탕색 테두리를 둘러 격자선·점 위에서도 읽히게 한다 */
+.chw-label {
+  fill: var(--ink-mid);
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.chw-label.is-top { fill: var(--ink); font-weight: 700; }
+
+.chw-legend {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 12.5px;
+  color: var(--ink-mid);
+}
+.chw-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.chw-swatch {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--chw-color, var(--ink-soft));
+}
+.chw-swatch.is-top { width: 14px; height: 14px; background: var(--ink-mid); box-shadow: 0 0 0 2px var(--bg) inset; }
+.chw-swatch.is-over { background: var(--bg); border: 1.5px solid var(--ink-soft); }
+
+/* 전체 취미 표 */
+.chw-all { margin-top: 14px; }
+.chw-all summary {
+  padding: 8px 0;
+  min-height: 34px;
+  color: var(--accent);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.chw-all .table-scroll { margin-top: 6px; }
+.chw-all .data-table td:nth-child(2) { text-align: left; font-weight: 600; }
+
+/* 공유 링크 */
+.chw-share { margin-top: 10px; }
+.chw-share label { display: block; font-size: 12.5px; color: var(--ink-soft); margin-bottom: 6px; }
+.chw-share input { width: 100%; font-size: 13px; color: var(--ink-mid); }
+
+@media (min-width: 640px) {
+  .chw-picks { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
